@@ -1,0 +1,16 @@
+{
+  "name": "Aura — Urban Wellness",
+  "short_name": "Aura",
+  "description": "Find your people. Find your place.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF7",
+  "theme_color": "#7A9E7E",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
