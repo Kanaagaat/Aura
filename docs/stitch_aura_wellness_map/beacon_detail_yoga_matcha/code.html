@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura - Beacon Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=Playfair+Display:wght@300;400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1a",
+                        "primary-fixed-dim": "#aad0ad",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#7b554a",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#424842",
+                        "tertiary-fixed-dim": "#ecbf7e",
+                        "surface-bright": "#fafaf5",
+                        "on-tertiary-fixed-variant": "#5f410a",
+                        "on-error-container": "#93000a",
+                        "primary": "#44664a",
+                        "outline-variant": "#c2c8bf",
+                        "tertiary-fixed": "#ffddb0",
+                        "primary-container": "#7a9e7e",
+                        "on-tertiary-fixed": "#291800",
+                        "on-secondary-fixed-variant": "#603e34",
+                        "tertiary": "#7a5821",
+                        "surface-dim": "#dadad6",
+                        "tertiary-container": "#b68e52",
+                        "inverse-on-surface": "#f1f1ec",
+                        "on-background": "#1a1c1a",
+                        "on-tertiary-container": "#402900",
+                        "background": "#fafaf5",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#feccbe",
+                        "secondary-fixed": "#ffdbd0",
+                        "surface-container-low": "#f4f4ef",
+                        "surface-container": "#eeeeea",
+                        "inverse-surface": "#2f312e",
+                        "inverse-primary": "#aad0ad",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#2e140c",
+                        "surface-container-highest": "#e2e3de",
+                        "surface-container-high": "#e8e8e4",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ecbcae",
+                        "surface-variant": "#e2e3de",
+                        "surface": "#fafaf5",
+                        "surface-tint": "#44664a",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#2d4e33",
+                        "outline": "#727971",
+                        "on-primary-container": "#13341c",
+                        "on-secondary-container": "#7a5449",
+                        "on-primary-fixed": "#00210b",
+                        "primary-fixed": "#c6ecc8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "stack-md": "24px",
+                        "container-margin-mobile": "20px",
+                        "stack-sm": "12px",
+                        "stack-lg": "40px",
+                        "container-margin-desktop": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["DM Sans"],
+                        "label-md": ["DM Sans"],
+                        "caption": ["DM Sans"],
+                        "body-lg": ["DM Sans"],
+                        "display-md": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "headline-lg": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "label-md": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "0.02em", "fontWeight": "300" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-lg antialiased overflow-x-hidden selection:bg-primary-container/30">
+<!-- Desktop Side Navigation -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 border-r border-outline-variant dark:border-outline backdrop-blur-md bg-surface-bright/80 shadow-sm z-50">
+<div class="flex flex-col h-full py-stack-lg px-unit">
+<div class="px-4 mb-12">
+<h1 class="font-display-md text-display-md text-primary tracking-tight">Aura</h1>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">map</span>
+<span class="font-label-md text-label-md">Map</span>
+</a>
+<a class="text-primary font-bold flex items-center gap-unit px-4 py-2 bg-primary-container/10 rounded-lg scale-95 transition-transform duration-150 relative" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">flare</span>
+<span class="font-label-md text-label-md">Beacon</span>
+<div class="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-primary rounded-full"></div>
+</a>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</div>
+<button class="bg-primary text-on-primary font-label-md text-label-md py-3 px-6 rounded-full w-full shadow-[0px_2px_16px_rgba(0,0,0,0.06)] hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mt-8 mb-8">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Create Beacon
+            </button>
+<div class="flex flex-col gap-2 border-t border-outline-variant/30 pt-6">
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">help_outline</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Top App Bar (Desktop) -->
+<header class="hidden md:flex justify-between items-center px-container-margin-desktop h-20 fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-200">
+<div class="flex-1 max-w-md ml-8">
+<!-- Search placeholder -->
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 md:pt-20 min-h-screen relative pb-32 md:pb-12 bg-surface-bright">
+<!-- Hero / Header Section -->
+<div class="relative w-full h-[409px] md:h-[512px] overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-bright via-surface-bright/20 to-transparent z-10"></div>
+<img alt="Serene yoga studio" class="w-full h-full object-cover object-center" data-alt="A bright, airy yoga studio bathed in soft morning light. The space features light wood floors, sheer white linen curtains gently blowing in a breeze, and a minimalist aesthetic. Potted Monstera plants add touches of organic green. The overall mood is serene, grounded, and premium, evoking a sense of calm wellness. Soft, natural lighting dominates the scene, highlighting the texture of the wooden floor and the lightness of the space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYwYbIwQeAIMl8PRg3VHC5OArG74IkQynayX8kt6-rywY7S_8eY4AMgdO9esdJTnBeK3E5wMI8Dxr24ndzXWuIjbK9AfSnSit3-CGzyMk5Y2hDEySjU0qpUROa60p0PxV3nFT-CE_k3ZqwGJ3Wy2KEjYXCdxx78FxEy89TaVTo635GBNLxPgv1JfM8AvBFTZL6_YfuGm7Witggd0Xrvfkt9UyI7VJUtH4fhjC3H5ukjZBgpgcjkZa1rU0giu91t21hrPSQPmPpWeR2"/>
+<button aria-label="Go back" class="absolute top-6 left-container-margin-mobile md:left-container-margin-desktop z-20 flex items-center justify-center w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-on-surface hover:bg-surface transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+</div>
+<!-- Content Container -->
+<div class="max-w-6xl mx-auto px-container-margin-mobile md:px-container-margin-desktop -mt-24 relative z-20">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Details (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-stack-lg">
+<!-- Title & Core Info -->
+<div class="bg-surface/80 backdrop-blur-xl rounded-2xl p-8 border border-outline-variant/30 shadow-[0px_2px_16px_rgba(0,0,0,0.02)]">
+<div class="flex items-center gap-2 mb-4">
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full font-label-md text-label-md uppercase tracking-widest border border-primary/10">Wellness Meetup</span>
+<span class="bg-tertiary-container/10 text-tertiary px-3 py-1 rounded-full font-label-md text-label-md uppercase tracking-widest border border-tertiary/10">Limited Spots</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-6 leading-tight">Yoga &amp; Matcha with Elena R.</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 border-t border-outline-variant/20 pt-8">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">DATE &amp; TIME</p>
+<p class="font-body-lg text-body-lg text-on-surface">Saturday, Oct 28</p>
+<p class="font-body-md text-body-md text-on-surface-variant">9:00 AM - 11:30 AM</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">LOCATION</p>
+<p class="font-body-lg text-body-lg text-on-surface">The Glasshouse Studio</p>
+<p class="font-body-md text-body-md text-on-surface-variant">124 Botanic Way, East District</p>
+</div>
+</div>
+</div>
+</div>
+<!-- About & Vibes -->
+<div class="pl-4 md:pl-8 border-l border-outline-variant/30">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">The Experience</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6 max-w-2xl">
+                            Join us for a grounding morning flow focused on breathwork and mindful movement. We'll start with 60 minutes of vinyasa tailored for all levels, followed by an intimate matcha tasting session led by ceremonial grade specialists. This is a space to connect, breathe, and start your weekend with intention.
+                        </p>
+<div class="flex flex-wrap gap-3 mt-6">
+<span class="px-4 py-2 rounded-full border border-outline-variant/40 font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary">wb_sunny</span>
+                                #SoftLight
+                            </span>
+<span class="px-4 py-2 rounded-full border border-outline-variant/40 font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">eco</span>
+                                #PlantFilled
+                            </span>
+<span class="px-4 py-2 rounded-full border border-outline-variant/40 font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">self_improvement</span>
+                                #Mindful
+                            </span>
+</div>
+</div>
+<!-- Host Info -->
+<div class="bg-surface flex items-center gap-6 p-6 rounded-2xl border border-outline-variant/20 mt-4">
+<img alt="Elena R." class="w-20 h-20 rounded-full object-cover" data-alt="A portrait of a young woman with a serene, natural look, smiling gently. She has soft, glowing skin and is lit by warm morning light. The background is slightly blurred, suggesting an indoor setting with subtle plant foliage. The overall aesthetic is calm, organic, and highly professional, fitting a wellness lifestyle brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH6PHxunDMz3W2Gf3feRzNUFV_CWYIvT_keiBO-Rwg0DKJcW2ahRdfTnYwZM3qa-VPWKyxC6n_Jj7-W41x6AWbDMQrT9EJJV5ZxGxGOfzd7LdwlmxoU107g6WUSqdc7WIN0JkYGK_2d6Mq9CxAiZktZx-J4aUBwDk1vNiMnH2nu6n419_KZU_pb-psO-8wX1pewYe6BQUikdfnAUkN5lvIKmPQlqtmgvNuKEFoh1ksBJ6k0ZoaZaL4p0H-RVbKgq-e11jvOSP-GpRm"/>
+<div>
+<p class="font-label-md text-label-md text-primary mb-1">HOSTED BY</p>
+<p class="font-title-lg text-title-lg text-on-surface">Elena R.</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Yoga Instructor &amp; Matcha Enthusiast</p>
+</div>
+<button class="ml-auto text-primary border border-primary/20 px-4 py-2 rounded-full font-label-md text-label-md hover:bg-primary-container/10 transition-colors">
+                            View Profile
+                        </button>
+</div>
+</div>
+<!-- Right Column: Map & Actions (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-stack-md sticky top-28">
+<!-- Action Card -->
+<div class="bg-surface/90 backdrop-blur-xl rounded-2xl p-6 border border-outline-variant/30 shadow-[0px_8px_32px_rgba(0,0,0,0.04)]">
+<div class="mb-6">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-2">Who's Coming</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">8 attending, 4 spots left</p>
+<div class="flex -space-x-3 mt-4">
+<img alt="Attendee 1" class="w-10 h-10 rounded-full border-2 border-surface object-cover z-10" data-alt="A portrait of a smiling person, natural lighting, organic and calm aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP--CE--PYKeAIR09Dh0d70_bhxfXymLomJsmtM3ZJ7tpl9wUtXgBTvBzUAdEjFU0VAGMFsRVzFjHdSxqQ0P4tb0cvJVgJPQleT2dZhy40uj316fs14njSQaIloo-g-HzNOCmhglW0ti9qESegOhZInc4lFsLCTdbSCXxchAQ89-irpobGs4JA9Z9KfciIfp60B8RPH7zZ6tVSO6DZp1A5tYlx4-PYgjO6d01F32cI_FpdAQcXqWv3B78fo8OadKlu3sbGVmNPq6b0"/>
+<img alt="Attendee 2" class="w-10 h-10 rounded-full border-2 border-surface object-cover z-20" data-alt="A portrait of a serene person, soft lighting, wellness lifestyle vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAADJwGJHYqqbG9sHxYMR3M_fbMOfQmdWWUaHwELOQaupiMhoaoNmWlKk50Tl-B4nluQYvXcg7cqOidUnTC2iBy-pRtcidQ2X0w8Zh3UC3S0DmQ3hyYa76hu162D4dSFJHXwTJ8_9MqxyMB-4OZl7uOj8-TS8W75N9LJDGfTQjdbTwQlTEMaL8o47QurEf5fQrs1u3Z2VAO19oF9DysNXkzcPH0OLZK7It2eNhbTv1a87n9szxTfbQvINQbOn76SEEERlITJEHRlaaa"/>
+<img alt="Attendee 3" class="w-10 h-10 rounded-full border-2 border-surface object-cover z-30" data-alt="A portrait of a calm person looking relaxed, warm ambient light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtZhqRqRQNtfOMTasIQwPnfmOoW2O7nlGBjs83cN-0U1eJY_0jKggs0xGbuY0F8NQcK7D9ht8ll9aDr2blhD6HCkUQV1CgNXPLLcctChxYpjuKHeLelfwJGdNzESW5wTQoGG1PtulnXO09twH7b84Vch3VCWgg9Jn1s_oR4ZaQXWfPiSKfEjMXxDxCUBJzDfx8WLYN1Tlq2RiydPIs7lL5e4VeZrt5vrHMXkWYcibpWBvXUUquRPQ3OQDzPgxqJPTQvuEcN3T1kqVY"/>
+<img alt="Attendee 4" class="w-10 h-10 rounded-full border-2 border-surface object-cover z-40" data-alt="A portrait of a person with a slight smile, natural minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs9RwlTCwjwHrnFKfifM8UNVR_IKgorpruwkmfpKNojyycgy1FQRjLtN9dgmfHr817N_XpQ7igVqFurZuFksTWUrb_bAORP_iun1hkl2T1SuBJYR9-oPiZwFxD4V3N0qPaOdcoaheioTZcIwTjEfgw03dVi17pr4iHJPDYHrajZBi_RhnmzLPhAybdkCkWbCbaijJB7NXbdRLdh5r10DTrKf9hygYL_aR9mI3gGfr_tKANAy7PwoAR7UJp0-0qI73yEzxZmvGzc3Wq"/>
+<div class="w-10 h-10 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center z-50 font-label-md text-label-md text-on-surface-variant">
+                                    +4
+                                </div>
+</div>
+</div>
+<button class="w-full bg-[#2AABEE] text-white py-4 rounded-full font-title-lg text-title-lg shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-3">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg>
+                            Link Up on Telegram
+                        </button>
+<p class="font-caption text-caption text-on-surface-variant text-center mt-4">Join the chat to coordinate and meet the group.</p>
+</div>
+<!-- Map Card -->
+<div class="relative h-64 rounded-2xl overflow-hidden border border-outline-variant/30 shadow-sm bg-surface-container-low group">
+<!-- Simulated Map Background -->
+<div class="absolute inset-0 bg-[#f4f4ef]" data-location="East District" style="">
+<svg class="w-full h-full opacity-10" height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="grid" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#7a9e7e" stroke-width="1"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<!-- Map Marker -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center shadow-md z-10 relative">
+<span class="material-symbols-outlined text-[20px]">self_improvement</span>
+</div>
+<div class="w-4 h-4 bg-primary/30 rounded-full -mt-2 animate-pulse"></div>
+</div>
+<!-- Glassmorphic Overlay Info -->
+<div class="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-md p-4 rounded-xl border border-white/50 shadow-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+<p class="font-label-md text-label-md text-primary mb-1">THE GLASSHOUSE STUDIO</p>
+<p class="font-caption text-caption text-on-surface-variant truncate">124 Botanic Way, East District</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

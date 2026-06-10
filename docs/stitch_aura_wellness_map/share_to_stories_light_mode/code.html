@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .backdrop-blur-glass {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .story-card-shadow {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        .glow-bg {
+            background: radial-gradient(circle at 50% 50%, rgba(175, 207, 169, 0.08) 0%, transparent 70%);
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .shimmer-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-effect::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: shimmer 3s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#93000a",
+                        "inverse-primary": "#496546",
+                        "on-secondary-fixed-variant": "#404a39",
+                        "tertiary-fixed-dim": "#cdbff0",
+                        "primary-fixed": "#cbebc3",
+                        "primary": "#afcfa9",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a3939",
+                        "inverse-surface": "#e5e2e1",
+                        "primary-fixed-dim": "#afcfa9",
+                        "surface-container-low": "#1c1b1b",
+                        "on-tertiary-fixed-variant": "#4b4169",
+                        "on-primary-container": "#152f15",
+                        "secondary": "#c0cab4",
+                        "on-secondary": "#2a3323",
+                        "on-tertiary": "#342a51",
+                        "surface-variant": "#353534",
+                        "surface-container-highest": "#353534",
+                        "on-primary": "#1c361b",
+                        "secondary-fixed-dim": "#c0cab4",
+                        "tertiary": "#cdbff0",
+                        "outline-variant": "#434840",
+                        "on-tertiary-fixed": "#1f153b",
+                        "primary-container": "#7a9975",
+                        "surface-container": "#201f1f",
+                        "tertiary-fixed": "#e8ddff",
+                        "inverse-on-surface": "#313030",
+                        "on-secondary-container": "#afb8a3",
+                        "on-secondary-fixed": "#161e10",
+                        "on-background": "#e5e2e1",
+                        "on-surface": "#e5e2e1",
+                        "on-primary-fixed": "#062108",
+                        "surface-dim": "#131313",
+                        "on-tertiary-container": "#2d234a",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#324d30",
+                        "background": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#afcfa9",
+                        "surface": "#131313",
+                        "on-surface-variant": "#c3c8be",
+                        "secondary-fixed": "#dce6cf",
+                        "surface-container-high": "#2a2a2a",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#8d9289",
+                        "secondary-container": "#404a39",
+                        "tertiary-container": "#968ab7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px",
+                        "glass-blur": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "headline-lg-mobile": ["EB Garamond"],
+                        "headline-md": ["EB Garamond"],
+                        "headline-xl": ["EB Garamond"],
+                        "label-md": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "headline-lg": ["EB Garamond"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation (Shell Replacement for focused task) -->
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-container-margin py-stack-md bg-transparent"><button class="flex items-center gap-2 group text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined font-label-md text-label-md">close</span><span class="font-label-md text-label-md">Exit Editor</span></button><div class="absolute left-1/2 -translate-x-1/2 font-display-md text-display-md font-medium text-primary tracking-tight">Aura</div><div class="flex items-center gap-stack-md"><button class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined font-label-md text-label-md">download</span><span class="font-label-md text-label-md hidden md:inline">Download</span></button></div></header>
+<main class="min-h-screen pt-24 pb-12 px-container-margin flex flex-col items-center justify-center glow-bg">
+<!-- Layout Container -->
+<div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-stack-lg items-center">
+<!-- Customization Controls (Left Column) -->
+<div class="lg:col-span-4 order-2 lg:order-1 space-y-stack-lg"><div class="space-y-stack-sm"><h1 class="font-display-lg text-display-lg text-on-surface">Share your Aura</h1><p class="font-body-md text-body-md text-on-surface-variant">Your invitation is ready. Customize the visual tone before you broadcast it to the world.</p></div><div class="space-y-stack-md"><div class="p-stack-md bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-stack-sm"><label class="font-label-md text-label-md uppercase text-primary">Card Background</label><div class="flex gap-stack-sm"><button class="w-12 h-12 rounded-lg bg-surface-container-highest border-2 border-primary ring-2 ring-primary/20 flex items-center justify-center overflow-hidden"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpUPcbLvonBfh-cSeUgtvUsfSkLQilsZf0rYqv2myR_lGcNdIfuppvkOX_Aw8ufnDUX0fqjsEroBOUJ1Lu2g0Us-6R5iFT_cSO3JfQeW2buB1Y2EBMjlgZPea3ObjehO5be9Vu78T8Xy0LYvFdbQWowvQC28xFORfQd6gyeHPMMi9ZcuHRHCRqAQWd1_YI7EfPvwANucsVxuZDrV_Kt4yOIDcyTUX5p12M1eJazpW3LeirTMkHwA94y3E2d5ItQMynPK8HkJdfIVmr"/></button><button class="w-12 h-12 rounded-lg bg-surface-container-highest border border-outline-variant/30 hover:border-primary transition-all overflow-hidden"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_ogcFVKxCeiBO6BJnIp93R3MbMZWZen1Y54DBVxpsm_gu0nr4quwsG0puSAcRS2vabGOra-7V8LhTGAytjIFboNyveRwcMt-_iifxaTFPTdx0qc_2_sVfnA7G3vgeUhIjD-M69wYWcZaCP0li3GKNlKDMcX55tre6s_FJYs4CbeFfpIz0_D3CI0X7DWrwLsGx153KDA4hY_cW-PM9VwumW9KZaWIszylyLSoLnn4mmDlMPBjsesizLL0j3gDoY2mpUpobJiZw79-3"/></button><button class="w-12 h-12 rounded-lg bg-surface-container-highest border border-outline-variant/30 hover:border-primary transition-all overflow-hidden"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9qMddTg0IKzFol9irgtgE0QAyQ8nLiSUBm_kiwusMY1Uq8TnXGR0uOobHbO6pcOJVp_6fYGuc61qtr7Diqt7Is3h4tiDrzRQ2xhUA11Iv84rGBW0y5yS2eQnVRubJGGcOUL6Ai4nzmyKo_CQq_1yXRZYsedV24tkDbswvDIX_S6qYhCs5GtACsDdNnm_eIb_I5lT8qv9OuC9va8-BE6vDD5bgiWHV32KcYqG9jJgPPVH6N2jji_-P4RRlRnaXHIm5WBGBnMheuiNC"/></button></div></div><div class="p-stack-md bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-stack-sm"><label class="font-label-md text-label-md uppercase text-primary">Layout Style</label><div class="grid grid-cols-2 gap-stack-sm"><button class="px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md">Editorial</button><button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-md text-label-md">Minimal</button></div></div></div><button class="w-full py-4 bg-inverse-surface text-inverse-on-surface rounded-full font-label-md text-label-md font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-[0.98]"><span class="material-symbols-outlined">share</span>Export to Stories</button></div>
+<!-- The Story Card (Center/Right Column) -->
+<div class="lg:col-span-8 flex justify-center order-1 lg:order-2 py-stack-lg">
+<!-- 9:16 Aspect Ratio Container -->
+<div class="relative w-full max-w-[360px] aspect-[9/16] story-card-shadow rounded-[32px] overflow-hidden group">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-700" data-alt="A high-resolution vertical portrait of a serene park at sunrise. Warm, golden sunlight creates long shadows across the grass where a figure is seen in a distant yoga pose. The overall mood is ethereal and peaceful, with a professional editorial grade and a soft-focus background that highlights the morning mist." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_gER9F6Xygh6XJ8GfmsH7yZ6Vpjq5Ty9Rx3V6IS5ug6LDLXG8tCFMfpH0rniJRY1rOee4BCYIJOurK4FTMowLmFxBTJZ7CluyTNZXLEo9azNFSF4fTnPVGle6py20uri4-p8qzuOLXFWUvPgshON6RPKtx0tgtawC4203f35aPY1rqM9S_8-kiH5dDi-jIW7pdrDWSHxJO8pBzp4UpoPkiMeAPHBqPZChlMxNA83Uct8SH-0NY6gEuUMMyjDEyVw5eRsfzPLUDmP_"/>
+<!-- Dark Overlay for Readability -->
+<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80"></div>
+</div>
+<!-- Card Content Layer -->
+<div class="relative z-10 h-full flex flex-col p-8 justify-between">
+<!-- Top: Brand -->
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-white tracking-tighter">Aura</span>
+<span class="font-label-sm text-label-sm text-white/70 uppercase tracking-widest -mt-1">Wellness Club</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-white/20 backdrop-blur-md flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-body-md" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+</div>
+<!-- Middle: Details -->
+<div class="space-y-stack-md">
+<div class="inline-flex items-center px-3 py-1 bg-primary/20 backdrop-blur-md rounded-full border border-primary/30">
+<span class="text-primary font-label-sm text-label-sm">Community Meetup</span>
+</div>
+<h2 class="font-headline-xl text-white leading-[1.1] tracking-tight">Yoga &amp; Matcha <br/><span class="text-primary italic">with @Dana</span></h2>
+<div class="flex items-center gap-stack-md text-white/90">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="font-label-md text-label-md">June 12, 8:00 AM</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="font-label-md text-label-md">Central Grove</span>
+</div>
+</div>
+</div>
+<!-- Bottom: QR & Call to Action -->
+<div class="flex items-end justify-between">
+<div class="space-y-stack-sm">
+<p class="text-white/60 font-label-sm text-label-sm max-w-[140px]">Scan to join our circle and reserve your spot.</p>
+<div class="w-24 h-24 bg-white p-2 rounded-2xl">
+<!-- QR Code Placeholder -->
+<div class="w-full h-full bg-black flex items-center justify-center rounded-lg overflow-hidden relative">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[length:4px_4px]"></div>
+<div class="z-10 w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-black text-[20px]">qr_code_2</span>
+</div>
+</div>
+</div>
+</div>
+<div class="pb-2">
+<div class="flex -space-x-3">
+<img alt="User" class="w-10 h-10 rounded-full border-2 border-black" data-alt="A close-up portrait of a diverse person with a serene expression, representing the inclusivity of the Aura wellness community. Soft, natural lighting and a minimalist background maintain the high-end digital wellness boutique aesthetic. Professional studio photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaSUwdQ2d-Yf3KvcWqthCUqTAd68-_VWelydkjjuZdDnoV1gf1XALJRXpwF1sWeT0MqH3xQ6-TGhBHDs6u3CDam3Jvjz2_S4_QN4Th_ct0Uo9Z_fM4Y5ThMDGIg-7fXh1VW9VQYBcBpE9jhM2MjCtLvCJJPHoVkszhE0bQXWa6396_qBLSGRXY0MiIM0oKUzMneAa0mvW4oychvyy22R4iHDa5QhsMWfxfkCSGg__2HguNGt6elAjGRUHO6E8zVdvkM44goOsiC44l"/>
+<img alt="User" class="w-10 h-10 rounded-full border-2 border-black" data-alt="A close-up portrait of a young professional smiling warmly, embodying the mindful connection and intentionality of the Aura brand. Soft, diffused lighting and a neutral background. High-quality editorial style photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZSfVEY6va5mP2N5EQ1tUXqXdTmkTeILRvP4K3ItIoYuH-4kZ_9t7FkRyvUb_yuY1vWnauXyK0f3pdBrqh7RsEm9ZtLBivetzXMZ-GkQoMj_TFKQeMWb8mHpaKUsk0muUfa9XMIx4Fi7Gd4MBE3R0wM-VN2u9AKphhxG2XGJjk9Nr9vxoaZORjGn66QGM-a2AAMHv3zHCGwMTBP5-T9BQbY5ccB6jGQc42H2UOcscSyok0k0bc2260NSuwsehFptZaFqHbdrfcNOCi"/>
+<div class="w-10 h-10 rounded-full border-2 border-black bg-surface-container-highest flex items-center justify-center text-white text-[10px] font-bold">
+                                        +42
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Story Card Interactions (Hover Overlays) -->
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</div>
+<!-- Device Preview Hints -->
+<div class="hidden lg:flex flex-col ml-stack-lg gap-stack-md py-stack-lg text-on-surface-variant"><button class="p-3 rounded-full hover:bg-surface-container-high transition-colors border border-outline-variant/30 text-on-surface-variant" title="Preview on iOS"><span class="material-symbols-outlined">smartphone</span></button><button class="p-3 rounded-full hover:bg-surface-container-high transition-colors border border-outline-variant/30 text-on-surface-variant" title="Copy Link"><span class="material-symbols-outlined">link</span></button><button class="p-3 rounded-full hover:bg-surface-container-high transition-colors border border-outline-variant/30 text-on-surface-variant" title="Full Screen"><span class="material-symbols-outlined">fullscreen</span></button></div>
+</div>
+</div>
+<!-- Footer Subtle Controls -->
+<footer class="mt-stack-lg max-w-6xl w-full flex flex-wrap justify-center gap-stack-md opacity-60 hover:opacity-100 transition-opacity"><div class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant/30 bg-surface-container-low"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">info</span><span class="font-label-md text-label-md uppercase tracking-tighter text-on-surface-variant">Rendered at 1080x1920 (9:16)</span></div><div class="flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant/30 bg-surface-container-low"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">palette</span><span class="font-label-md text-label-md uppercase tracking-tighter text-on-surface-variant">Matcha Green Theme</span></div></footer>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        // Simple logic for the background selector
+        const bgButtons = document.querySelectorAll('[data-bg]');
+        // (Visual-only placeholder for logic)
+        bgButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                bgButtons.forEach(b => b.classList.remove('border-primary', 'ring-2', 'ring-primary/20'));
+                btn.classList.add('border-primary', 'ring-2', 'ring-primary/20');
+            });
+        });
+
+        // Simulating Export feedback
+        const exportBtn = document.querySelector('button.bg-primary');
+        exportBtn.addEventListener('click', () => {
+            const originalText = exportBtn.innerHTML;
+            exportBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span> Processing...`;
+            exportBtn.disabled = true;
+            
+            setTimeout(() => {
+                exportBtn.innerHTML = `<span class="material-symbols-outlined">check</span> Success`;
+                setTimeout(() => {
+                    exportBtn.innerHTML = originalText;
+                    exportBtn.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body></html>

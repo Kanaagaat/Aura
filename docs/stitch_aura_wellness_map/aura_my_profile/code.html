@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1a1c1a",
+                        "primary-fixed-dim": "#aad0ad",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#7b554a",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#424842",
+                        "tertiary-fixed-dim": "#ecbf7e",
+                        "surface-bright": "#fafaf5",
+                        "on-tertiary-fixed-variant": "#5f410a",
+                        "on-error-container": "#93000a",
+                        "primary": "#44664a",
+                        "outline-variant": "#c2c8bf",
+                        "tertiary-fixed": "#ffddb0",
+                        "primary-container": "#7a9e7e",
+                        "on-tertiary-fixed": "#291800",
+                        "on-secondary-fixed-variant": "#603e34",
+                        "tertiary": "#7a5821",
+                        "surface-dim": "#dadad6",
+                        "tertiary-container": "#b68e52",
+                        "inverse-on-surface": "#f1f1ec",
+                        "on-background": "#1a1c1a",
+                        "on-tertiary-container": "#402900",
+                        "background": "#fafaf5",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#feccbe",
+                        "secondary-fixed": "#ffdbd0",
+                        "surface-container-low": "#f4f4ef",
+                        "surface-container": "#eeeeea",
+                        "inverse-surface": "#2f312e",
+                        "inverse-primary": "#aad0ad",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#2e140c",
+                        "surface-container-highest": "#e2e3de",
+                        "surface-container-high": "#e8e8e4",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ecbcae",
+                        "surface-variant": "#e2e3de",
+                        "surface": "#fafaf5",
+                        "surface-tint": "#44664a",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#2d4e33",
+                        "outline": "#727971",
+                        "on-primary-container": "#13341c",
+                        "on-secondary-container": "#7a5449",
+                        "on-primary-fixed": "#00210b",
+                        "primary-fixed": "#c6ecc8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "stack-md": "24px",
+                        "container-margin-mobile": "20px",
+                        "stack-sm": "12px",
+                        "stack-lg": "40px",
+                        "container-margin-desktop": "48px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["DM Sans"],
+                        "label-md": ["DM Sans"],
+                        "caption": ["DM Sans"],
+                        "body-lg": ["DM Sans"],
+                        "display-md": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "headline-lg": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "label-md": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "0.02em", "fontWeight": "300" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-surface-bright/80 border-r border-outline-variant backdrop-blur-md shadow-sm z-50">
+<div class="flex flex-col h-full py-stack-lg px-unit w-full">
+<div class="px-4 mb-stack-md">
+<span class="font-display-md text-display-md text-primary tracking-tight">Aura</span>
+<p class="text-on-surface-variant font-caption text-caption mt-1">Good morning, Wellness Enthusiast</p>
+</div>
+<button class="mx-4 mb-stack-md bg-primary-container text-on-tertiary rounded-full py-2 px-4 flex items-center justify-center gap-2 hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-xl">add</span>
+<span class="font-label-md text-label-md">Create Beacon</span>
+</button>
+<ul class="flex flex-col gap-1 flex-grow">
+<li>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-md text-label-md">Map</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="flare">flare</span>
+<span class="font-label-md text-label-md">Beacon</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+</li>
+<li>
+<a class="text-primary font-bold flex items-center gap-unit px-4 py-2 bg-primary-container/10 rounded-lg scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person" data-weight="fill">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</li>
+</ul>
+<ul class="flex flex-col gap-1 mt-auto pt-4 border-t border-outline-variant/30 mx-4">
+<li>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</li>
+<li>
+<a class="text-on-surface-variant flex items-center gap-unit px-4 py-2 hover:bg-primary-container/10 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- TopAppBar (Desktop) -->
+<header class="hidden md:flex fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/30 h-20 px-container-margin-desktop justify-between items-center">
+<div class="font-display-md text-display-md text-primary">Aura</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="p-2 text-primary border-b-2 border-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-weight="fill">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="w-full md:pl-64 pt-20 md:pt-28 pb-20 md:pb-12 px-container-margin-mobile md:px-container-margin-desktop max-w-[1280px] mx-auto min-h-screen">
+<!-- Profile Header -->
+<section class="flex flex-col md:flex-row items-center md:items-start gap-stack-md mb-stack-lg">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-surface-container-highest shadow-sm shrink-0">
+<img alt="Profile Avatar" class="w-full h-full object-cover" data-alt="A serene portrait of a young woman with natural makeup, looking calmly at the camera. She is set against a soft, sunlit linen background, embodying an organic, breathable, premium aesthetic. Warm neutral tones, sage greens, and soft earthy colors dominate the palette. Soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuaEVau3XFTeZWTF2QEugNs-9HUaWWdhoE1CTvv0HGHyMrm1Ti4o4Jj4-crkoC7HIF1bV4Z7gN9aWrvUtW-Du_R3Z9kVVi66YATnKkrQMakiLagDJKAHhK0SsHW2DeciG7RmnJzUp3PQHvSCV5spj_9fc73FVxI9ZyiCVN3ue71TNw9yREVQo1mpFyMBorB4Npbyv2dk6CKo13bKQZ5eXwuhOdSMU953dIRgkUsdpT9avhmMF2uz6IrW2JItEO2BaSbwvykt1K9b00"/>
+</div>
+<div class="text-center md:text-left flex-grow">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">Elena Rostova</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-4 max-w-lg">Morning yoga. Good coffee. Almaty 🌿<br/>Seeking mindful connections and quiet spaces in the city.</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-3">
+<button class="bg-primary-container text-on-tertiary font-label-md text-label-md px-6 py-2.5 rounded-full hover:bg-primary transition-colors">Edit Profile</button>
+<button class="border border-outline text-on-surface font-label-md text-label-md px-6 py-2.5 rounded-full hover:bg-surface-container-low transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span> Share
+                    </button>
+</div>
+</div>
+</section>
+<!-- Stats Row -->
+<section class="grid grid-cols-3 gap-4 md:gap-gutter mb-stack-lg">
+<div class="bg-surface-container-lowest border border-surface-container-highest rounded-xl p-4 md:p-6 text-center flex flex-col items-center justify-center">
+<span class="font-display-md text-display-md text-primary mb-1">12</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Beacons Lit</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-container-highest rounded-xl p-4 md:p-6 text-center flex flex-col items-center justify-center">
+<span class="font-display-md text-display-md text-primary mb-1">48</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">People Met</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-container-highest rounded-xl p-4 md:p-6 text-center flex flex-col items-center justify-center">
+<span class="font-display-md text-display-md text-primary mb-1">24</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Places Visited</span>
+</div>
+</section>
+<!-- Tabs -->
+<div class="border-b border-surface-container-highest mb-stack-md flex gap-stack-md">
+<button class="pb-3 border-b-2 border-primary text-primary font-label-md text-label-md uppercase tracking-wider relative">
+                My Beacons
+                <span class="absolute -bottom-[2px] left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full hidden"></span>
+</button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-label-md text-label-md uppercase tracking-wider transition-colors">
+                Saved Places
+            </button>
+</div>
+<!-- Content Area (My Beacons) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Beacon Card 1 (Upcoming) -->
+<article class="bg-surface-container-lowest border border-surface-container-highest rounded-xl overflow-hidden hover:shadow-[0px_2px_16px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+<div class="h-32 bg-surface-container-low relative p-4 flex flex-col justify-between overflow-hidden">
+<img alt="Yoga Studio" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply" data-alt="A minimalist yoga studio with light wood floors, sheer white curtains letting in soft morning sunlight. The aesthetic is serene, calm, and grounded. Warm white, sage, and pale beige tones dominate. A high-end lifestyle editorial feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_jTO76zZLl-HuD5gieGkhncc7Rm3TXDLcqtLSe49sPQ5VsJPOu_CB62wAc31vjFxISIh9jgOsMEZ6wNsGSUwBgJnxkzu5ca_suifQ_g5a9B8WFa97gPI4HHd0wbvM7IdTRAkMaENag0A3p8FWgDcxv74qHT-IG3njYRYgdO-5v-KrIKyOYMmMyjzYNl5cocjgAwcA4T8HBD5Q1OjKpJXVpHKMZOiuV-b3cyV9n3qkRs5e-xP-PSpeFzMEA-IPZ3As85Wdcyz903Ty"/>
+<div class="relative z-10 flex justify-between items-start w-full">
+<span class="bg-primary-container/20 text-on-primary-container backdrop-blur-sm font-label-md text-label-md px-2 py-1 rounded">Upcoming</span>
+<button class="text-on-surface hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="relative z-10 font-title-lg text-title-lg text-on-surface mt-auto">Morning Vinyasa Flow</div>
+</div>
+<div class="p-4 flex flex-col gap-2 flex-grow">
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Tomorrow, 7:00 AM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Zen Space, Almaty</span>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant border border-surface-container-lowest"></div>
+<div class="w-6 h-6 rounded-full bg-surface-container border border-surface-container-lowest"></div>
+</div>
+<span class="text-caption font-caption text-on-surface-variant">+3 attending</span>
+</div>
+</div>
+</article>
+<!-- Beacon Card 2 (Past) -->
+<article class="bg-surface-container-lowest border border-surface-container-highest rounded-xl overflow-hidden hover:shadow-[0px_2px_16px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col opacity-80">
+<div class="h-32 bg-surface-container-low relative p-4 flex flex-col justify-between overflow-hidden">
+<img alt="Coffee Shop" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-multiply grayscale" data-alt="A cozy corner in a minimalist cafe with two ceramic coffee cups on a light wooden table. Sunlight streams in through a large window. The mood is calm and reflective. The aesthetic is high-end, organic softness with muted natural tones and a focus on subtle textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_gXCY9XFmEgSdNUuTmS6ft1h3ryvqC8aoC8P4bNRA-LYE8DrTRenZbdHqO7HJ6iVbHW0JFxqtLZFlXHX2bjNXT7CSVXZHflYS0Zx3rsZXWyFHKEh9eEtyLQNWArbTfv6PjbtKK7J5N0x7rMw5XUWKcac7gBTgeaRSY4LJ-Jiw87uy_anLQKBHl9AU7b9xgG1AM66GSajneGCRZ17Ky4x3R3gFTCczj3i_dna3zuGXoHorTRfmsIkAszpi47sCSujt2TdDxBXiTBzx"/>
+<div class="relative z-10 flex justify-between items-start w-full">
+<span class="bg-surface-variant text-on-surface-variant backdrop-blur-sm font-label-md text-label-md px-2 py-1 rounded">Past</span>
+</div>
+<div class="relative z-10 font-title-lg text-title-lg text-on-surface mt-auto">Quiet Reading Hour</div>
+</div>
+<div class="p-4 flex flex-col gap-2 flex-grow">
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Oct 12, 10:00 AM</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Botanica Cafe</span>
+</div>
+</div>
+</article>
+</section>
+</main>
+</body></html>

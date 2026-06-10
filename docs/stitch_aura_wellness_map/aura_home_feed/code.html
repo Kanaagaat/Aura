@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura | Home Feed</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#424842",
+                        "inverse-on-surface": "#f1f1ec",
+                        "surface-container-highest": "#e2e3de",
+                        "on-primary-fixed-variant": "#2d4e33",
+                        "inverse-primary": "#aad0ad",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#b68e52",
+                        "secondary": "#7b554a",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#402900",
+                        "on-secondary-container": "#7a5449",
+                        "surface-tint": "#44664a",
+                        "outline": "#727971",
+                        "on-tertiary-fixed": "#291800",
+                        "surface-bright": "#fafaf5",
+                        "secondary-fixed-dim": "#ecbcae",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f312e",
+                        "tertiary-fixed": "#ffddb0",
+                        "primary-container": "#7a9e7e",
+                        "surface-container": "#eeeeea",
+                        "on-primary-container": "#13341c",
+                        "primary": "#44664a",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e8e8e4",
+                        "on-secondary-fixed-variant": "#603e34",
+                        "on-tertiary-fixed-variant": "#5f410a",
+                        "on-background": "#1a1c1a",
+                        "on-secondary-fixed": "#2e140c",
+                        "tertiary": "#7a5821",
+                        "primary-fixed": "#c6ecc8",
+                        "secondary-fixed": "#ffdbd0",
+                        "secondary-container": "#feccbe",
+                        "background": "#fafaf5",
+                        "surface-container-low": "#f4f4ef",
+                        "surface-dim": "#dadad6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e3de",
+                        "surface": "#fafaf5",
+                        "on-surface": "#1a1c1a",
+                        "on-primary-fixed": "#00210b",
+                        "primary-fixed-dim": "#aad0ad",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ecbf7e",
+                        "outline-variant": "#c2c8bf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-sm": "12px",
+                        "unit": "8px",
+                        "gutter": "16px",
+                        "container-margin-mobile": "20px",
+                        "container-margin-desktop": "48px",
+                        "stack-lg": "40px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["DM Sans"],
+                        "label-md": ["DM Sans"],
+                        "headline-lg": ["Playfair Display"],
+                        "caption": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "display-md": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "title-lg": ["DM Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.02em", "fontWeight": "300"}],
+                        "display-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "title-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #fafaf5;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tonal-layer {
+            box-shadow: 0px 2px 16px rgba(0,0,0,0.04);
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Desktop Sidebar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 py-8 border-r border-surface-container-highest bg-surface/80 backdrop-blur-md z-50">
+<div class="px-6 mb-10">
+<h1 class="font-display-md text-display-md text-primary">Aura</h1>
+<p class="font-body-md text-label-md text-on-surface-variant opacity-70">Urban Wellness</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active: Home -->
+<a class="flex items-center gap-4 text-primary font-bold border-r-4 border-primary px-6 py-3 bg-primary/10 transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-body-md">Home</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-body-md">Map</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-body-md">Beacon</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-body-md">Notifications</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md">Profile</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<div class="max-w-[680px] mx-auto px-container-margin-mobile md:px-0 py-12">
+<!-- Greeting Header -->
+<header class="mb-stack-lg">
+<h2 class="font-headline-lg text-[22px] text-on-surface mb-2">Good morning, Kanagat 🌿</h2>
+<div class="w-full h-[1px] bg-outline-variant/30"></div>
+</header>
+<!-- Section 1: Happening Now -->
+<section class="mb-stack-lg">
+<div class="flex justify-between items-end mb-gutter">
+<h3 class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">Happening now</h3>
+<button class="text-primary font-label-md text-label-md hover:opacity-70">View all</button>
+</div>
+<div class="flex gap-gutter overflow-x-auto no-scrollbar -mx-container-margin-mobile px-container-margin-mobile md:mx-0 md:px-0">
+<!-- Beacon Card 1 -->
+<div class="flex-shrink-0 w-[200px] h-[240px] rounded-xl overflow-hidden bg-surface-container-lowest border border-outline-variant/30 tonal-layer group">
+<div class="relative w-full h-[140px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A serene rooftop yoga studio at sunrise with soft golden light streaming through large windows. The interior is minimalist with wooden floors and a few scattered yoga mats, creating a peaceful and intentional wellness atmosphere in a high-end urban setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyxHPe4R9KR6gWcVdVoB79bP-4UFTr7LhgyLyGwJDjBpahxJlm72IhJHA-PeAN1Or_Avn45F-LaUA0szgP0OW5oUFcR-1pxkM_FlAOg22g8U4hD_XqNJM6cFPXo2sW3S1V0hIXhObkzQvK3FfWP1s8a8JCx_t46o3qMP9z5SpDhmzpk0C-PGw-DDHV5HXwGZPL0Fl2UjynKiyBD84xOlHYvnKlE_aWBc2JW-Q89cGrruyBnXTdQWmglMWpE0KVYYBaFszvJObugBi_"/>
+<div class="absolute top-3 left-3 w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a professional wellness instructor with a calm expression. Soft, natural lighting highlights a clean-cut aesthetic, reflecting a lifestyle of mindfulness and serenity consistent with a premium editorial wellness brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQGWCCtqNmcw8G0Cqp6VlJh4NBMdOYHKQOunNiMthztsUoZFD4iMbgK0NpYpXILj07ATasUWj7V7S5xMYlCFezDiKo4xz3KeEDeWG12NZXr4osqR9TyOnpE0iYpTatt3Z7kY_jG8lykqOuYxHBAjtdIUZhDXaXn_7OlFkXGLRG2-W1TO8MQOKGHXusyoh1qBfBQMfjG94wnInnw6WZXrTwrwb1C0sjURfkT-04_JOJ2wuXDnHu8qfOTr4j98Dl0R9XKhtFA4FNlBnG"/>
+</div>
+</div>
+<div class="p-4 flex flex-col h-[100px] justify-between">
+<h4 class="font-headline-lg text-[16px] truncate">Lumiere Rooftop</h4>
+<button class="w-full py-1.5 border border-primary text-primary font-label-md text-label-md rounded-full hover:bg-primary hover:text-white transition-colors">Join</button>
+</div>
+</div>
+<!-- Beacon Card 2 -->
+<div class="flex-shrink-0 w-[200px] h-[240px] rounded-xl overflow-hidden bg-surface-container-lowest border border-outline-variant/30 tonal-layer group">
+<div class="relative w-full h-[140px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sophisticated minimalist cafe interior with marble counters and soft wooden accents. The space is filled with bright natural light and lush indoor plants, creating an organic and breathable atmosphere perfect for a morning coffee and wellness ritual." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI5ECozGrWwUB5aWz5BJvdzcn8TRJJOgRIN8DhFfJ2PmI8MoKL8DRunh7hMJ8sCAAuJIfwUeA1cTB-EuftyCAl4A-gHxgcAbrN9VaNoxANobHrG8wGQOOmWIY19PKXlo5lHNMJCLiH--X8vvde2dO71yxnGK6X_J0dDYDAifVVWhCjp7D1PqoSipq5FRrxTNXcnXUBtIfwil_8TPfA1LG5x2xZkJpIJ19UEBN2uJbUM56X6-pUpTZ1Ak4QpfHfD2kGsBsGb0wXT-RX"/>
+<div class="absolute top-3 left-3 w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young creative professional with a friendly and serene look. The style is understated and premium, fitting into a high-end minimalist lifestyle community centered around intentional living and community connection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCudiiSx8sWYNqWzEZkRpWN3Wu6sPD-h80Uu8iBqQ6OhHvikObd3qeLJOcw5KHpJcuVkOaY7HCAVQmKAq5rAyrUwUzQQGoB3N4UVBHvUVCHgPWcyl-uvZeYkHy5GlSF8fW_fRlstJrNpYloA80h-fQH5ue9daPX0OmSZhQEBF4H7OV5GrjT7imNj1iZ9trZObVj77W9xpuxvw-x5hoMwN14cmgar7pFCFsY5icD1xUjon6GlEFqcngBmPvHC_tebM5VhYhsbLJA8lHS"/>
+</div>
+</div>
+<div class="p-4 flex flex-col h-[100px] justify-between">
+<h4 class="font-headline-lg text-[16px] truncate">Botanical Brew</h4>
+<button class="w-full py-1.5 border border-primary text-primary font-label-md text-label-md rounded-full hover:bg-primary hover:text-white transition-colors">Join</button>
+</div>
+</div>
+<!-- Beacon Card 3 -->
+<div class="flex-shrink-0 w-[200px] h-[240px] rounded-xl overflow-hidden bg-surface-container-lowest border border-outline-variant/30 tonal-layer group">
+<div class="relative w-full h-[140px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A lush urban conservatory with tall tropical plants and elegant glass structures. Sunlight filters through the green leaves, casting soft shadows on clean white pathways, evoking a feeling of organic softness and high-end botanical luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzEXaaI8zxNjnd1BxQwsTwKA4JHDpO15oNiGVFXLQjV-itG5H1oNtG-WiI-iPSkx9OLWEqDbsE4c_z-oeeKaoA0WDwOB2MQMyVTagUG5DTP5eOXubhXtE_cnfLw1s02feWH1Xi8yEv7G9-5BgLQ_QQ5aOFWCJz1lNzlNQRIte6IdbRdV0lYEESY8soMIWG1CkajXlYquVF1hSr8PiaK1XVYI1OxawZGNj-_YgbXVgkM-Qm5kIuYVPiE8TYQg36gKeRHjM0Lgcv2xnp"/>
+<div class="absolute top-3 left-3 w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A close-up photograph of a woman with a natural, serene expression. She represents a wellness-focused lifestyle, with soft lighting and a neutral color palette that emphasizes purity, calm, and an editorial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5JXPblhnmdOUZJK5284e_PhHB0JnIUVwJGhcipa-YsCVYurnVc5ryEjiGj23VVjMs1RM-7oyokfx0RkzBTLIiga-xEgzgBp3IxTzaME1neP2IjEnWw70CL3lpJoEFOQI0Klbcmz9-7Xk6EoUpdYE7FcmFaEjENJdjwXYk5t-Tca_HwLgTG1GrYt0RSXjJXT5TDr0k-jVpQ9Si0XNx9Z3054P4Qn0N1mOGAtLqt31GM7fVlJh5UBmC2La-t9yo-HZ2sNYAQJu-BOX9"/>
+</div>
+</div>
+<div class="p-4 flex flex-col h-[100px] justify-between">
+<h4 class="font-headline-lg text-[16px] truncate">Verdant Walk</h4>
+<button class="w-full py-1.5 border border-primary text-primary font-label-md text-label-md rounded-full hover:bg-primary hover:text-white transition-colors">Join</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Curated for Today -->
+<section class="mb-stack-lg">
+<h3 class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant mb-gutter">Curated for today</h3>
+<div class="space-y-gutter">
+<!-- Location Card 1 -->
+<div class="flex items-center gap-gutter p-2 rounded-2xl hover:bg-white transition-all group cursor-pointer">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A minimalist architectural detail of a modern gallery with off-white walls and subtle grey shadows. The lighting is soft and directional, creating a sense of sophisticated depth and quiet luxury suitable for a wellness-focused editorial app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGnu4aAwAuJ_tk7R2F3IXKjA4e9k9XFx_giXG1E0xfxTghtDPDONKySIft6dscAxPvhJ4kZxWvg2XKbFKrvlKzhb1XRtgfA4aszre1mNklYN2znVbNaMsQDWUq55cufL7QuQOGQ5DLtwphgCnaZ22lf3hHHV0weaambrZWA4rZTmt5f0CDCyMDFghhy98qFiHUdu0zsodlm3gurv2FcIB6Up4-E79In_M4bOGyXJJUfLw8Oe20WAKKQzrjWTpJjNXvLwSw0xZCWVxc"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-lg text-[18px] text-on-surface mb-0.5">The Quiet Archive</h4>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">Meditation</span>
+<span class="font-label-md text-[10px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">Quiet zone</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant truncate italic opacity-70">“A sanctuary for focus and deep thought.”</p>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<!-- Location Card 2 -->
+<div class="flex items-center gap-gutter p-2 rounded-2xl hover:bg-white transition-all group cursor-pointer">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A premium spa reception area with stone textures and warm ambient lighting. The atmosphere is grounded and serene, utilizing a palette of earthy tones and high-end materials to convey a feeling of deep relaxation and intentional self-care." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS_DG0kN_oKs2k8CzcbeB_BazqCSl4FNWQ9ahrfRYnqcgJs-Z5jGn_P1A0s7ifKNVmxl1SNhtyHs7PjvcepYIS3AUY_cmCLqACd5-jjvg-IVj5dLg6lDNoKz6bygu1iZBGW5hKFncOB1s2nN-LuH10JAQNvwJ21Wv2gYvYq2oDVEGPg_oVkZAKgu0tMmM0ZpfgDyR-h53_Xb2zwPiI0-ckAEqENpTkpzYZWOrPr4MAtaAM5LcK1qtP7Pm0RMcYkxp4_1-TGPIOpD0B"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-lg text-[18px] text-on-surface mb-0.5">Solstice Wellness</h4>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-[10px] text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">Spa</span>
+<span class="font-label-md text-[10px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">Aesthetic</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant truncate italic opacity-70">“Refining the art of restoration.”</p>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<!-- Location Card 3 -->
+<div class="flex items-center gap-gutter p-2 rounded-2xl hover:bg-white transition-all group cursor-pointer">
+<div class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="An open-air mountain retreat with views of a misty valley. The design is integrated into nature, with simple wooden furniture and soft textiles, evoking the feeling of morning light through linen curtains and a connection to the organic world." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZrZ8TmZoxiOSkEMYssUhn-YK46gzo7ZPxF7QqUzyXU2VbqlMdI--EOmI_r062bxF6GiE2-TntPlpnM_1UyfA3oxzDhcvbGL-n0KpcJyh4yyub6YLUsqXEk6W9R4mXmwzrdskF6pd_vKMTEZ0--g2lz8PW4aamsBzzFJoHuMlMaSru0UK3AdAXp3nEuTxPOGyfj36TWz52HczA9IQc99ECL0XSRXbBW-RcJYaWXrywiewwfzKSEx_ckAs8kTs-6mAPjxFIWaM86hm4"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-lg text-[18px] text-on-surface mb-0.5">Summit Sanctuary</h4>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">Nature</span>
+<span class="font-label-md text-[10px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">Mindful</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant truncate italic opacity-70">“High altitude mindfulness.”</p>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Section 3: Your Next Beacon -->
+<section class="mb-stack-lg">
+<div class="bg-[#FDF6EC] rounded-[2rem] p-8 relative overflow-hidden border border-tertiary-fixed/30">
+<!-- Soft Background Animation / Texture could go here -->
+<div class="relative z-10 max-w-[280px]">
+<span class="font-label-md text-label-md text-tertiary uppercase tracking-widest block mb-4">Recommended for you</span>
+<h3 class="font-display-md text-display-md text-on-surface mb-4">Your next beacon awaits at the Grove.</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">Discover a curated session designed around your morning ritual and movement patterns.</p>
+<button class="bg-primary text-white px-8 py-3 rounded-full font-label-md text-label-md hover:shadow-lg transition-shadow scale-100 active:scale-95">
+                            Book Session
+                        </button>
+</div>
+<!-- Botanical Illustration Placeholder (using an icon or simple styled element) -->
+<div class="absolute right-[-40px] bottom-[-40px] opacity-10 select-none pointer-events-none">
+<span class="material-symbols-outlined text-[320px] text-tertiary">potted_plant</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-lg border-t border-surface-container-highest flex justify-around items-center h-20 px-4 z-50">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<div class="w-1 h-1 rounded-full bg-primary"></div>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant/60" href="#">
+<span class="material-symbols-outlined">map</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant/60" href="#">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white -mt-8 shadow-lg">
+<span class="material-symbols-outlined">sensors</span>
+</div>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant/60" href="#">
+<span class="material-symbols-outlined">notifications</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant/60" href="#">
+<span class="material-symbols-outlined">person</span>
+</a>
+</nav>
+<!-- FAB for Desktop Context -->
+<button class="hidden md:flex fixed right-10 bottom-10 w-16 h-16 bg-primary text-white rounded-full items-center justify-center shadow-xl hover:scale-105 active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<script>
+        // Micro-interactions for horizontal scroll
+        const scrollContainer = document.querySelector('.overflow-x-auto');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('wheel', (evt) => {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            });
+        }
+
+        // Tonal Layer interaction
+        document.querySelectorAll('.tonal-layer').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = '0px 4px 24px rgba(0,0,0,0.08)';
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'all 0.4s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = '0px 2px 16px rgba(0,0,0,0.04)';
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

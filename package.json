@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "ollama-ai-provider-v2": "^3.5.1"
+  }
+}

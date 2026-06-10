@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura | Wellness Map</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#424842",
+                        "inverse-on-surface": "#f1f1ec",
+                        "surface-container-highest": "#e2e3de",
+                        "on-primary-fixed-variant": "#2d4e33",
+                        "inverse-primary": "#aad0ad",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#b68e52",
+                        "secondary": "#7b554a",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#402900",
+                        "on-secondary-container": "#7a5449",
+                        "surface-tint": "#44664a",
+                        "outline": "#727971",
+                        "on-tertiary-fixed": "#291800",
+                        "surface-bright": "#fafaf5",
+                        "secondary-fixed-dim": "#ecbcae",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f312e",
+                        "tertiary-fixed": "#ffddb0",
+                        "primary-container": "#7a9e7e",
+                        "surface-container": "#eeeeea",
+                        "on-primary-container": "#13341c",
+                        "primary": "#44664a",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e8e8e4",
+                        "on-secondary-fixed-variant": "#603e34",
+                        "on-tertiary-fixed-variant": "#5f410a",
+                        "on-background": "#1a1c1a",
+                        "on-secondary-fixed": "#2e140c",
+                        "tertiary": "#7a5821",
+                        "primary-fixed": "#c6ecc8",
+                        "secondary-fixed": "#ffdbd0",
+                        "secondary-container": "#feccbe",
+                        "background": "#fafaf5",
+                        "surface-container-low": "#f4f4ef",
+                        "surface-dim": "#dadad6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e3de",
+                        "surface": "#fafaf5",
+                        "on-surface": "#1a1c1a",
+                        "on-primary-fixed": "#00210b",
+                        "primary-fixed-dim": "#aad0ad",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ecbf7e",
+                        "outline-variant": "#c2c8bf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "stack-sm": "12px",
+                        "unit": "8px",
+                        "gutter": "16px",
+                        "container-margin-mobile": "20px",
+                        "container-margin-desktop": "48px",
+                        "stack-lg": "40px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["DM Sans"],
+                        "label-md": ["DM Sans"],
+                        "headline-lg": ["Playfair Display"],
+                        "caption": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "display-md": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "title-lg": ["DM Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.02em", "fontWeight": "300"}],
+                        "display-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "title-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FAFAF7;
+            color: #1a1c1a;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .micro-shadow {
+            box-shadow: 0px 2px 16px rgba(0,0,0,0.06);
+        }
+        .custom-map-bg {
+            background-color: #F5F3EF;
+            background-image: 
+                linear-gradient(#E8E4DC 1px, transparent 1px),
+                linear-gradient(90deg, #E8E4DC 1px, transparent 1px);
+            background-size: 100px 100px;
+        }
+        /* Custom scrollbar for wellness aesthetic */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e3de; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+<!-- Left Side Navigation (Shared Component Logic) -->
+<nav class="hidden md:flex flex-col h-full py-8 bg-surface/80 backdrop-blur-md dark:bg-surface-dim/80 border-r border-surface-container-highest dark:border-outline-variant w-64 fixed left-0 top-0 z-50">
+<div class="px-8 mb-12">
+<h1 class="font-display-md text-display-md text-primary dark:text-inverse-primary tracking-tight">Aura</h1>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">Urban Wellness</p>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-body-md text-body-md">Home</span>
+</a>
+<!-- ACTIVE TAB: Map -->
+<a class="flex items-center gap-4 text-primary font-bold border-r-4 border-primary px-6 py-3 bg-primary/10 transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-body-md text-body-md">Map</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-body-md text-body-md">Beacon</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-body-md text-body-md">Notifications</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-container-high transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Main Map Canvas -->
+<main class="relative flex-grow h-full ml-0 md:ml-64 overflow-hidden flex">
+<!-- Center: Map Interface -->
+<div class="relative flex-grow h-full bg-[#F5F3EF]">
+<!-- Decorative Map Elements (Simulated) -->
+<div class="absolute inset-0 custom-map-bg opacity-40"></div>
+<!-- Parks Representation -->
+<div class="absolute top-1/4 left-1/3 w-64 h-80 bg-[#D4E4C8]/40 rounded-[60px] blur-3xl rotate-12"></div>
+<div class="absolute bottom-10 right-1/4 w-96 h-48 bg-[#D4E4C8]/30 rounded-full blur-2xl"></div>
+<!-- Top Floating Controls -->
+<div class="absolute top-8 left-1/2 -translate-x-1/2 w-full max-w-2xl px-6 z-40 flex flex-col gap-4">
+<!-- Search Pill -->
+<div class="bg-white/90 backdrop-blur-xl rounded-full micro-shadow px-6 py-3 flex items-center gap-4 border border-[#EEECE8]">
+<span class="material-symbols-outlined text-primary">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full font-body-md text-body-md text-on-surface outline-none" placeholder="Find sanctuary..." type="text"/>
+<span class="material-symbols-outlined text-on-surface-variant/40">tune</span>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md micro-shadow">All</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white/80 text-on-surface-variant border border-[#EEECE8] font-label-md text-label-md hover:bg-white transition-colors">Yoga</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white/80 text-on-surface-variant border border-[#EEECE8] font-label-md text-label-md hover:bg-white transition-colors">Coffee</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white/80 text-on-surface-variant border border-[#EEECE8] font-label-md text-label-md hover:bg-white transition-colors">Meditate</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white/80 text-on-surface-variant border border-[#EEECE8] font-label-md text-label-md hover:bg-white transition-colors">Nature</button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-white/80 text-on-surface-variant border border-[#EEECE8] font-label-md text-label-md hover:bg-white transition-colors">Reading</button>
+</div>
+</div>
+<!-- Custom Pins -->
+<!-- Selected Pin -->
+<div class="absolute top-[45%] left-[40%] z-30 group cursor-pointer">
+<div class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full micro-shadow animate-bounce">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">spa</span>
+<span class="font-label-md text-label-md">🧘 Flow Studio</span>
+</div>
+<div class="w-0.5 h-4 bg-primary mx-auto"></div>
+</div>
+<div class="absolute top-[30%] left-[60%] z-20 group cursor-pointer opacity-90 hover:opacity-100 transition-opacity">
+<div class="flex items-center gap-2 bg-white text-on-surface px-4 py-2 rounded-full micro-shadow border border-[#EEECE8]">
+<span class="material-symbols-outlined text-sm">coffee</span>
+<span class="font-label-md text-label-md">☕ Mono</span>
+</div>
+<div class="w-0.5 h-3 bg-white/60 mx-auto"></div>
+</div>
+<div class="absolute bottom-[30%] left-[45%] z-20 group cursor-pointer opacity-90 hover:opacity-100 transition-opacity">
+<div class="flex items-center gap-2 bg-white text-on-surface px-4 py-2 rounded-full micro-shadow border border-[#EEECE8]">
+<span class="material-symbols-outlined text-sm">park</span>
+<span class="font-label-md text-label-md">🌲 Willow Park</span>
+</div>
+<div class="w-0.5 h-3 bg-white/60 mx-auto"></div>
+</div>
+<!-- Right Detail Panel -->
+<aside class="absolute top-0 right-0 h-full w-80 md:w-96 bg-white/95 backdrop-blur-md border-l border-[#EEECE8] z-40 p-8 overflow-y-auto">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">3 beacons near you</h2>
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</div>
+<div class="flex flex-col gap-6">
+<!-- Beacon Card 1 (Active) -->
+<div class="group relative overflow-hidden rounded-2xl border border-primary/20 bg-primary/5 p-4 transition-all hover:micro-shadow cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="inline-block px-2 py-1 rounded bg-primary-container/20 text-primary font-label-md text-[10px] mb-2 uppercase tracking-widest">Selected Sanctuary</span>
+<h3 class="font-title-lg text-title-lg text-on-surface">Flow Studio</h3>
+<p class="font-caption text-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span> 0.2 miles away
+                                </p>
+</div>
+<div class="w-16 h-16 rounded-xl overflow-hidden">
+<img alt="Yoga studio" class="w-full h-full object-cover" data-alt="A high-end minimalist yoga studio with soft sunlight streaming through floor-to-ceiling windows. The floor is made of light white oak, and several sage green yoga mats are laid out neatly. The atmosphere is ethereal and serene, emphasizing a clean, airy aesthetic with neutral tones and organic textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACaP5m13C1RdmfpyoBbY4GQQYQyeqPLju_H3nbQfsozA1SSvksV589EuZ2iLhzsAA2RyhAze3Gq9lr954C8icBSW7LBBM9XsxeSdNhFhhHaJhfmIEwDY-g4m92Hg0-1aq20dUdJT5ybWMe9Ff24dqk32x7iuFwwCcAlrtwU6-ZvRmTB8E1MBdQgVK_dp2xReJtsGTPw4kJN5YjXwEuEOrfZQgaXDPPeiMqvHujEXoG5F7T1FgidSxBpiia4MMaMhyvZM8ZcIIvQoez"/>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-grow py-2 bg-primary text-white rounded-full font-label-md text-label-md hover:bg-on-primary-fixed-variant transition-colors">View Schedule</button>
+<button class="px-3 py-2 bg-white border border-[#EEECE8] text-primary rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">directions</span>
+</button>
+</div>
+</div>
+<!-- Beacon Card 2 -->
+<div class="group relative overflow-hidden rounded-2xl border border-[#EEECE8] bg-white p-4 transition-all hover:micro-shadow cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Mono Coffee</h3>
+<p class="font-caption text-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span> 0.5 miles away
+                                </p>
+</div>
+<div class="w-16 h-16 rounded-xl overflow-hidden grayscale group-hover:grayscale-0 transition-all">
+<img alt="Minimalist cafe" class="w-full h-full object-cover" data-alt="A sophisticated minimalist coffee bar with a warm neutral color palette. The counter is made of smooth honed marble, featuring a high-end matte black espresso machine. Soft lighting glows from sculptural ceramic pendants above. The vibe is quiet, editorial, and deeply intentional, reflecting an urban wellness aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZcR-brSm82LrdKLp_zS-O4yYZHpy-XFGNSgQKV09QMpLOwiKZOIniX6NLfIDp4lJ1xq40qlgBIaXDIqiA_W7K6-gArSrXpAwX6H6w2txvz9YgIkDef9DExGmV7eUWBpBbSDiXJXzLqsXsxoGkDlnUI4grqjiTZ0yWHjMI6nj7AO0p_dAzz2bdQe9GuEH88t3QsI8Hgqqh156VuJdOiJqegtOSo2md1w6xpfM2KBcd9va_O8cPtuDsfWz88KgIM9FuuzpXkc96QTOc"/>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2">Quiet zone established. Perfect for morning reflection and artisanal matcha.</p>
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-3 py-1 rounded-full">Quiet Sanctuary</span>
+<span class="material-symbols-outlined text-on-surface-variant/40">arrow_forward</span>
+</div>
+</div>
+<!-- Beacon Card 3 -->
+<div class="group relative overflow-hidden rounded-2xl border border-[#EEECE8] bg-white p-4 transition-all hover:micro-shadow cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Willow Park</h3>
+<p class="font-caption text-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span> 0.8 miles away
+                                </p>
+</div>
+<div class="w-16 h-16 rounded-xl overflow-hidden grayscale group-hover:grayscale-0 transition-all">
+<img alt="Urban park" class="w-full h-full object-cover" data-alt="A serene urban meadow during golden hour with tall golden grass and a single sculptural willow tree. The lighting is soft and warm, casting long shadows. The style is reminiscent of a high-end travel magazine, emphasizing natural beauty and calm in an urban setting with a palette of sage, cream, and soft amber." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ6J6BJYi-NmUog1WDHNUSrwjgKnHGgq9yGh8W5Fw5tRxCcwUFryg1liuvpThUYAPboIx7tH2kVJwX3wLoIX0LfRsI83t_CceslPpZGufH1kHmJy7WyY1KGpP-wk1_b5oCFSg1dEB85DRpJqHXfptN8GCG1Ug1_tW6IrTkLb_i_QBwbpaT-SQi83DDO3_JlUMJ7bU7Id13agyajC3fOqqVnZ8_PNMexHan-DWo_5bac5KllMEEuyEdUJyMzMU5mmRk5nof1_3o9lZn"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="user" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLRJbsoGaNZfUyGWA1kxKHwVuMWhL4jEW0xfIennCx_dpAlTohhWVZt4MDju6Mtco4OIFPJaozN4fm4lVtQDaYT5ix7Rlte8M57plEDwbPN9MC4BX-3E3lFmpZHk1eU7OVPmCSpPf19uWytm4C6qzTymVHtYk-E8F8LSFuBz2H4FcibiewDCjMFU_DAg-DmeOnHF6iAGlN70828ml33yiMIl3d65MgLzW-HTRLjx-lKFGhliIqynaidkXxaFyrtrbJxITHo9FMap63"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="user" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB54eQWOf2GXEHm72n0kQVYo34RT_5rpet6KgJO_kVUdn55qaw1w90VeBrDhK7cS7rq4uPQPJCvRIHzfrmikrHVipcPpkvmBE5DgQvgXHZJz9esW9o8YYSa37WkZCqUUlj2sbbqONihDOhaIhKewmwcBfxPiu5fVE51n1U_-Sm9a9_FPssb9fEovktMV-4sXEjBQO9Q4QXyBfKcPw1dQfjWtwbAk678XBOCF0piS7G-25G3X7GBb3GPY0DqXXozUujrmAajZoUS1LE"/>
+</div>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant">12 others breathing here</span>
+</div>
+</div>
+</div>
+<!-- Subtle Map Branding -->
+<div class="mt-12 pt-8 border-t border-[#EEECE8] opacity-40">
+<p class="font-label-md text-[10px] tracking-widest uppercase">Cartography by Aura Labs</p>
+</div>
+</aside>
+</div>
+</main>
+<!-- Mobile Navigation (Bottom Bar) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-[#EEECE8] z-50 flex justify-around py-4">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-md text-[10px] font-bold">Map</span>
+<div class="w-1 h-1 rounded-full bg-primary mt-0.5"></div>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-md text-[10px]">Beacon</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-[10px]">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for map pins
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateY(-4px)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input');
+        const searchContainer = searchInput.parentElement;
+        
+        searchInput.addEventListener('focus', () => {
+            searchContainer.classList.add('ring-2', 'ring-primary/20', 'border-primary/40');
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchContainer.classList.remove('ring-2', 'ring-primary/20', 'border-primary/40');
+        });
+    </script>
+</body></html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura - Public Profile</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#1a1c1a",
+                    "primary-fixed-dim": "#aad0ad",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#7b554a",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#424842",
+                    "tertiary-fixed-dim": "#ecbf7e",
+                    "surface-bright": "#fafaf5",
+                    "on-tertiary-fixed-variant": "#5f410a",
+                    "on-error-container": "#93000a",
+                    "primary": "#44664a",
+                    "outline-variant": "#c2c8bf",
+                    "tertiary-fixed": "#ffddb0",
+                    "primary-container": "#7a9e7e",
+                    "on-tertiary-fixed": "#291800",
+                    "on-secondary-fixed-variant": "#603e34",
+                    "tertiary": "#7a5821",
+                    "surface-dim": "#dadad6",
+                    "tertiary-container": "#b68e52",
+                    "inverse-on-surface": "#f1f1ec",
+                    "on-background": "#1a1c1a",
+                    "on-tertiary-container": "#402900",
+                    "background": "#fafaf5",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#feccbe",
+                    "secondary-fixed": "#ffdbd0",
+                    "surface-container-low": "#f4f4ef",
+                    "surface-container": "#eeeeea",
+                    "inverse-surface": "#2f312e",
+                    "inverse-primary": "#aad0ad",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#2e140c",
+                    "surface-container-highest": "#e2e3de",
+                    "surface-container-high": "#e8e8e4",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#ecbcae",
+                    "surface-variant": "#e2e3de",
+                    "surface": "#fafaf5",
+                    "surface-tint": "#44664a",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#2d4e33",
+                    "outline": "#727971",
+                    "on-primary-container": "#13341c",
+                    "on-secondary-container": "#7a5449",
+                    "on-primary-fixed": "#00210b",
+                    "primary-fixed": "#c6ecc8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "stack-md": "24px",
+                    "container-margin-mobile": "20px",
+                    "stack-sm": "12px",
+                    "stack-lg": "40px",
+                    "container-margin-desktop": "48px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-lg": [
+                            "DM Sans"
+                    ],
+                    "label-md": [
+                            "DM Sans"
+                    ],
+                    "caption": [
+                            "DM Sans"
+                    ],
+                    "body-lg": [
+                            "DM Sans"
+                    ],
+                    "display-md": [
+                            "Playfair Display"
+                    ],
+                    "headline-lg-mobile": [
+                            "Playfair Display"
+                    ],
+                    "body-md": [
+                            "DM Sans"
+                    ],
+                    "headline-lg": [
+                            "Playfair Display"
+                    ],
+                    "display-lg": [
+                            "Playfair Display"
+                    ]
+            },
+            "fontSize": {
+                    "title-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-md": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "caption": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-md": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "0.01em",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "20px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "300"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #fafaf5; /* surface */
+            color: #1a1c1a; /* on-surface */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Subtle ghost border utility */
+        .ghost-border {
+            border: 1px solid #c2c8bf; /* outline-variant */
+        }
+        
+        /* High-end micro-shadow */
+        .micro-shadow {
+            box-shadow: 0px 2px 16px rgba(0,0,0,0.06);
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="flex bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Desktop Side Navigation -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-bright/80 dark:bg-surface-dim/80 border-r border-outline-variant dark:border-outline backdrop-blur-md shadow-sm z-50">
+<div class="flex flex-col h-full py-stack-lg px-unit">
+<!-- Brand & Header -->
+<div class="mb-stack-lg px-4 flex flex-col gap-2">
+<span class="font-display-md text-display-md text-primary dark:text-primary-fixed-dim tracking-tight">Aura</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Good morning, Wellness Enthusiast</span>
+</div>
+<!-- Main Nav Links -->
+<div class="flex flex-col gap-1 flex-grow">
+<!-- Inactive Tab -->
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<!-- Inactive Tab -->
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-md text-label-md">Map</span>
+</a>
+<!-- Inactive Tab -->
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">flare</span>
+<span class="font-label-md text-label-md">Beacon</span>
+</a>
+<!-- Inactive Tab -->
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+<!-- Inactive Tab (Since this is another user's profile, 'Profile' is not strictly active for the logged-in user, but we'll leave it inactive to signify this is exploring external content, or we could highlight it. Given rules, Intent Fallback: Exploring content, but let's keep all inactive for external profiles to differentiate from 'My Profile', or highlight 'Profile'. Actually, standard practice: if on a profile view, 'Profile' tab might not be active if it's not YOUR profile. Let's keep 'Home' or 'Explore' active in intent. Assuming user clicked through from Map or Home. We'll leave them all inactive to act as purely navigational shell here to focus on canvas, or highlight 'Home' as base state.) -->
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</div>
+<!-- Primary CTA -->
+<div class="mt-auto mb-stack-md px-4">
+<button class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-3 rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                    Create Beacon
+                </button>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-col gap-1 border-t border-outline-variant/30 pt-4">
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant flex items-center gap-unit px-4 py-2 rounded-lg hover:bg-primary-container/10 dark:hover:bg-primary-container/20 transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">help_outline</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 relative min-h-screen">
+<!-- Top App Bar (Desktop) -->
+<header class="hidden md:flex justify-between items-center px-container-margin-desktop h-20 fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] z-40 bg-surface/60 dark:bg-surface-dim/60 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-200">
+<div class="flex items-center">
+<!-- Search or context title -->
+<span class="font-headline-lg text-headline-lg text-on-surface">Community Member</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Profile Content Wrapper -->
+<div class="pt-24 pb-32 md:pt-32 px-container-margin-mobile md:px-container-margin-desktop max-w-[1280px] mx-auto">
+<!-- Bento Layout for Profile -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Identity & Actions (Sticky) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter lg:sticky lg:top-32 h-fit">
+<!-- Main Profile Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 ghost-border micro-shadow flex flex-col items-center text-center relative overflow-hidden">
+<!-- Decorative subtle gradient blob -->
+<div class="absolute -top-20 -right-20 w-48 h-48 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="w-32 h-32 rounded-full mb-6 relative group overflow-hidden ghost-border">
+<img alt="Profile photo" class="w-full h-full object-cover" data-alt="A sophisticated editorial portrait of a young woman with natural makeup and flowing hair, captured in soft, diffused natural daylight. The background is a minimalist, warm neutral tone, evoking a serene and grounded aesthetic typical of luxury wellness branding. The lighting highlights subtle textures and organic softness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdC38QtaN_eVR2Tup3KOA9ptXagHN7Io9INSrFkr0Kpac6pF-SnLajcKoTvWvvpTsagxqahxO2N_Ol7gEWniGvt-jgnl8RfpiELzlv3IOPQDDFNtjiPU03W-TdwLu8wvTjCc6UB-TKekl-HZPjUKeFvq1P4Z9Y5BFVfKEWdpkHZyCUWABsbnBVz1wsmvxQfaWuRnNxTKOnjfAiB_6HhjalsVjWAskzMW6Do9opPXGK0XLIDY9syNVCTWfwfvnStyTx0arBdIc81nJ-"/>
+</div>
+<h1 class="font-display-lg text-headline-lg text-on-surface mb-2">Elena Rostova</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6 max-w-[250px]">Curating mindful moments and exploring botanical spaces.</p>
+<!-- Connect Buttons -->
+<div class="w-full flex flex-col gap-3">
+<button class="w-full bg-inverse-surface text-inverse-on-surface py-3 px-6 rounded-full font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.04-.19-.02-.27 0-.12.03-1.99 1.25-5.61 3.67-.53.36-1.01.54-1.44.53-.47-.01-1.38-.27-2.05-.48-.82-.26-1.47-.4-1.42-.84.03-.23.36-.47 1-.72 3.91-1.69 6.52-2.8 7.81-3.34 3.73-1.54 4.51-1.8 5.02-1.81.11 0 .36.03.49.13.11.08.14.2.16.29.01.12.01.24 0 .35z"></path>
+</svg>
+                                Send Message on Telegram
+                            </button>
+<button class="w-full bg-transparent border border-outline-variant text-on-surface py-3 px-6 rounded-full font-label-md text-label-md hover:bg-surface-variant/50 transition-colors flex items-center justify-center gap-2">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" fill-rule="evenodd"></path>
+</svg>
+                                Follow on Instagram
+                            </button>
+</div>
+<!-- Mini Stats -->
+<div class="flex justify-between w-full mt-8 pt-6 border-t border-outline-variant/30">
+<div class="flex flex-col items-center">
+<span class="font-display-md text-[24px] text-on-surface">14</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Beacons</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-display-md text-[24px] text-on-surface">2.1k</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Followers</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-display-md text-[24px] text-on-surface">42</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Following</span>
+</div>
+</div>
+</div>
+<!-- Interest Chips -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 ghost-border">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-4">Interests</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-primary-container/10 text-primary font-label-md text-label-md rounded-full">Botany</span>
+<span class="px-3 py-1.5 bg-tertiary-container/10 text-tertiary font-label-md text-label-md rounded-full">Meditation</span>
+<span class="px-3 py-1.5 bg-primary-container/10 text-primary font-label-md text-label-md rounded-full">Urban Hiking</span>
+<span class="px-3 py-1.5 bg-secondary-container/10 text-secondary font-label-md text-label-md rounded-full">Ceramics</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Beacons Content -->
+<div class="lg:col-span-8 flex flex-col gap-stack-md">
+<!-- Section Header -->
+<div class="flex items-end justify-between border-b border-outline-variant/30 pb-4 mt-4 lg:mt-0">
+<div>
+<h2 class="font-display-md text-[28px] text-on-surface mb-1">Active Beacons</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Live locations and ongoing events</p>
+</div>
+<a class="font-label-md text-label-md text-primary hover:underline hidden sm:block" href="#">View Map</a>
+</div>
+<!-- Active Beacon Glass Card (Featured) -->
+<div class="relative rounded-2xl overflow-hidden group min-h-[300px] flex items-end p-6 md:p-8 cursor-pointer micro-shadow">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Botanical Garden Event" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A sunlit modern botanical garden interior, featuring large architectural glass windows framing lush tropical plants. The light is warm, soft, and natural, casting elegant shadows on a pristine white floor. The scene embodies an upscale, serene lifestyle aesthetic, emphasizing organic shapes, clean lines, and a muted natural palette of sage greens and warm whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCp_1_dF-oHgdGlweXB9NDtW-z2UP4HG6edwGHip75bHGNnAzZV9XFSJpPkn0i_d9pLfxzjiX_h_VtWa0qU63xtPu3869Cqg9uqgITx22ObKuovzX9zV53EEUKtGuB2BvEit5doOSe6wUmg8uvaU34BQfTbQMgom7sV8VC8zwt_AcJXFs5pmZjU2YCitJILinBl7_MUOE-R5TRcJV7Erq84fswbGOis9-nZxIaKtP7C1GbcDKzqgmuqxUZP760Fu8v0YHbnm6lj6t9"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+</div>
+<!-- Content -->
+<div class="relative z-10 w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-3">
+<span class="flex h-2 w-2 rounded-full bg-primary-fixed-dim relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-fixed-dim opacity-75"></span>
+</span>
+<span class="font-label-md text-label-md text-white/90 uppercase tracking-widest">Live Now</span>
+</div>
+<h3 class="font-display-md text-[32px] text-white leading-tight mb-2">Morning Sun Salutation</h3>
+<div class="flex items-center gap-2 text-white/80 font-body-md text-body-md">
+<span class="material-symbols-outlined" style="font-size: 16px;">location_on</span>
+<span>Conservatory of Flowers, Golden Gate Park</span>
+</div>
+</div>
+<button class="shrink-0 bg-white/20 backdrop-blur-md text-white border border-white/30 py-2.5 px-5 rounded-full font-label-md text-label-md hover:bg-white/30 transition-colors">
+                                Join Beacon
+                            </button>
+</div>
+</div>
+<!-- Section Header -->
+<div class="flex items-end justify-between border-b border-outline-variant/30 pb-4 mt-8">
+<div>
+<h2 class="font-display-md text-[28px] text-on-surface mb-1">Past Beacons</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Archived moments and locations</p>
+</div>
+</div>
+<!-- Past Beacons Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Past Card 1 -->
+<div class="bg-surface-container-lowest rounded-2xl ghost-border overflow-hidden hover:micro-shadow transition-shadow group cursor-pointer flex flex-col">
+<div class="h-48 overflow-hidden relative">
+<img alt="Coffee shop setup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A minimalist, high-end coffee shop setting showing a ceramic pour-over setup on a clean, light oak wooden counter. The lighting is bright and airy, typical of a bright morning light filtering through linen. The color palette revolves around warm whites, natural wood tones, and subtle charcoal grays, creating a calm, highly intentional composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZFDsBoJiBh5ZJevvu-baPPY8TGK3g3SS2z0XmZnPmduGQrcXgByjjdxmIe4--dgvhmJM7rGYOxi9YBMHLTRz58uespmsIC3C9hquJ5mAfcB2Lgp-xpM_03ZaDY-rsDhSK4kDx3gZkf8NO_7YEuWQuxxTPtroMqoD2Of5MpWJBqZjLlql3uOo9ymmAcl3hF_aQ3rgt0SSgdXBS7842rF-kRNZw8eZXcS193npAFo_OhpanyBmP01m_NvvszA3QQY2Rx8uUIPVDmF8y"/>
+<div class="absolute top-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full font-label-md text-[10px] text-on-surface-variant">
+                                    Oct 12
+                                </div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<h4 class="font-title-lg text-title-lg text-on-surface mb-1">Quiet Reading Hour</h4>
+<div class="flex items-center gap-1 text-on-surface-variant font-caption text-caption mb-4">
+<span class="material-symbols-outlined" style="font-size: 14px;">location_on</span>
+<span>Sightglass Coffee, SOMA</span>
+</div>
+<div class="mt-auto flex items-center justify-between text-on-surface-variant font-caption text-caption border-t border-outline-variant/20 pt-3">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">group</span>
+<span>8 joined</span>
+</div>
+<span class="px-2 py-0.5 bg-surface-variant rounded-md">Cafe</span>
+</div>
+</div>
+</div>
+<!-- Past Card 2 -->
+<div class="bg-surface-container-lowest rounded-2xl ghost-border overflow-hidden hover:micro-shadow transition-shadow group cursor-pointer flex flex-col">
+<div class="h-48 overflow-hidden relative">
+<img alt="Park landscape" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A serene landscape of an urban park path curving gently under tall, ancient eucalyptus trees. The lighting suggests late afternoon 'golden hour' with long, soft shadows stretching across a neatly manicured lawn. The colors are muted organic greens, soft earthen tones, and pale blue skies, aligning with a sophisticated, breathable editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDswfD_YCFfXCLNupH8LYbY09rJqcgoFwEWE7SgKYAbDKjakLiYkLaf3LbfBmzQAhlpA1wZSsdw4Q0UBKI0ftIZdDo0DJsrcbBALsX1eXZFBU5Jyv4fO5cQnkaKyVsUOLTe3BO7j0t30jk3FQejix0HklDIqG4Kg1cX0RrHYVEEjVoiC8AH-3Ihnmo3ZcGtCsnLufbEcAo8IgE_hWD9zOrDdwp_89iHmttI6HDS_udcLvOeFy0yyVg9PLKO1OFX35oF9qJUESS3cfna"/>
+<div class="absolute top-4 right-4 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full font-label-md text-[10px] text-on-surface-variant">
+                                    Sep 28
+                                </div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<h4 class="font-title-lg text-title-lg text-on-surface mb-1">Weekend Dog Walk</h4>
+<div class="flex items-center gap-1 text-on-surface-variant font-caption text-caption mb-4">
+<span class="material-symbols-outlined" style="font-size: 14px;">location_on</span>
+<span>Presidio Park Trails</span>
+</div>
+<div class="mt-auto flex items-center justify-between text-on-surface-variant font-caption text-caption border-t border-outline-variant/20 pt-3">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">group</span>
+<span>12 joined</span>
+</div>
+<span class="px-2 py-0.5 bg-surface-variant rounded-md">Outdoors</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 rounded-t-xl md:hidden bg-white/90 dark:bg-surface-container-highest/90 border-t border-outline-variant/20 backdrop-blur-lg shadow-[0px_-2px_16px_rgba(0,0,0,0.06)] pb-safe">
+<div class="flex justify-around items-center h-16 px-container-margin-mobile">
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-container-low transition-all duration-300 w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-md-mobile text-[10px] uppercase tracking-wider">Home</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-container-low transition-all duration-300 w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-label-md-mobile text-[10px] uppercase tracking-wider">Map</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-container-low transition-all duration-300 w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1">flare</span>
+<span class="font-label-md-mobile text-[10px] uppercase tracking-wider">Beacon</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-container-low transition-all duration-300 w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1">notifications</span>
+<span class="font-label-md-mobile text-[10px] uppercase tracking-wider">Alerts</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant active:bg-surface-container-low transition-all duration-300 w-full h-full" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md-mobile text-[10px] uppercase tracking-wider">Profile</span>
+</a>
+</div>
+</nav>
+<!-- Script for interactive elements if needed -->
+<script>
+        // Smooth scroll handling or minor visual tweaks could go here.
+        // Left intentionally empty to rely on CSS transitions primarily for performance.
+    </script>
+</body></html>
