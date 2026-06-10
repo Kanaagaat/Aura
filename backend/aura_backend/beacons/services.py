@@ -36,6 +36,14 @@ def list_beacons(location_id: str | None = None, active: str | None = None) -> Q
     return queryset
 
 
+def get_beacon(beacon_id: int) -> Beacon:
+    return (
+        Beacon.objects.select_related("location", "creator", "creator__user")
+        .prefetch_related("joins__user", "joins__user__user")
+        .get(id=beacon_id)
+    )
+
+
 def create_beacon(
     *,
     creator: User,

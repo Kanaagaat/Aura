@@ -1,49 +1,18 @@
 import json
-import re
 from datetime import timedelta
-from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from core.location_utils import (
+    find_local_photo_url,
+    normalize_category,
+    normalize_tags,
+    resolve_photo_url,
+)
 from core.models import Beacon, Location, UserProfile
-
-
-def _normalize_category(category: str) -> str:
-    normalized = category.lower()
-    if any(token in normalized for token in ["кофей", "coffee", "кафе"]):
-        return Location.CATEGORY_COFFEE
-    if any(token in normalized for token in ["йога", "yoga", "studio", "студия", "fitness"]):
-        return Location.CATEGORY_YOGA
-    if any(token in normalized for token in ["spa", "wellness", "sauna", "баня", "banya", "bathhouse"]):
-        return Location.CATEGORY_SPA
-    return Location.CATEGORY_OTHER
-
-
-def _normalize_tags(rubrics: str) -> list[str]:
-    if not rubrics:
-        return []
-    return [f"#{tag.strip().replace(' ', '')}" for tag in rubrics.split(",") if tag.strip()]
-
-
-def _find_photo_url(two_gis_id: str, name: str) -> str:
-    photos_dir = settings.BASE_DIR.parent.parent / "downloads_photos"
-    if not photos_dir.exists():
-        return ""
-
-    name_norm = re.sub(r"[^a-z0-9]+", "", name.lower())
-    for path in photos_dir.iterdir():
-        if not path.is_file():
-            continue
-        file_name = path.name.lower()
-        file_stem = path.stem.lower()
-        if two_gis_id and two_gis_id in file_name:
-            return f"/downloads_photos/{path.name}"
-        if name_norm and name_norm in file_stem:
-            return f"/downloads_photos/{path.name}"
-    return ""
 
 
 def _load_doc_locations() -> list[dict]:
@@ -64,16 +33,20 @@ class Command(BaseCommand):
 
         locations = _load_doc_locations()
         for raw in locations:
+            category = normalize_category(raw.get("category", ""))
+            two_gis_id = str(raw.get("2gis_id", "") or "")
+            local_photo = find_local_photo_url(two_gis_id, raw.get("name", ""))
             Location.objects.create(
                 name=raw.get("name", ""),
-                category=_normalize_category(raw.get("category", "")),
+                category=category,
                 address=raw.get("address", ""),
                 city="Almaty",
                 latitude=raw.get("lat", 0),
                 longitude=raw.get("lon", 0),
-                vibe_tags=_normalize_tags(raw.get("rubrics", "")),
+                vibe_tags=normalize_tags(raw.get("rubrics", "")),
                 editorial_note=raw.get("schedule", "") or raw.get("rubrics", ""),
-                photo_url=_find_photo_url(str(raw.get("2gis_id", "") or ""), raw.get("name", "")),
+                photo_url=local_photo or resolve_photo_url("", category),
+                two_gis_id=two_gis_id,
                 operating_hours=raw.get("schedule", ""),
                 tier=Location.TIER_FREE,
             )

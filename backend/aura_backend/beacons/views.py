@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from core.models import Beacon
 
 from .serializers import BeaconCreateSerializer, BeaconJoinCreateSerializer, BeaconSerializer
-from .services import create_beacon, join_beacon, list_beacons
+from .services import create_beacon, get_beacon, join_beacon, list_beacons
 
 
 def success_response(data: Any, response_status: int = status.HTTP_200_OK) -> Response:
@@ -45,6 +45,20 @@ class BeaconListCreateView(APIView):
         beacon = create_beacon(creator=request.user, **serializer.validated_data)
         data = BeaconSerializer(beacon, context={"request": request}).data
         return success_response(data, status.HTTP_201_CREATED)
+
+
+class BeaconDetailView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request: Request, pk: int) -> Response:
+        try:
+            beacon = get_beacon(pk)
+        except Beacon.DoesNotExist:
+            return error_response(
+                "beacon_not_found", "Beacon not found.", status.HTTP_404_NOT_FOUND
+            )
+        serializer = BeaconSerializer(beacon, context={"request": request})
+        return success_response(serializer.data)
 
 
 class BeaconJoinView(APIView):

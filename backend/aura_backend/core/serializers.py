@@ -1,16 +1,19 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from .location_utils import absolute_photo_url, two_gis_firm_url
 from .models import Beacon, BeaconJoin, Location, UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     beacons_lit = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
         model = UserProfile
         fields = [
             "id",
+            "username",
             "display_name",
             "bio",
             "telegram_username",
@@ -23,6 +26,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class LocationSerializer(serializers.ModelSerializer):
     active_beacon_count = serializers.SerializerMethodField()
+    photo_url = serializers.SerializerMethodField()
+    two_gis_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Location
@@ -37,11 +42,20 @@ class LocationSerializer(serializers.ModelSerializer):
             "vibe_tags",
             "editorial_note",
             "photo_url",
+            "two_gis_id",
+            "two_gis_url",
             "operating_hours",
             "tier",
             "is_featured",
             "active_beacon_count",
         ]
+
+    def get_photo_url(self, obj: Location) -> str:
+        request = self.context.get("request")
+        return absolute_photo_url(request, obj.photo_url, obj.category)
+
+    def get_two_gis_url(self, obj: Location) -> str:
+        return two_gis_firm_url(obj.two_gis_id)
 
     def get_active_beacon_count(self, obj: Location) -> int:
         return obj.beacons.filter(is_active=True).count()

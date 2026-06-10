@@ -1,7 +1,6 @@
 import json
-import re
+import secrets
 from datetime import timedelta
-from pathlib import Path
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -14,6 +13,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
+from .location_utils import (
+    find_local_photo_url,
+    normalize_category,
+    normalize_tags,
+    resolve_photo_url,
+)
 from .models import Beacon, BeaconJoin, Location, UserProfile
 from .serializers import (
     BeaconJoinCreateSerializer,
@@ -67,16 +72,26 @@ class GoogleAuthView(APIView):
                 "picture": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200"
             }
         else:
+            if not settings.GOOGLE_CLIENT_ID:
+                return Response(
+                    {
+                        "detail": (
+                            "Google sign-in is not configured on the server. "
+                            "Set GOOGLE_CLIENT_ID in the backend environment."
+                        )
+                    },
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                )
             try:
                 idinfo = id_token.verify_oauth2_token(
                     token_str,
                     google_requests.Request(),
-                    settings.GOOGLE_CLIENT_ID
+                    settings.GOOGLE_CLIENT_ID,
                 )
             except Exception as e:
                 return Response(
                     {"detail": f"Invalid Google token: {str(e)}"},
-                    status=status.HTTP_400_BAD_REQUEST
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
 
         if not idinfo:
@@ -107,10 +122,12 @@ class GoogleAuthView(APIView):
                 username = f"{base_username}_{counter}"
                 counter += 1
 
+            # NOTE: User.objects.make_random_password() was removed in Django 5.1+.
+            # Generate a strong random password for OAuth users instead.
             user = User.objects.create_user(
                 username=username,
                 email=email,
-                password=User.objects.make_random_password()
+                password=secrets.token_urlsafe(32),
             )
 
         profile, created = UserProfile.objects.get_or_create(
@@ -134,41 +151,6 @@ class GoogleAuthView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-def _normalize_category(category: str) -> str:
-    normalized = category.lower()
-    if any(token in normalized for token in ["кофей", "coffee", "кафе"]):
-        return Location.CATEGORY_COFFEE
-    if any(token in normalized for token in ["йога", "yoga", "studio", "студия", "fitness"]):
-        return Location.CATEGORY_YOGA
-    if any(token in normalized for token in ["spa", "wellness", "sauna", "баня", "banya", "bathhouse"]):
-        return Location.CATEGORY_SPA
-    return Location.CATEGORY_OTHER
-
-
-def _normalize_tags(rubrics: str) -> list[str]:
-    if not rubrics:
-        return []
-    return [f"#{tag.strip().replace(' ', '')}" for tag in rubrics.split(",") if tag.strip()]
-
-
-def _find_photo_url(two_gis_id: str, name: str) -> str:
-    photos_dir = settings.BASE_DIR.parent.parent / "downloads_photos"
-    if not photos_dir.exists():
-        return ""
-
-    name_norm = re.sub(r"[^a-z0-9]+", "", name.lower())
-    for path in photos_dir.iterdir():
-        if not path.is_file():
-            continue
-        file_name = path.name.lower()
-        file_stem = path.stem.lower()
-        if two_gis_id and two_gis_id in file_name:
-            return f"/downloads_photos/{path.name}"
-        if name_norm and name_norm in file_stem:
-            return f"/downloads_photos/{path.name}"
-    return ""
-
-
 def _sync_locations_from_docs() -> None:
     if Location.objects.exists():
         return
@@ -181,16 +163,20 @@ def _sync_locations_from_docs() -> None:
         raw_locations = json.load(file)
 
     for raw in raw_locations:
+        category = normalize_category(raw.get("category", ""))
+        two_gis_id = str(raw.get("2gis_id", "") or "")
+        local_photo = find_local_photo_url(two_gis_id, raw.get("name", ""))
         Location.objects.create(
             name=raw.get("name", ""),
-            category=_normalize_category(raw.get("category", "")),
+            category=category,
             address=raw.get("address", ""),
             city="Almaty",
             latitude=raw.get("lat", 0),
             longitude=raw.get("lon", 0),
-            vibe_tags=_normalize_tags(raw.get("rubrics", "")),
+            vibe_tags=normalize_tags(raw.get("rubrics", "")),
             editorial_note=raw.get("schedule", "") or raw.get("rubrics", ""),
-            photo_url=_find_photo_url(str(raw.get("2gis_id", "") or ""), raw.get("name", "")),
+            photo_url=local_photo or resolve_photo_url("", category),
+            two_gis_id=two_gis_id,
             operating_hours=raw.get("schedule", ""),
             tier=Location.TIER_FREE,
         )
@@ -281,13 +267,23 @@ class BeaconViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.select_related("user").all()
     serializer_class = UserProfileSerializer
+    http_method_names = ["get", "patch", "head", "options"]
 
     def get_permissions(self):
-        if self.action == "me":
+        if self.action in ("me", "partial_update", "update"):
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
+
+    def partial_update(self, request, *args, **kwargs):
+        profile = self.get_object()
+        if profile.user_id != request.user.id:
+            return Response(
+                {"detail": "You can only edit your own profile."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        return super().partial_update(request, *args, **kwargs)
 
     @action(detail=False, methods=["get", "patch"])
     def me(self, request):

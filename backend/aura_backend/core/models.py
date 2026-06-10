@@ -11,7 +11,8 @@ class UserProfile(models.Model):
     telegram_username = models.CharField(max_length=32, blank=True, default="")
     display_name = models.CharField(max_length=100, blank=True, default="")
     bio = models.TextField(blank=True, default="")
-    avatar_url = models.URLField(blank=True, default="")
+    # TextField (not URLField) so uploaded avatars can be stored as data URLs.
+    avatar_url = models.TextField(blank=True, default="")
     instagram_handle = models.CharField(max_length=64, blank=True, default="")
     is_premium = models.BooleanField(default=False)
     saved_locations = models.ManyToManyField(
@@ -52,6 +53,7 @@ class Location(models.Model):
     vibe_tags = models.JSONField(default=list)
     editorial_note = models.TextField(max_length=500, blank=True, default="")
     photo_url = models.URLField(blank=True, default="")
+    two_gis_id = models.CharField(max_length=32, blank=True, default="")
     operating_hours = models.CharField(max_length=100, blank=True, default="")
     tier = models.CharField(max_length=10, choices=TIER_CHOICES, default=TIER_FREE)
     is_featured = models.BooleanField(default=False)
