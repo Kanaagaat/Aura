@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuraStore } from '../store/useAuraStore';
 import { BeaconCard } from '../components/BeaconCard';
+import { EditProfileModal } from '../components/EditProfileModal';
 import type { Beacon } from '../types';
+
+const FALLBACK_AVATAR =
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200';
 
 export function ProfilePage() {
   const navigate = useNavigate();
   const { profile, beacons, fetchProfile, fetchBeacons, logout } = useAuraStore();
   const [tab, setTab] = useState<'active' | 'past'>('active');
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -30,15 +35,34 @@ export function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto px-5 py-8">
       <div className="text-center mb-10">
-        <img
-          src={profile.avatar_url}
-          alt={profile.display_name}
-          className="h-24 w-24 rounded-full object-cover mx-auto border-4 border-surface shadow-[var(--shadow-soft)]"
-        />
+        <div className="relative inline-block">
+          <img
+            src={profile.avatar_url || FALLBACK_AVATAR}
+            alt={profile.display_name}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = FALLBACK_AVATAR;
+            }}
+            className="h-24 w-24 rounded-full object-cover mx-auto border-4 border-surface shadow-[var(--shadow-soft)]"
+          />
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-text-main text-white flex items-center justify-center shadow-md hover:opacity-90 transition-opacity"
+            aria-label="Edit profile photo"
+          >
+            <span className="material-symbols-outlined text-base">edit</span>
+          </button>
+        </div>
         <h1 className="font-serif text-3xl mt-4">{profile.display_name}</h1>
         <p className="text-text-muted text-sm mt-2 max-w-sm mx-auto">{profile.bio}</p>
 
-        <div className="flex justify-center gap-3 mt-4">
+        <div className="flex justify-center gap-3 mt-4 flex-wrap">
+          <button
+            onClick={() => setEditing(true)}
+            className="rounded-full border border-border px-4 py-2 text-sm hover:border-primary transition-colors"
+          >
+            Edit Profile
+          </button>
           {profile.telegram_username && (
             <a
               href={`https://t.me/${profile.telegram_username.replace('@', '')}`}
@@ -116,6 +140,12 @@ export function ProfilePage() {
           shown.map((b) => <BeaconCard key={b.id} beacon={b} />)
         )}
       </div>
+
+      <EditProfileModal
+        open={editing}
+        profile={profile}
+        onClose={() => setEditing(false)}
+      />
     </div>
   );
 }

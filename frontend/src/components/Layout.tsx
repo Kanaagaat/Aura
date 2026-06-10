@@ -1,8 +1,11 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
+// Routes where the app chrome (sidebar + bottom nav) must be hidden.
+const CHROME_HIDDEN_ROUTES = ['/auth', '/'];
+
 const NAV = [
-  { to: '/', icon: 'home', label: 'Home' },
+  { to: '/home', icon: 'home', label: 'Home' },
   { to: '/map', icon: 'map', label: 'Map' },
   { to: '/beacon/new', icon: 'flare', label: 'Beacon' },
   { to: '/profile', icon: 'person', label: 'Profile' },
@@ -86,6 +89,15 @@ export function MobileNav() {
 }
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const hideChrome = CHROME_HIDDEN_ROUTES.some(
+    (route) => location.pathname === route || location.pathname.startsWith(`${route}/`)
+  );
+
+  if (hideChrome) {
+    return <div className="min-h-screen bg-background">{children}</div>;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <SidebarNav />

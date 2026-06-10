@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuraStore } from '../store/useAuraStore';
 import { AuraButton } from '../components/AuraButton';
@@ -12,7 +12,7 @@ import { AuraButton } from '../components/AuraButton';
 export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/';
+  const redirectPath = searchParams.get('redirect') || '/map';
   
   const { login, register, googleLogin, isAuthenticated, error, loading } = useAuraStore();
 
@@ -25,6 +25,27 @@ export function AuthPage() {
     telegram_username: '',
   });
   const [localError, setLocalError] = useState<string | null>(null);
+  const googleBtnRef = useRef<HTMLDivElement>(null);
+
+  // A real Google OAuth client id ends with ".apps.googleusercontent.com".
+  // When one is not configured we skip the (broken) GIS button entirely and
+  // fall back to the dev bypass, instead of rendering a button that errors.
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+  const hasGoogleAuth =
+    !!googleClientId && googleClientId.endsWith('.apps.googleusercontent.com');
+
+  const handleGoogleCallback = useCallback(
+    async (credential: string) => {
+      setLocalError(null);
+      try {
+        await googleLogin(credential);
+        navigate(redirectPath);
+      } catch (e) {
+        setLocalError((e as Error).message);
+      }
+    },
+    [googleLogin, navigate, redirectPath],
+  );
 
   // If already authenticated, redirect
   useEffect(() => {
@@ -33,43 +54,59 @@ export function AuthPage() {
     }
   }, [isAuthenticated, navigate, redirectPath]);
 
-  // Load Google Identity Services Script
+  // Load Google Identity Services and render the button after the container mounts
   useEffect(() => {
+    if (!hasGoogleAuth || !googleClientId) return;
+
+    let cancelled = false;
+    const scriptId = 'google-gsi-script';
+
+    const mountGoogleButton = () => {
+      if (cancelled || !window.google?.accounts?.id || !googleBtnRef.current) {
+        return;
+      }
+      googleBtnRef.current.innerHTML = '';
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: (response: { credential: string }) => {
+          void handleGoogleCallback(response.credential);
+        },
+      });
+      window.google.accounts.id.renderButton(googleBtnRef.current, {
+        theme: 'outline',
+        size: 'large',
+        width: 320,
+        shape: 'pill',
+        type: 'standard',
+        text: 'continue_with',
+      });
+    };
+
+    const existing = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (existing) {
+      if (window.google?.accounts?.id) {
+        mountGoogleButton();
+      } else {
+        existing.addEventListener('load', mountGoogleButton);
+      }
+      return () => {
+        cancelled = true;
+        existing.removeEventListener('load', mountGoogleButton);
+      };
+    }
+
     const script = document.createElement('script');
+    script.id = scriptId;
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
-    document.body.appendChild(script);
-
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1084282309590-dummy.apps.googleusercontent.com',
-          callback: (response: any) => {
-            handleGoogleCallback(response.credential);
-          },
-        });
-        window.google.accounts.id.renderButton(
-          document.getElementById('google-signin-btn'),
-          { theme: 'outline', size: 'large', width: 320, shape: 'pill' }
-        );
-      }
-    };
+    script.onload = mountGoogleButton;
+    document.head.appendChild(script);
 
     return () => {
-      document.body.removeChild(script);
+      cancelled = true;
     };
-  }, []);
-
-  const handleGoogleCallback = async (credential: string) => {
-    setLocalError(null);
-    try {
-      await googleLogin(credential);
-      navigate(redirectPath);
-    } catch (e) {
-      setLocalError((e as Error).message);
-    }
-  };
+  }, [hasGoogleAuth, googleClientId, handleGoogleCallback]);
 
   const handleMockBypass = async () => {
     setLocalError(null);
@@ -219,17 +256,39 @@ export function AuthPage() {
           <div className="flex-1 border-t border-[#EEECE8]" />
         </div>
 
-        {/* Google OAuth Button */}
-        <div className="flex justify-center mb-4">
-          <div id="google-signin-btn"></div>
-        </div>
+        {/* Google OAuth Button (only when a real client id is configured) */}
+        {hasGoogleAuth && (
+          <div className="flex justify-center mb-4 min-h-[44px]">
+            <div ref={googleBtnRef} aria-label="Sign in with Google" />
+          </div>
+        )}
 
-        {/* Mock Sign-In Bypass for local development */}
+        {/* Continue with Google — falls back to the mock flow in dev when no
+            real OAuth client id is set, so sign-in always works locally. */}
+        {!hasGoogleAuth && (
+          <button
+            type="button"
+            onClick={handleMockBypass}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 rounded-full border border-[#EEECE8] bg-white py-3 text-sm font-medium text-[#1C1C1A] hover:bg-[#FAFAF7] transition-colors disabled:opacity-60"
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
+              <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
+              <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
+              <path fill="#FBBC05" d="M3.97 10.72A5.4 5.4 0 0 1 3.68 9c0-.6.1-1.18.29-1.72V4.95H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.05l3.01-2.33z" />
+              <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
+            </svg>
+            Continue with Google
+          </button>
+        )}
+
+        {/* Mock Sign-In Bypass (always available in dev) */}
         <button
+          type="button"
           onClick={handleMockBypass}
-          className="w-full text-center text-xs text-[#8A8880] hover:text-[#7A9E7E] underline cursor-pointer"
+          className="w-full mt-3 text-center text-xs text-[#8A8880] hover:text-[#7A9E7E] underline cursor-pointer"
         >
-          ⚡ Dev Mode Bypass (Simulate Google Login)
+          ⚡ Dev Mode Bypass (Simulate Login)
         </button>
 
         <div className="text-center mt-6 text-sm text-[#8A8880]">

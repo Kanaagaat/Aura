@@ -1,6 +1,8 @@
 // frontend/src/components/VibeCard.tsx
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { LocationImage } from './LocationImage';
+import { TwoGisButton } from './TwoGisButton';
 import type { Location } from '../types';
 
 interface VibeCardProps {
@@ -121,17 +123,12 @@ function PanelContent({
     <div className="flex flex-col h-full">
       {/* Photo */}
       <div className="relative shrink-0">
-        {location.photo_url ? (
-          <img
-            src={location.photo_url}
-            alt={location.name}
-            className="w-full h-52 md:h-60 object-cover"
-          />
-        ) : (
-          <div className="w-full h-52 md:h-60 bg-gradient-to-br from-[#F0EDE8] to-[#E6E2D9] flex items-center justify-center">
-            <span className="text-5xl opacity-40">{emoji}</span>
-          </div>
-        )}
+        <LocationImage
+          src={location.photo_url}
+          alt={location.name}
+          category={location.category}
+          className="w-full h-52 md:h-60"
+        />
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
@@ -217,7 +214,7 @@ function PanelContent({
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* CTA */}
+        {/* CTAs */}
         <button
           type="button"
           id="light-beacon-cta"
@@ -226,6 +223,12 @@ function PanelContent({
         >
           🌿 Light a Beacon Here
         </button>
+
+        <TwoGisButton
+          twoGisId={location.two_gis_id}
+          twoGisUrl={location.two_gis_url}
+          locationName={location.name}
+        />
 
         {/* Bottom padding for mobile safe area */}
         <div className="h-4 md:hidden" />

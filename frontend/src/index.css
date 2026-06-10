@@ -24,6 +24,7 @@
     background-color: var(--color-background);
     color: var(--color-text-main);
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
 
   h1, h2, h3, .font-serif {

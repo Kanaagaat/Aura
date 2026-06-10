@@ -22,6 +22,7 @@ interface AuraState {
   login: (payload: any) => Promise<void>;
   register: (payload: any) => Promise<void>;
   googleLogin: (credential: string) => Promise<void>;
+  updateProfile: (payload: Partial<UserProfile>) => Promise<void>;
   logout: () => void;
   createBeacon: (payload: Parameters<typeof api.createBeacon>[0]) => Promise<Beacon>;
   joinBeacon: (id: number, handle?: string) => Promise<void>;
@@ -106,6 +107,17 @@ export const useAuraStore = create<AuraState>((set, get) => ({
       const data = await api.googleAuth(credential);
       setTokens(data.access, data.refresh);
       set({ profile: data.user, isAuthenticated: true, loading: false });
+    } catch (e) {
+      set({ error: (e as Error).message, loading: false });
+      throw e;
+    }
+  },
+
+  updateProfile: async (payload) => {
+    set({ loading: true, error: null });
+    try {
+      const profile = await api.updateProfile(payload);
+      set({ profile, loading: false });
     } catch (e) {
       set({ error: (e as Error).message, loading: false });
       throw e;

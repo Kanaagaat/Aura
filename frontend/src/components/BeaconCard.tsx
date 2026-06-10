@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import type { Beacon } from '../types';
 import { CountdownTimer } from './CountdownTimer';
+import { LocationImage } from './LocationImage';
 
 const ACTIVITY_EMOJI: Record<string, string> = {
   coffee: '☕',
@@ -16,6 +17,7 @@ interface BeaconCardProps {
 }
 
 export function BeaconCard({ beacon, compact }: BeaconCardProps) {
+  const navigate = useNavigate();
   const expired = beacon.is_expired || !beacon.is_active;
   const expiringSoon =
     !expired &&
@@ -31,10 +33,11 @@ export function BeaconCard({ beacon, compact }: BeaconCardProps) {
       )}
     >
       <div className="relative h-32 overflow-hidden">
-        <img
+        <LocationImage
           src={beacon.location.photo_url}
           alt={beacon.location.name}
-          className="h-full w-full object-cover"
+          category={beacon.location.category}
+          className="h-full w-full"
         />
         {beacon.location.is_featured && (
           <span className="absolute top-3 left-3 rounded-full bg-accent-amber/90 px-2 py-0.5 text-xs font-medium text-text-main">
@@ -57,14 +60,22 @@ export function BeaconCard({ beacon, compact }: BeaconCardProps) {
         <p className="font-serif text-lg leading-snug mb-1">{beacon.message}</p>
         <p className="text-sm text-text-muted">{beacon.location.name}</p>
         <div className="mt-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(`/users/${beacon.creator.id}`);
+            }}
+            className="flex items-center gap-2 hover:opacity-80 text-left"
+          >
             <img
               src={beacon.creator.avatar_url}
               alt=""
               className="h-6 w-6 rounded-full object-cover bg-border"
             />
             <span className="text-xs text-text-muted">{beacon.creator.display_name}</span>
-          </div>
+          </button>
           <span className="text-xs text-primary font-medium">
             {beacon.join_count} joining
           </span>

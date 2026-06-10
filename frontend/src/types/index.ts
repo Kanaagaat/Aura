@@ -3,6 +3,7 @@ export type ActivityType = 'coffee' | 'yoga' | 'walk' | 'study';
 
 export interface UserProfile {
   id: number;
+  username?: string;
   display_name: string;
   bio: string;
   telegram_username: string;
@@ -23,6 +24,8 @@ export interface Location {
   vibe_tags: string[];
   editorial_note: string;
   photo_url: string;
+  two_gis_id?: string;
+  two_gis_url?: string;
   operating_hours: string;
   tier: 'free' | 'featured';
   is_featured: boolean;

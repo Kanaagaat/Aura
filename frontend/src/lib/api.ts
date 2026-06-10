@@ -103,8 +103,16 @@ function unwrapList<T>(data: T[] | { results: T[] }): T[] {
 }
 
 async function axiosJson<T>(path: string, payload?: unknown): Promise<T> {
-  const response = payload === undefined ? await client.get(path) : await client.post(path, payload);
-  return unwrapApiData<T>(response.data);
+  try {
+    const response =
+      payload === undefined ? await client.get(path) : await client.post(path, payload);
+    return unwrapApiData<T>(response.data);
+  } catch (err: any) {
+    const data = err?.response?.data;
+    const message =
+      data?.error?.message || data?.detail || err?.message || 'Request failed';
+    throw new Error(message);
+  }
 }
 
 interface AuthResponse {
@@ -148,7 +156,7 @@ export const api = {
     return unwrapList(data);
   },
 
-  getBeacon: (id: number) => axiosJson<Beacon>(`/api/beacons/${id}/`),
+  getBeacon: (id: number) => axiosJson<Beacon>(`/api/v1/beacons/${id}/`),
 
   createBeacon: (payload: CreateBeaconPayload) =>
     axiosJson<Beacon>('/api/v1/beacons/', payload),
@@ -157,12 +165,14 @@ export const api = {
     axiosJson<Beacon>(`/api/v1/beacons/${id}/join/`, { telegram_handle: telegram_handle || '' }),
 
   deleteBeacon: (id: number) =>
-    fetchJson<void>(`/api/beacons/${id}/`, { method: 'DELETE' }),
+    axiosJson<void>(`/api/v1/beacons/${id}/`, {}),
 
   getProfile: () => fetchJson<UserProfile>('/api/v1/profiles/me/'),
 
+  getProfileById: (id: number) => fetchJson<UserProfile>(`/api/v1/profiles/${id}/`),
+
   updateProfile: (payload: Partial<UserProfile>) =>
-    fetchJson<UserProfile>('/api/profiles/me/', {
+    fetchJson<UserProfile>('/api/v1/profiles/me/', {
       method: 'PATCH',
       body: JSON.stringify(payload),
     }),
