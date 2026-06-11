@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HeroPills } from '../components/landing/HeroPills';
 import { HowItWorks } from '../components/landing/HowItWorks';
 import { Features } from '../components/landing/Features';
 import { FAQ } from '../components/landing/FAQ';
+import { WaitlistSection } from '../components/landing/WaitlistSection';
 import { fadeUp, heroItem } from '../components/landing/animations';
 
 const TESTIMONIALS = [
@@ -24,6 +24,10 @@ const TESTIMONIALS = [
 
 function scrollToHowItWorks() {
   document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function scrollToWaitlist() {
+  document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 export function LandingPage() {
@@ -53,18 +57,20 @@ export function LandingPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
           <span className="text-lg font-semibold text-[#1a1a18]">Aura</span>
           <div className="flex items-center gap-3 md:gap-5">
-            <Link
-              to="/auth"
+            <button
+              type="button"
+              onClick={scrollToHowItWorks}
               className="text-sm font-medium text-[#62625b] hover:text-[#1a1a18] transition-colors px-2 py-2"
             >
-              Sign in
-            </Link>
-            <Link
-              to="/auth"
+              How it works
+            </button>
+            <button
+              type="button"
+              onClick={scrollToWaitlist}
               className="rounded-full bg-[#c8a882] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#b5936a] transition-colors"
             >
-              Get started
-            </Link>
+              Get early access
+            </button>
           </div>
         </div>
       </motion.header>
@@ -93,27 +99,30 @@ export function LandingPage() {
               variants={heroItem}
               className="text-[40px] sm:text-[52px] md:text-[64px] font-semibold leading-[1.1] tracking-[-1.2px] text-[#1a1a18] mb-6"
             >
-              Find your people.
+              Aura
               <br />
-              Find your place.
+              <span className="text-[34px] sm:text-[44px] md:text-[54px]">
+                Find where to go in Almaty — and who to go with.
+              </span>
             </motion.h1>
             <motion.p
               variants={heroItem}
               className="text-[#62625b] text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-10"
             >
-              Aura is a curated wellness map for Almaty — discover yoga studios, coffee spots,
-              and spas, then light a Beacon to meet up with someone spontaneously.
+              Aura is a social map for coffee, yoga, walks, and wellness places in Almaty.
+              Light a beacon on a place you want to visit, and people with a similar vibe can join you.
             </motion.p>
             <motion.div
               variants={heroItem}
               className="flex flex-col sm:flex-row items-center justify-center gap-3"
             >
-              <Link
-                to="/map"
+              <button
+                type="button"
+                onClick={scrollToWaitlist}
                 className="w-full sm:w-auto rounded-full bg-[#c8a882] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#b5936a] transition-colors shadow-[0_4px_24px_rgba(200,168,130,0.3)]"
               >
-                Explore the map
-              </Link>
+                Get early access
+              </button>
               <button
                 type="button"
                 onClick={scrollToHowItWorks}
@@ -128,6 +137,7 @@ export function LandingPage() {
 
       <HowItWorks />
       <Features />
+      <WaitlistSection />
 
       {/* Social proof */}
       <section className="bg-[#f6f6f3] py-16 md:py-24 px-5 md:px-8">
@@ -184,15 +194,16 @@ export function LandingPage() {
           className="relative mx-auto max-w-xl text-center"
         >
           <h2 className="text-[32px] md:text-[40px] font-semibold text-white mb-3 tracking-[-0.8px]">
-            Your city is waiting.
+            Join Aura before the beta opens.
           </h2>
-          <p className="text-[#91918c] text-base mb-8">Light your first Beacon today.</p>
-          <Link
-            to="/auth"
+          <p className="text-[#91918c] text-base mb-8">Beta opening soon in Almaty.</p>
+          <button
+            type="button"
+            onClick={scrollToWaitlist}
             className="inline-block rounded-full bg-[#c8a882] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#b5936a] transition-colors"
           >
-            Get started
-          </Link>
+            Get early access
+          </button>
         </motion.div>
       </section>
 

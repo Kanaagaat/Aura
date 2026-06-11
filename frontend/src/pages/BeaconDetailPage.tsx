@@ -6,6 +6,8 @@ import { AvatarStack } from '../components/AvatarStack';
 import { LocationImage } from '../components/LocationImage';
 import { StoryCardModal } from '../components/StoryCardModal';
 import { TwoGisButton } from '../components/TwoGisButton';
+import { MiniMap } from '../components/MiniMap';
+import { useToastStore } from '../store/useToastStore';
 import type { Beacon } from '../types';
 import { api } from '../lib/api';
 
@@ -21,6 +23,7 @@ export function BeaconDetailPage() {
   // All hooks are declared unconditionally, before any early return, to keep
   // a stable hook order across renders (previously this crashed the page).
   const joinBeacon = useAuraStore((s) => s.joinBeacon);
+  const showToast = useToastStore((s) => s.show);
   const profile = useAuraStore((s) => s.profile);
   const isAuthenticated = useAuraStore((s) => s.isAuthenticated);
 
@@ -88,6 +91,7 @@ export function BeaconDetailPage() {
       await joinBeacon(beacon.id, profile?.telegram_username);
       const updated = await api.getBeacon(beacon.id);
       setBeacon(updated);
+      showToast("You're in! Coordinate on Telegram when ready.");
     } catch (e) {
       setJoinError((e as Error).message || 'Could not join this beacon.');
     } finally {
@@ -196,12 +200,21 @@ export function BeaconDetailPage() {
         </div>
 
         <div className="mt-6 space-y-3">
-          <div className="rounded-[var(--radius-card)] overflow-hidden border border-border h-40 bg-[#F5F3EF] flex items-center justify-center">
-            <div className="text-center px-4">
-              <span className="material-symbols-outlined text-primary text-3xl">location_on</span>
-              <p className="text-sm text-text-muted mt-1">{beacon.location?.address}</p>
-            </div>
-          </div>
+          {beacon.location && (
+            <>
+              <Link
+                to={`/venues/${beacon.location.id}`}
+                className="text-sm font-medium text-primary-dark hover:underline"
+              >
+                View venue details →
+              </Link>
+              <MiniMap
+                latitude={beacon.location.latitude}
+                longitude={beacon.location.longitude}
+                category={beacon.location.category}
+              />
+            </>
+          )}
           {beacon.location && (
             <TwoGisButton
               twoGisId={beacon.location.two_gis_id}

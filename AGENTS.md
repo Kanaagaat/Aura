@@ -149,60 +149,7 @@ MapContainer must have explicit height:
   <MapContainer style={{ width: '100%', height: '100%' }} ...>
   Parent div must also have a fixed height (e.g. h-screen or h-[calc(100vh-64px)])
 
-═══════════════════════════════════════════════
-IMMEDIATE NEXT TASKS (priority order)
-═══════════════════════════════════════════════
 
-TASK 1 — Fix TypeScript error in AuthPage.tsx
-File: frontend/src/pages/AuthPage.tsx
-Add at top: declare global { interface Window { google: any } }
-This unblocks the frontend build.
-
-TASK 2 — Connect map pins to real API data
-File: frontend/src/hooks/useLocations.ts (create)
-- Fetch GET /api/v1/locations/ on mount with axios
-- Return { locations, loading, error }
-
-File: frontend/src/components/AuraMap.tsx (create or update)
-- MapContainer with CartoDB Light tiles
-- Render pill-shaped custom markers per location (emoji + short name)
-- On marker click: open VibeCard bottom sheet (pass location id via state)
-- Fix Leaflet default icon at module level
-
-TASK 3 — VibeCard bottom sheet component
-File: frontend/src/components/VibeCard.tsx (create)
-- Slides up from bottom on mobile (Framer Motion: y: '100%' → y: 0)
-- Becomes right panel on desktop (≥768px): fixed right side, full height
-- Shows: photo (w-full rounded-t-2xl), location name (font-serif text-2xl),
-  vibe_tags as soft pills (#F0EDE8 bg), editorial text, hours,
-  "Light a Beacon" CTA button (full width, dark pill)
-- Close on backdrop tap or swipe down
-
-TASK 4 — Beacon backend (new Django app)
-Files to create:
-  backend/aura_backend/beacons/__init__.py
-  backend/aura_backend/beacons/models.py
-  backend/aura_backend/beacons/serializers.py
-  backend/aura_backend/beacons/views.py
-  backend/aura_backend/beacons/urls.py
-  backend/aura_backend/beacons/services.py
-  backend/aura_backend/beacons/management/commands/deactivate_expired_beacons.py
-
-- Auto-set expires_at = scheduled_at + timedelta(hours=2) in service
-- Management command sets is_active=False where expires_at < now()
-- Endpoints:
-  GET  /api/v1/beacons/?location_id=&active=true
-  POST /api/v1/beacons/
-  POST /api/v1/beacons/<id>/join/
-
-TASK 5 — Beacon creation UI
-File: frontend/src/components/BeaconCreate.tsx (create)
-- Modal that slides up over map (Framer Motion)
-- 4 activity tiles (2×2 grid): ☕ Coffee 🧘 Yoga 🚶 Walk 📖 Study
-- Time picker: horizontal scroll of time slots (08:00 … 22:00)
-- Message textarea (max 100 chars) with char counter
-- "Light it 🌿" submit button
-- On success: close modal, show pulse animation on map marker
 
 ═══════════════════════════════════════════════
 UPCOMING TASKS (weeks 4–6, do not build yet)

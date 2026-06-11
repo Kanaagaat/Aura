@@ -13,7 +13,7 @@ const NAV = [
 
 export function SidebarNav() {
   return (
-    <nav className="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 py-8 bg-surface/80 backdrop-blur-md border-r border-border z-50">
+    <nav className="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 py-8 bg-surface-cream/90 backdrop-blur-md border-r border-border z-50">
       <div className="px-8 mb-12">
         <h1 className="font-serif text-3xl text-primary-dark tracking-tight">Aura</h1>
         <p className="text-sm text-text-muted mt-1">Urban Wellness</p>
@@ -47,7 +47,7 @@ export function SidebarNav() {
       </div>
       <NavLink
         to="/beacon/new"
-        className="mx-6 mt-auto mb-4 flex items-center justify-center gap-2 rounded-full bg-text-main text-white py-3 text-sm font-medium shadow-[var(--shadow-soft)] hover:opacity-90"
+        className="mx-6 mt-auto mb-4 flex items-center justify-center gap-2 rounded-full bg-accent text-white py-3 text-sm font-semibold shadow-[0_4px_16px_rgba(200,168,130,0.3)] hover:bg-accent-hover"
       >
         <span className="material-symbols-outlined text-lg">add</span>
         Light a Beacon

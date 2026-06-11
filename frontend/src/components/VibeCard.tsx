@@ -1,6 +1,6 @@
 // frontend/src/components/VibeCard.tsx
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LocationImage } from './LocationImage';
 import { TwoGisButton } from './TwoGisButton';
 import type { Location } from '../types';
@@ -229,6 +229,13 @@ function PanelContent({
           twoGisUrl={location.two_gis_url}
           locationName={location.name}
         />
+
+        <Link
+          to={`/venues/${location.id}`}
+          className="w-full text-center text-sm font-medium text-primary-dark hover:underline py-1"
+        >
+          View full venue →
+        </Link>
 
         {/* Bottom padding for mobile safe area */}
         <div className="h-4 md:hidden" />

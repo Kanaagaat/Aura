@@ -1,5 +1,6 @@
 // frontend/src/pages/MapPage.tsx
 import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useLocations } from '../hooks/useLocations';
 import { AuraMap } from '../components/AuraMap';
 import { VibeCard } from '../components/VibeCard';
@@ -142,38 +143,50 @@ export function MapPage() {
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
             {filtered.map((loc) => (
-              <button
+              <div
                 key={loc.id}
-                type="button"
-                id={`location-list-item-${loc.id}`}
-                onClick={() => setSelectedId(loc.id)}
-                className="w-full text-left rounded-2xl border border-[#EEECE8] p-4 hover:border-[#7A9E7E]/40 hover:bg-[#FAFAF7] transition-all group"
+                className="rounded-2xl border border-[#EEECE8] hover:border-[#7A9E7E]/40 hover:bg-[#FAFAF7] transition-all overflow-hidden"
               >
-                <div className="flex items-start gap-3">
-                  <span className="text-xl mt-0.5">{EMOJI[loc.category] ?? '📍'}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-serif text-[#1C1C1A] truncate">{loc.name}</p>
-                    <p className="text-xs text-[#8A8880] capitalize mt-0.5">{loc.category}</p>
-                    {loc.vibe_tags.slice(0, 2).length > 0 && (
-                      <div className="flex gap-1 mt-2 flex-wrap">
-                        {loc.vibe_tags.slice(0, 2).map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full bg-[#F0EDE8] px-2 py-0.5 text-[10px] text-[#5A5750]"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
+                <button
+                  type="button"
+                  id={`location-list-item-${loc.id}`}
+                  onClick={() => setSelectedId(loc.id)}
+                  className="w-full text-left p-4 group"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl mt-0.5">{EMOJI[loc.category] ?? '📍'}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-serif text-[#1C1C1A] truncate">{loc.name}</p>
+                      <p className="text-xs text-[#8A8880] capitalize mt-0.5">{loc.category}</p>
+                      {loc.vibe_tags.slice(0, 2).length > 0 && (
+                        <div className="flex gap-1 mt-2 flex-wrap">
+                          {loc.vibe_tags.slice(0, 2).map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full bg-[#F0EDE8] px-2 py-0.5 text-[10px] text-[#5A5750]"
+                            >
+                              {tag.startsWith('#') ? tag : `#${tag}`}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {!!loc.active_beacon_count && loc.active_beacon_count > 0 && (
+                      <span className="shrink-0 text-amber-500 text-sm font-semibold">
+                        🔆 {loc.active_beacon_count}
+                      </span>
                     )}
                   </div>
-                  {!!loc.active_beacon_count && loc.active_beacon_count > 0 && (
-                    <span className="shrink-0 text-amber-500 text-sm font-semibold">
-                      🔆 {loc.active_beacon_count}
-                    </span>
-                  )}
+                </button>
+                <div className="px-4 pb-3 -mt-1">
+                  <Link
+                    to={`/venues/${loc.id}`}
+                    className="text-xs font-medium text-primary-dark hover:underline"
+                  >
+                    Venue page →
+                  </Link>
                 </div>
-              </button>
+              </div>
             ))}
 
             {filtered.length === 0 && (

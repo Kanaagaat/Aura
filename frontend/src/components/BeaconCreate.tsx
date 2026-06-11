@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useAuraStore } from '../store/useAuraStore';
+import { useToastStore } from '../store/useToastStore';
 import type { ActivityType, Location } from '../types';
 
 const ACTIVITIES: { id: ActivityType; label: string; emoji: string }[] = [
@@ -41,6 +42,7 @@ function slotToDate(slot: string): Date {
 
 export function BeaconCreate({ location, onClose, onSuccess }: BeaconCreateProps) {
   const createBeacon = useAuraStore((state) => state.createBeacon);
+  const showToast = useToastStore((s) => s.show);
   const [activity, setActivity] = useState<ActivityType>('coffee');
   const [timeSlot, setTimeSlot] = useState(getDefaultSlot);
   const [message, setMessage] = useState('');
@@ -64,6 +66,7 @@ export function BeaconCreate({ location, onClose, onSuccess }: BeaconCreateProps
         message: message.trim().slice(0, 100),
         scheduled_at: slotToDate(timeSlot).toISOString(),
       });
+      showToast('Beacon lit! It stays live for 2 hours.');
       onSuccess(location.id);
       setMessage('');
       setActivity('coffee');

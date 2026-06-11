@@ -12,7 +12,7 @@ import { AuraButton } from '../components/AuraButton';
 export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/map';
+  const redirectPath = searchParams.get('redirect') || '/home';
   
   const { login, register, googleLogin, isAuthenticated, error, loading } = useAuraStore();
 
