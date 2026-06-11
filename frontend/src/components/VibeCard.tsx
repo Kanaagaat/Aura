@@ -1,8 +1,9 @@
 // frontend/src/components/VibeCard.tsx
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { LocationImage } from './LocationImage';
 import { TwoGisButton } from './TwoGisButton';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import type { Location } from '../types';
 
 interface VibeCardProps {
@@ -54,9 +55,7 @@ function DesktopPanel({ location, onClose, onLightBeacon }: VibeCardProps) {
 // ─── Mobile bottom sheet (< 768 px) ──────────────────────────────────────────
 function MobileSheet({ location, onClose, onLightBeacon }: VibeCardProps) {
   const navigate = useNavigate();
-  const y = useMotionValue(0);
-  // Drag down 120 px → fully transparent handle
-  const opacity = useTransform(y, [0, 120], [1, 0.4]);
+  useBodyScrollLock(Boolean(location));
 
   return (
     <AnimatePresence>
@@ -68,31 +67,26 @@ function MobileSheet({ location, onClose, onLightBeacon }: VibeCardProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 bg-black/20 z-40"
+            className="md:hidden fixed inset-0 bg-black/20 z-[60]"
             onClick={onClose}
           />
 
           {/* Sheet */}
           <motion.div
             key="sheet"
-            drag="y"
-            dragConstraints={{ top: 0 }}
-            dragElastic={0.2}
-            style={{ y, opacity }}
-            onDragEnd={(_, info) => {
-              if (info.offset.y > 100 || info.velocity.y > 500) onClose();
-            }}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="md:hidden fixed bottom-0 left-0 right-0 z-50 max-h-[88vh] flex flex-col overflow-hidden rounded-t-[28px] bg-white shadow-[0_-4px_40px_rgba(0,0,0,0.12)]"
+            className="md:hidden fixed bottom-0 left-0 right-0 z-[70] max-h-[92dvh] flex flex-col overflow-hidden rounded-t-[28px] bg-white shadow-[0_-4px_40px_rgba(0,0,0,0.12)]"
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1 shrink-0">
               <div className="w-10 h-1 rounded-full bg-[#D4D0C8]" />
             </div>
-            <div className="overflow-y-auto">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
               <PanelContent
                 location={location}
                 onClose={onClose}
@@ -155,7 +149,7 @@ function PanelContent({
       </div>
 
       {/* Body */}
-      <div className="flex flex-col flex-1 px-6 py-5 gap-4 overflow-y-auto">
+      <div className="flex flex-col flex-1 px-6 py-5 gap-4 overflow-y-auto overscroll-contain">
         {/* Name + category */}
         <div>
           <p className="text-xs font-semibold tracking-widest text-[#8A8880] uppercase mb-1">
@@ -232,13 +226,13 @@ function PanelContent({
 
         <Link
           to={`/venues/${location.id}`}
-          className="w-full text-center text-sm font-medium text-primary-dark hover:underline py-1"
+          className="w-full rounded-full border border-[#EEECE8] bg-white py-3 text-center text-sm font-medium text-primary-dark hover:border-[#7A9E7E]/50 transition-colors"
         >
           View full venue →
         </Link>
 
         {/* Bottom padding for mobile safe area */}
-        <div className="h-4 md:hidden" />
+        <div className="h-[calc(1rem+env(safe-area-inset-bottom))] md:hidden" />
       </div>
     </div>
   );

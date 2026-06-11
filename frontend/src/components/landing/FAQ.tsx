@@ -5,11 +5,11 @@ import { fadeUp } from './animations';
 const ITEMS = [
   {
     q: 'Is Aura free?',
-    a: 'Yes, completely free during our Almaty beta. Always will be for casual users.',
+    a: 'Yes, completely free during beta. Always will be for casual users.',
   },
   {
-    q: 'Does it work outside Almaty?',
-    a: "Not yet — we're intentionally city-first. Almaty is home base. Other cities TBD.",
+    q: 'Does it work in every city?',
+    a: "We're intentionally city-first. Aura starts with curated local places, then grows city by city.",
   },
   {
     q: 'Do I need a Telegram account?',

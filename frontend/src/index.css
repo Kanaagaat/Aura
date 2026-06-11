@@ -55,3 +55,250 @@
 .mapboxgl-ctrl-attrib {
   opacity: 0.5;
 }
+
+.aura-map-marker-shell {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+.aura-map-marker {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(218, 218, 211, 0.88);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 24px rgba(75, 68, 58, 0.14);
+  color: var(--color-text-main);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.aura-map-marker-shell:hover .aura-map-marker,
+.aura-map-marker--selected {
+  background: var(--color-text-main);
+  border-color: var(--color-text-main);
+  box-shadow: 0 14px 30px rgba(26, 26, 24, 0.22);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.aura-map-marker-label {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  max-width: 170px;
+  padding: 8px 11px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 10px 24px rgba(75, 68, 58, 0.14);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  transform: translate(-50%, 4px);
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+  white-space: nowrap;
+}
+
+.aura-map-marker-shell:hover .aura-map-marker-label,
+.aura-map-marker-shell--labeled .aura-map-marker-label {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.aura-beacon-marker {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aura-beacon-marker__pulse {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  background: rgba(212, 169, 106, 0.3);
+  animation: aura-pulse 1.5s ease-out infinite;
+}
+
+.aura-beacon-marker__core {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 9999px;
+  background: var(--color-accent-amber);
+  box-shadow: 0 6px 18px rgba(212, 169, 106, 0.45);
+  font-size: 13px;
+}
+
+.aura-map-cluster {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(196, 151, 138, 0.34);
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 34% 28%, #ffffff 0 28%, transparent 29%),
+    linear-gradient(135deg, #fffdfb 0%, #f3eee8 54%, #e9f0e6 100%);
+  box-shadow: 0 12px 28px rgba(75, 68, 58, 0.16);
+  color: var(--color-text-main);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.aura-map-cluster span {
+  transform: translateY(1px);
+}
+
+.aura-map-controls {
+  position: absolute;
+  right: 16px;
+  bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aura-map-control-button {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(218, 218, 211, 0.9);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 24px rgba(75, 68, 58, 0.14);
+  color: var(--color-text-main);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.aura-map-control-button:hover {
+  border-color: rgba(143, 170, 139, 0.58);
+  box-shadow: 0 12px 28px rgba(75, 68, 58, 0.18);
+  transform: translateY(-1px);
+}
+
+.aura-map-control-button:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.aura-map-control-button .material-symbols-outlined {
+  font-size: 21px;
+}
+
+.aura-map-control-spin {
+  animation: aura-control-spin 900ms linear infinite;
+}
+
+.aura-user-location {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aura-user-location__pulse {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(34, 158, 217, 0.2);
+  animation: aura-user-pulse 1.6s ease-out infinite;
+}
+
+.aura-user-location__dot {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border: 3px solid #ffffff;
+  border-radius: 9999px;
+  background: #229ed9;
+  box-shadow: 0 4px 14px rgba(34, 158, 217, 0.42);
+}
+
+.leaflet-marker-icon {
+  background: transparent;
+  border: 0;
+}
+
+@keyframes aura-pulse {
+  0% {
+    opacity: 0.78;
+    transform: scale(0.72);
+  }
+
+  70% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+}
+
+@keyframes aura-user-pulse {
+  0% {
+    opacity: 0.78;
+    transform: scale(0.55);
+  }
+
+  75% {
+    opacity: 0;
+    transform: scale(1.65);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+
+@keyframes aura-control-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .aura-map-controls {
+    top: 24px;
+    right: 24px;
+    bottom: auto;
+  }
+}

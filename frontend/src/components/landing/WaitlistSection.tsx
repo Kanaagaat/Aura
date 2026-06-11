@@ -60,8 +60,12 @@ export function WaitlistSection() {
       setEmail('');
       setTelegram('');
       setInterests([]);
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (submissionError) {
+      setError(
+        submissionError instanceof Error
+          ? submissionError.message
+          : 'Something went wrong. Please try again.',
+      );
     } finally {
       setLoading(false);
     }
@@ -72,7 +76,7 @@ export function WaitlistSection() {
       <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-center">
         <motion.div {...fadeUp}>
           <p className="mb-3 inline-flex rounded-full border border-[#e7d8ca] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#9a7d66] shadow-[0_8px_24px_rgba(188,151,125,0.08)]">
-            Beta opening soon in Almaty
+            Beta opening soon in your city
           </p>
           <h2 className="text-[32px] font-semibold leading-tight tracking-[-0.6px] text-[#1a1a18] md:text-[44px]">
             Join the first wave of Aura

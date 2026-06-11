@@ -1,13 +1,16 @@
 // frontend/src/components/AuraMap.tsx
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   MapContainer,
-  TileLayer,
   Marker,
+  TileLayer,
   useMap,
+  useMapEvents,
 } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 // Fix Leaflet's default icon — required or markers show as broken images
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -31,63 +34,78 @@ const EMOJI: Record<string, string> = {
   other: '📍',
 };
 
+const LABEL_ZOOM = 15;
+type LatLngTuple = [number, number];
+
 // ─── Icon factories ──────────────────────────────────────────────────────────
-function createVenueIcon(emoji: string, name: string, selected: boolean) {
-  const shortName = name.length > 18 ? name.slice(0, 16) + '…' : name;
+function escapeHtml(value: string) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function createVenueIcon(
+  emoji: string,
+  name: string,
+  selected: boolean,
+  showLabel: boolean
+) {
   return L.divIcon({
-    html: `<div style="
-      background: ${selected ? '#1C1C1A' : 'white'};
-      color: ${selected ? 'white' : '#1C1C1A'};
-      border-radius: 100px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      box-shadow: ${selected
-        ? '0 4px 16px rgba(0,0,0,0.25)'
-        : '0 2px 8px rgba(0,0,0,0.12)'};
-      border: ${selected ? '1.5px solid #1C1C1A' : '0.5px solid rgba(0,0,0,0.08)'};
-      transform: ${selected ? 'scale(1.08)' : 'scale(1)'};
-      transition: all 0.15s ease;
-      cursor: pointer;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    ">${emoji} ${shortName}</div>`,
+    html: `
+      <div class="aura-map-marker-shell${selected || showLabel ? ' aura-map-marker-shell--labeled' : ''}">
+        <div class="aura-map-marker${selected ? ' aura-map-marker--selected' : ''}">${emoji}</div>
+        <span class="aura-map-marker-label">${escapeHtml(name)}</span>
+      </div>
+    `,
     className: '',
-    iconAnchor: [0, 0],
+    iconSize: [42, 42],
+    iconAnchor: [21, 21],
   });
 }
 
-function createBeaconPulseIcon(emoji: string) {
+function createBeaconPulseIcon(
+  emoji: string,
+  name: string,
+  selected: boolean,
+  showLabel: boolean
+) {
   return L.divIcon({
     html: `
-      <div style="position:relative; display:flex; align-items:center; justify-content:center; width:40px; height:40px;">
-        <div style="
-          position:absolute;
-          width:40px; height:40px;
-          border-radius:50%;
-          background: rgba(245,158,11,0.25);
-          animation: aura-pulse 1.5s ease-out infinite;
-        "></div>
-        <div style="
-          position:relative;
-          width:22px; height:22px;
-          border-radius:50%;
-          background:#F59E0B;
-          display:flex; align-items:center; justify-content:center;
-          font-size:12px;
-          box-shadow: 0 2px 8px rgba(245,158,11,0.6);
-        ">${emoji}</div>
+      <div class="aura-map-marker-shell${selected || showLabel ? ' aura-map-marker-shell--labeled' : ''}">
+        <div class="aura-beacon-marker">
+          <div class="aura-beacon-marker__pulse"></div>
+          <div class="aura-beacon-marker__core">${emoji}</div>
+        </div>
+        <span class="aura-map-marker-label">${escapeHtml(name)}</span>
       </div>
-      <style>
-        @keyframes aura-pulse {
-          0%   { transform: scale(0.7); opacity: 0.8; }
-          70%  { transform: scale(1.8); opacity: 0; }
-          100% { transform: scale(0.7); opacity: 0; }
-        }
-      </style>
     `,
     className: '',
     iconAnchor: [20, 20],
+  });
+}
+
+function createClusterIcon(cluster: { getChildCount: () => number }) {
+  return L.divIcon({
+    html: `<div class="aura-map-cluster"><span>${cluster.getChildCount()}</span></div>`,
+    className: '',
+    iconSize: L.point(48, 48, true),
+  });
+}
+
+function createUserLocationIcon() {
+  return L.divIcon({
+    html: `
+      <div class="aura-user-location">
+        <div class="aura-user-location__pulse"></div>
+        <div class="aura-user-location__dot"></div>
+      </div>
+    `,
+    className: '',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
   });
 }
 
@@ -109,6 +127,82 @@ function FlyToSelected({ selected }: { selected: Location | null }) {
   return null;
 }
 
+function ZoomTracker({ onZoomChange }: { onZoomChange: (zoom: number) => void }) {
+  const map = useMapEvents({
+    zoomend: () => onZoomChange(map.getZoom()),
+  });
+
+  useEffect(() => {
+    onZoomChange(map.getZoom());
+  }, [map, onZoomChange]);
+
+  return null;
+}
+
+function MapControls({
+  onLocate,
+}: {
+  onLocate: (position: LatLngTuple) => void;
+}) {
+  const map = useMap();
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState(false);
+
+  const locate = () => {
+    if (!navigator.geolocation || locating) return;
+    setLocating(true);
+    setLocationError(false);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const nextPosition: LatLngTuple = [
+          position.coords.latitude,
+          position.coords.longitude,
+        ];
+        onLocate(nextPosition);
+        map.flyTo(nextPosition, Math.max(map.getZoom(), 15), { duration: 0.7 });
+        setLocating(false);
+      },
+      () => {
+        setLocationError(true);
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
+    );
+  };
+
+  return (
+    <div className="aura-map-controls" aria-label="Map controls">
+      <button
+        type="button"
+        onClick={() => map.zoomIn()}
+        className="aura-map-control-button"
+        aria-label="Zoom in"
+      >
+        <span className="material-symbols-outlined">add</span>
+      </button>
+      <button
+        type="button"
+        onClick={() => map.zoomOut()}
+        className="aura-map-control-button"
+        aria-label="Zoom out"
+      >
+        <span className="material-symbols-outlined">remove</span>
+      </button>
+      <button
+        type="button"
+        onClick={locate}
+        className="aura-map-control-button"
+        aria-label="Show my location"
+        title={locationError ? 'Location unavailable' : 'Show my location'}
+      >
+        <span className={`material-symbols-outlined ${locating ? 'aura-map-control-spin' : ''}`}>
+          {locating ? 'progress_activity' : 'my_location'}
+        </span>
+      </button>
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 interface AuraMapProps {
   locations: Location[];
@@ -123,7 +217,13 @@ export function AuraMap({
   activeBeaconLocationIds = [],
   onSelect,
 }: AuraMapProps) {
+  const [zoom, setZoom] = useState(13);
+  const [userPosition, setUserPosition] = useState<LatLngTuple | null>(null);
   const selected = locations.find((l) => l.id === selectedId) ?? null;
+  const showLabels = zoom >= LABEL_ZOOM;
+  const handleZoomChange = useCallback((nextZoom: number) => {
+    setZoom(nextZoom);
+  }, []);
 
   return (
     <MapContainer
@@ -135,33 +235,52 @@ export function AuraMap({
     >
       <TileLayer url={TILE_URL} attribution={ATTRIBUTION} />
 
+      <ZoomTracker onZoomChange={handleZoomChange} />
       <FlyToSelected selected={selected} />
+      <MapControls onLocate={setUserPosition} />
 
-      {locations.map((loc) => {
-        const pos: [number, number] = [
-          parseFloat(loc.latitude),
-          parseFloat(loc.longitude),
-        ];
-        const emoji = EMOJI[loc.category] ?? '📍';
-        const isSelected = loc.id === selectedId;
-        const hasBeacon = activeBeaconLocationIds.includes(loc.id);
+      {userPosition && (
+        <Marker
+          position={userPosition}
+          icon={createUserLocationIcon()}
+          interactive={false}
+          zIndexOffset={1200}
+        />
+      )}
 
-        return (
-          <Marker
-            key={loc.id}
-            position={pos}
-            icon={
-              hasBeacon
-                ? createBeaconPulseIcon(emoji)
-                : createVenueIcon(emoji, loc.name, isSelected)
-            }
-            eventHandlers={{
-              click: () => onSelect(loc.id),
-            }}
-            zIndexOffset={isSelected ? 1000 : 0}
-          />
-        );
-      })}
+      <MarkerClusterGroup
+        chunkedLoading
+        showCoverageOnHover={false}
+        spiderfyOnMaxZoom
+        maxClusterRadius={44}
+        iconCreateFunction={createClusterIcon}
+      >
+        {locations.map((loc) => {
+          const pos: [number, number] = [
+            parseFloat(loc.latitude),
+            parseFloat(loc.longitude),
+          ];
+          const emoji = EMOJI[loc.category] ?? '📍';
+          const isSelected = loc.id === selectedId;
+          const hasBeacon = activeBeaconLocationIds.includes(loc.id);
+
+          return (
+            <Marker
+              key={loc.id}
+              position={pos}
+              icon={
+                hasBeacon
+                  ? createBeaconPulseIcon(emoji, loc.name, isSelected, showLabels)
+                  : createVenueIcon(emoji, loc.name, isSelected, showLabels)
+              }
+              eventHandlers={{
+                click: () => onSelect(loc.id),
+              }}
+              zIndexOffset={isSelected ? 1000 : 0}
+            />
+          );
+        })}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 }

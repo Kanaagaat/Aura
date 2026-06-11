@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuraStore } from '../store/useAuraStore';
 import { BeaconCard } from '../components/BeaconCard';
+import { InstagramIcon } from '../components/InstagramIcon';
+import { TelegramIcon } from '../components/TelegramIcon';
 import { api } from '../lib/api';
 import type { Beacon, UserProfile } from '../types';
 
@@ -91,9 +93,10 @@ export function UserProfilePage() {
               href={`https://t.me/${user.telegram_username.replace('@', '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-border px-4 py-2 text-sm hover:border-primary transition-colors"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white hover:border-[#229ED9] transition-colors"
+              aria-label={`Open Telegram profile @${user.telegram_username.replace('@', '')}`}
             >
-              Telegram
+              <TelegramIcon className="h-5 w-5" />
             </a>
           )}
           {user.instagram_handle && (
@@ -101,9 +104,10 @@ export function UserProfilePage() {
               href={`https://instagram.com/${user.instagram_handle.replace('@', '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-border px-4 py-2 text-sm hover:border-primary transition-colors"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white hover:border-[#D6249F] transition-colors"
+              aria-label={`Open Instagram profile @${user.instagram_handle.replace('@', '')}`}
             >
-              Instagram
+              <InstagramIcon className="h-5 w-5" />
             </a>
           )}
         </div>

@@ -5,7 +5,7 @@ const FEATURES = [
   {
     emoji: '🗺',
     title: 'Interactive Map',
-    body: '34 handpicked Almaty wellness venues. Warm pill markers, category filters, no ads.',
+    body: 'Handpicked wellness places with warm markers, soft filters, and no ads.',
     soon: false,
   },
   {
@@ -34,8 +34,8 @@ const FEATURES = [
   },
   {
     emoji: '📍',
-    title: 'Almaty-first',
-    body: 'Built for the city, not a global feed. Every venue is personally curated.',
+    title: 'City-first',
+    body: 'Built for your city, not a noisy global feed. Every place feels personally curated.',
     soon: false,
   },
 ];

@@ -28,9 +28,11 @@ const EMOJI: Record<string, string> = {
 export function VenueDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { beacons, fetchBeacons, isAuthenticated } = useAuraStore();
+  const { beacons, fetchBeacons, isAuthenticated, profile, toggleSave } = useAuraStore();
   const [venue, setVenue] = useState<Location | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [savingHeart, setSavingHeart] = useState(false);
+  const [heartPopped, setHeartPopped] = useState(false);
 
   const venueId = Number(id);
 
@@ -75,13 +77,28 @@ export function VenueDetailPage() {
   }
 
   const emoji = EMOJI[venue.category] ?? '📍';
+  const isSaved = (profile?.saved_location_ids ?? []).includes(venueId);
+
+  const handleToggleSave = async () => {
+    if (!isAuthenticated) {
+      navigate(`/auth?redirect=${encodeURIComponent(`/venues/${venueId}`)}`);
+      return;
+    }
+    setSavingHeart(true);
+    await toggleSave(venueId);
+    setSavingHeart(false);
+    if (!isSaved) {
+      setHeartPopped(true);
+      setTimeout(() => setHeartPopped(false), 600);
+    }
+  };
 
   const lightBeacon = () => {
     if (!isAuthenticated) {
-      navigate(`/auth?redirect=${encodeURIComponent(`/venues/${venue.id}`)}`);
+      navigate(`/auth?redirect=${encodeURIComponent(`/venues/${venue!.id}`)}`);
       return;
     }
-    navigate(`/beacon/new?location=${venue.id}`);
+    navigate(`/beacon/new?location=${venue!.id}`);
   };
 
   return (
@@ -105,8 +122,26 @@ export function VenueDetailPage() {
         >
           ←
         </button>
+
+        {/* Heart / Save button */}
+        <button
+          type="button"
+          onClick={handleToggleSave}
+          disabled={savingHeart}
+          aria-label={isSaved ? 'Remove from saved' : 'Save this venue'}
+          className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 backdrop-blur shadow-sm active:scale-90 disabled:opacity-60"
+        >
+          <motion.span
+            animate={{ scale: heartPopped ? 1.4 : 1 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+            style={{ color: isSaved ? '#f43f5e' : '#8A8880', fontSize: '1.25rem', lineHeight: 1 }}
+          >
+            {isSaved ? '♥' : '♡'}
+          </motion.span>
+        </button>
+
         {venue.is_featured && (
-          <span className="absolute top-4 right-4 rounded-full bg-accent-amber/90 px-3 py-1 text-xs font-semibold text-amber-900">
+          <span className="absolute bottom-4 right-4 rounded-full bg-accent-amber/90 px-3 py-1 text-xs font-semibold text-amber-900">
             ⭐ Editor&apos;s pick
           </span>
         )}

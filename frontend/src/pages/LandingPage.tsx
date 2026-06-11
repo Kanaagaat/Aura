@@ -102,14 +102,14 @@ export function LandingPage() {
               Aura
               <br />
               <span className="text-[34px] sm:text-[44px] md:text-[54px]">
-                Find where to go in Almaty — and who to go with.
+                Find where to go in your city — and who to go with.
               </span>
             </motion.h1>
             <motion.p
               variants={heroItem}
               className="text-[#62625b] text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-10"
             >
-              Aura is a social map for coffee, yoga, walks, and wellness places in Almaty.
+              Aura is a social map for coffee, yoga, walks, and vibey wellness places in your city.
               Light a beacon on a place you want to visit, and people with a similar vibe can join you.
             </motion.p>
             <motion.div
@@ -196,7 +196,7 @@ export function LandingPage() {
           <h2 className="text-[32px] md:text-[40px] font-semibold text-white mb-3 tracking-[-0.8px]">
             Join Aura before the beta opens.
           </h2>
-          <p className="text-[#91918c] text-base mb-8">Beta opening soon in Almaty.</p>
+          <p className="text-[#91918c] text-base mb-8">Beta opening soon for your city.</p>
           <button
             type="button"
             onClick={scrollToWaitlist}

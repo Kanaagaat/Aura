@@ -73,7 +73,7 @@ export function LightBeaconPage() {
           <label className="text-sm font-medium block mb-2">Find a venue</label>
           <input
             type="search"
-            placeholder="Search Almaty spots..."
+            placeholder="Search vibey spots..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-[14px] border border-border bg-surface px-4 py-3 text-sm mb-4 outline-none focus:border-primary"

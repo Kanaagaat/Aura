@@ -6,6 +6,7 @@ interface AuraState {
   locations: Location[];
   beacons: Beacon[];
   profile: UserProfile | null;
+  savedLocations: Location[];
   isAuthenticated: boolean;
   mapFilter: Category;
   searchQuery: string;
@@ -19,6 +20,8 @@ interface AuraState {
   fetchLocations: () => Promise<void>;
   fetchBeacons: () => Promise<void>;
   fetchProfile: () => Promise<void>;
+  fetchSavedLocations: () => Promise<void>;
+  toggleSave: (locationId: number) => Promise<void>;
   login: (payload: any) => Promise<void>;
   register: (payload: any) => Promise<void>;
   googleLogin: (credential: string) => Promise<void>;
@@ -33,6 +36,7 @@ export const useAuraStore = create<AuraState>((set, get) => ({
   locations: [],
   beacons: [],
   profile: null,
+  savedLocations: [],
   isAuthenticated: !!getAccessToken(),
   mapFilter: 'all',
   searchQuery: '',
@@ -74,6 +78,41 @@ export const useAuraStore = create<AuraState>((set, get) => ({
     } catch (e) {
       clearTokens();
       set({ profile: null, isAuthenticated: false, error: (e as Error).message });
+    }
+  },
+
+  fetchSavedLocations: async () => {
+    if (!getAccessToken()) return;
+    try {
+      const savedLocations = await api.getSavedLocations();
+      set({ savedLocations });
+    } catch {
+      // silently fail — not critical
+    }
+  },
+
+  toggleSave: async (locationId: number) => {
+    if (!getAccessToken()) return;
+    try {
+      const result = await api.toggleSavedLocation(locationId);
+      const { savedLocations, locations, profile } = get();
+      if (result.saved) {
+        const loc = locations.find((l) => l.id === locationId);
+        if (loc && !savedLocations.find((s) => s.id === locationId)) {
+          set({ savedLocations: [...savedLocations, loc] });
+        }
+      } else {
+        set({ savedLocations: savedLocations.filter((l) => l.id !== locationId) });
+      }
+      // Update profile saved_location_ids in sync
+      if (profile) {
+        const ids = result.saved
+          ? [...(profile.saved_location_ids ?? []), locationId]
+          : (profile.saved_location_ids ?? []).filter((id) => id !== locationId);
+        set({ profile: { ...profile, saved_location_ids: ids } });
+      }
+    } catch (e) {
+      set({ error: (e as Error).message });
     }
   },
 
@@ -148,6 +187,7 @@ export const useAuraStore = create<AuraState>((set, get) => ({
     ];
     if (getAccessToken()) {
       promises.push(get().fetchProfile());
+      promises.push(get().fetchSavedLocations());
     }
     await Promise.all(promises);
     set({ loading: false });

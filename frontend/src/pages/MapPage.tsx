@@ -98,7 +98,7 @@ export function MapPage() {
           <div className="absolute inset-0 flex items-center justify-center bg-[#F5F3EF] z-10">
             <div className="text-center space-y-3">
               <div className="w-8 h-8 rounded-full border-2 border-[#7A9E7E] border-t-transparent animate-spin mx-auto" />
-              <p className="text-sm text-[#8A8880]">Loading Almaty's wellness spots…</p>
+              <p className="text-sm text-[#8A8880]">Loading vibey wellness spots…</p>
             </div>
           </div>
         )}
@@ -127,7 +127,7 @@ export function MapPage() {
       {!loading && !error && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 md:hidden">
           <div className="rounded-full bg-white/90 backdrop-blur-md px-4 py-2 text-xs font-medium text-[#5A5750] shadow-[0_2px_12px_rgba(0,0,0,0.1)] border border-[#EEECE8]">
-            {filtered.length} spot{filtered.length !== 1 ? 's' : ''} in Almaty
+            Vibey spots near you
           </div>
         </div>
       )}
@@ -138,7 +138,7 @@ export function MapPage() {
           <div className="p-6 border-b border-[#EEECE8]">
             <h1 className="font-serif text-2xl text-[#1C1C1A]">Wellness Map</h1>
             <p className="text-sm text-[#8A8880] mt-1">
-              {filtered.length} curated spot{filtered.length !== 1 ? 's' : ''} · Tap a pin to explore
+              Curated places for your city · Tap a pin to explore
             </p>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-2">

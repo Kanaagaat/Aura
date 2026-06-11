@@ -11,6 +11,7 @@ export interface UserProfile {
   avatar_url: string;
   is_premium: boolean;
   beacons_lit: number;
+  saved_location_ids: number[];
 }
 
 export interface Location {

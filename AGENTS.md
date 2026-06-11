@@ -29,22 +29,21 @@ Repo layout:
   /downloads_photos/       → local venue photos served in DEBUG
 
 ═══════════════════════════════════════════════
-CURRENT STATE — ALREADY BUILT (do not rewrite)
+CURRENT STATE — DO NOT REGENERATE
 ═══════════════════════════════════════════════
 
-✅ Django project structure + PostgreSQL connected
-✅ Location model + seed_venues management command
-   - Reads from docs/locations.json (34 locations: 10 coffee, 10 yoga, 10 spa, 4 other)
-   - Auto-syncs to DB on first GET /api/locations/?city=Almaty if table is empty
-   - Photos matched by 2gis_id or normalized name → /downloads_photos/<file>
-✅ Static serving of /downloads_photos/ in DEBUG via urls.py
-✅ React + Vite frontend bootstrapped
-✅ React Router with catch-all redirect to / for unknown paths
-⚠️  AuthPage.tsx exists but has TypeScript error:
-    window.google used without type declaration
-    FIX: add at top of AuthPage.tsx →
-    declare global { interface Window { google: any } }
-⚠️  Map renders but location pins not yet connected to API data
+Aura is already partially built. Before adding new code, inspect the existing
+backend/frontend implementation and extend the current modules instead of
+regenerating scaffolding, models, routes, or map components.
+
+Key areas already present:
+- Django project, PostgreSQL integration, DRF API, auth/profile/beacon/location flows.
+- React + Vite frontend with routing, landing/waitlist, auth, map, profiles,
+  venue details, beacon detail/create/join, and story-card export.
+- Location import from `docs/locations.json`, local photo matching, and
+  `/downloads_photos/` DEBUG serving.
+- Leaflet map with API-driven markers, clustering, zoom controls, user-location
+  control, selected venue sheet, and beacon creation sheet.
 
 ═══════════════════════════════════════════════
 DATA MODELS (source of truth)
@@ -64,7 +63,7 @@ class Location(models.Model):
     hours       = models.CharField(max_length=80, blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
 
-# Add these next — generate migrations for them
+# Already exists — do not regenerate migrations for these
 
 class UserProfile(models.Model):
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -120,22 +119,11 @@ Fix Leaflet default icon (required — icons break without this):
   delete (L.Icon.Default.prototype as any)._getIconUrl
   L.Icon.Default.mergeOptions({ iconUrl: markerIcon, shadowUrl: markerShadow })
 
-Custom pill marker for venues:
-  const createVenueIcon = (emoji: string, name: string) =>
-    L.divIcon({
-      html: `<div style="
-        background: white;
-        border-radius: 100px;
-        padding: 4px 10px;
-        font-size: 12px;
-        font-weight: 500;
-        white-space: nowrap;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        border: 0.5px solid rgba(0,0,0,0.08);
-      ">${emoji} ${name}</div>`,
-      className: '',
-      iconAnchor: [0, 0],
-    })
+Venue marker UX:
+  - Default zoom should show soft circular emoji markers, not permanent names.
+  - Nearby venues should cluster when zoomed out.
+  - Venue names may appear on hover, selected marker, or high zoom.
+  - Venue details should open in the existing card/bottom sheet.
 
 Category emoji map:
   const EMOJI: Record<string, string> = {
@@ -157,7 +145,6 @@ UPCOMING TASKS (weeks 4–6, do not build yet)
 
 Week 4:
 - Telegram deep-link: tg://resolve?domain=<handle>&text=<prefilled>
-- Story card generator via html2canvas
 
 Week 5 — AI features:
 - Compatibility score: embeddings (OpenAI text-embedding-3-small) +
@@ -189,11 +176,6 @@ Existing endpoints (do not recreate):
   GET /api/v1/locations/<id>/  → single location detail
 
 Endpoints to build:
-  GET  /api/v1/users/me/
-  PUT  /api/v1/users/me/
-  GET  /api/v1/beacons/
-  POST /api/v1/beacons/
-  POST /api/v1/beacons/<id>/join/
   GET  /api/v1/ai/compatibility/?beacon_id=<id>
   POST /api/v1/ai/vibe-search/
   GET  /api/v1/ai/beacon-suggest/?location_id=<id>&activity=<type>

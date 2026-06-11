@@ -116,7 +116,7 @@ export function BeaconDetailPage() {
     : "I'm in";
 
   return (
-    <div className="max-w-2xl mx-auto pb-12">
+    <div className="max-w-2xl mx-auto pb-[calc(8rem+env(safe-area-inset-bottom))] md:pb-12">
       <div className="relative h-64 md:h-80">
         {beacon.location && (
           <LocationImage
@@ -204,9 +204,10 @@ export function BeaconDetailPage() {
             <>
               <Link
                 to={`/venues/${beacon.location.id}`}
-                className="text-sm font-medium text-primary-dark hover:underline"
+                className="flex items-center justify-between rounded-[var(--radius-card)] border border-border bg-surface px-4 py-3 text-sm font-medium text-primary-dark shadow-[var(--shadow-soft)] hover:border-primary/50"
               >
-                View venue details →
+                <span>View venue details</span>
+                <span className="material-symbols-outlined text-lg">arrow_forward</span>
               </Link>
               <MiniMap
                 latitude={beacon.location.latitude}

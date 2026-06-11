@@ -6,7 +6,7 @@ const STEPS = [
     num: '01',
     emoji: '🗺',
     title: 'Discover',
-    body: 'Browse 34 curated wellness venues on an interactive Almaty map. Coffee, yoga, spa — filtered by vibe.',
+    body: 'Browse curated wellness places on an interactive city map. Coffee, yoga, spa — filtered by vibe.',
   },
   {
     num: '02',

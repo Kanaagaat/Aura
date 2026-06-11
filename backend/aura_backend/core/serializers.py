@@ -8,6 +8,7 @@ from .models import Beacon, BeaconJoin, Location, UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     beacons_lit = serializers.IntegerField(read_only=True)
     username = serializers.CharField(source="user.username", read_only=True)
+    saved_location_ids = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
@@ -21,7 +22,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "avatar_url",
             "is_premium",
             "beacons_lit",
+            "saved_location_ids",
         ]
+
+    def get_saved_location_ids(self, obj: "UserProfile") -> list[int]:
+        return list(obj.saved_locations.values_list("pk", flat=True))
 
 
 class LocationSerializer(serializers.ModelSerializer):

@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuraStore } from '../store/useAuraStore';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import type { UserProfile } from '../types';
 
 interface EditProfileModalProps {
@@ -15,6 +16,7 @@ const MAX_AVATAR_BYTES = 1.5 * 1024 * 1024; // 1.5 MB
 export function EditProfileModal({ open, profile, onClose }: EditProfileModalProps) {
   const updateProfile = useAuraStore((s) => s.updateProfile);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  useBodyScrollLock(open);
 
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || '');
   const [displayName, setDisplayName] = useState(profile.display_name || '');
@@ -69,7 +71,7 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 z-50"
+            className="fixed inset-0 bg-black/30 z-[70]"
             onClick={onClose}
           />
           <motion.div
@@ -77,15 +79,17 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="fixed z-50 inset-x-0 bottom-0 md:inset-0 md:m-auto md:h-fit md:max-w-md
+            className="fixed z-[80] inset-x-0 bottom-0 md:inset-0 md:m-auto md:h-fit md:max-w-md
                        bg-white rounded-t-[28px] md:rounded-[28px] shadow-[0_-4px_40px_rgba(0,0,0,0.15)]
-                       max-h-[92vh] overflow-y-auto"
+                       max-h-[92dvh] overflow-hidden flex flex-col"
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-center pt-3 pb-1 md:hidden">
+            <div className="shrink-0 flex justify-center pt-3 pb-1 md:hidden">
               <div className="w-10 h-1 rounded-full bg-[#D4D0C8]" />
             </div>
 
-            <div className="px-6 py-5">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pt-5 pb-4">
               <h2 className="font-serif text-2xl text-[#1C1C1A] mb-6">Edit Profile</h2>
 
               {/* Avatar editor */}
@@ -179,24 +183,24 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
               </Field>
 
               {error && <p className="text-sm text-rose-500 mt-2">{error}</p>}
+            </div>
 
-              <div className="flex gap-3 mt-6 mb-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="flex-1 rounded-full border border-[#EEECE8] py-3 text-sm font-medium text-[#5A5750] hover:bg-[#FAFAF7] transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="flex-1 rounded-full bg-[#1C1C1A] text-white py-3 text-sm font-medium hover:bg-[#2C2C2A] transition-colors disabled:opacity-60"
-                >
-                  {saving ? 'Saving…' : 'Save Changes'}
-                </button>
-              </div>
+            <div className="shrink-0 flex gap-3 border-t border-[#EEECE8] bg-white/96 px-6 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-8px_22px_rgba(0,0,0,0.04)]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 rounded-full border border-[#EEECE8] py-3 text-sm font-medium text-[#5A5750] hover:bg-[#FAFAF7] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={saving}
+                className="flex-1 rounded-full bg-[#1C1C1A] text-white py-3 text-sm font-medium hover:bg-[#2C2C2A] transition-colors disabled:opacity-60"
+              >
+                {saving ? 'Saving…' : 'Save Changes'}
+              </button>
             </div>
           </motion.div>
         </>

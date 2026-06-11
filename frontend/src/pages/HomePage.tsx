@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuraStore } from '../store/useAuraStore';
 import { BeaconCard } from '../components/BeaconCard';
@@ -29,6 +29,46 @@ function timeOfDaySuggestion(hour: number): { label: string; categories: string[
   return { label: 'Evening unwind', categories: ['spa', 'yoga'] };
 }
 
+function HeartButton({ locationId }: { locationId: number }) {
+  const { profile, toggleSave, isAuthenticated } = useAuraStore();
+  const [saving, setSaving] = useState(false);
+  const [popped, setPopped] = useState(false);
+  const isSaved = (profile?.saved_location_ids ?? []).includes(locationId);
+
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) return;
+    setSaving(true);
+    await toggleSave(locationId);
+    setSaving(false);
+    if (!isSaved) {
+      setPopped(true);
+      setTimeout(() => setPopped(false), 600);
+    }
+  };
+
+  if (!isAuthenticated) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={saving}
+      aria-label={isSaved ? 'Unsave' : 'Save'}
+      className="flex h-8 w-8 items-center justify-center rounded-full bg-surface/80 backdrop-blur shadow-sm active:scale-90 disabled:opacity-50 shrink-0"
+    >
+      <motion.span
+        animate={{ scale: popped ? 1.4 : 1 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+        style={{ color: isSaved ? '#f43f5e' : '#AAAAAA', fontSize: '1rem', lineHeight: 1 }}
+      >
+        {isSaved ? '♥' : '♡'}
+      </motion.span>
+    </button>
+  );
+}
+
 function VenueRow({ loc, featured }: { loc: Location; featured?: boolean }) {
   return (
     <motion.div {...fadeUp}>
@@ -53,7 +93,7 @@ function VenueRow({ loc, featured }: { loc: Location; featured?: boolean }) {
             </span>
           )}
         </div>
-        <div className="py-4 pr-4 flex flex-col justify-center min-w-0">
+        <div className="py-4 pr-3 flex flex-col justify-center min-w-0 flex-1">
           <p className="text-xs text-text-muted uppercase tracking-wide mb-0.5">
             {EMOJI[loc.category] ?? '📍'} {loc.category}
           </p>
@@ -71,6 +111,9 @@ function VenueRow({ loc, featured }: { loc: Location; featured?: boolean }) {
               </span>
             )}
           </div>
+        </div>
+        <div className="flex items-center pr-4">
+          <HeartButton locationId={loc.id} />
         </div>
       </Link>
     </motion.div>
@@ -115,7 +158,7 @@ export function HomePage() {
         className="mb-10"
       >
         <p className="text-sm text-text-muted uppercase tracking-widest mb-2">
-          Almaty · Today
+          Your city · Today
         </p>
         <h1 className="font-serif text-4xl md:text-5xl leading-tight">
           {greeting}

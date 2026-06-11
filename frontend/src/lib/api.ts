@@ -141,10 +141,11 @@ export const api = {
     }),
 
   getLocations: async (category?: Category): Promise<Location[]> => {
-    const params = new URLSearchParams({ city: 'Almaty' });
+    const params = new URLSearchParams();
     if (category && category !== 'all') params.set('category', category);
+    const query = params.toString();
     const data = await axiosJson<Location[] | { results: Location[] }>(
-      `/api/v1/locations/?${params}`,
+      `/api/v1/locations/${query ? `?${query}` : ''}`,
     );
     return unwrapList(data);
   },
@@ -176,4 +177,17 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(payload),
     }),
+
+  getSavedLocations: async (): Promise<Location[]> => {
+    const data = await axiosJson<{ data: Location[] }>('/api/v1/profiles/saved/');
+    return (data as any).data ?? data ?? [];
+  },
+
+  toggleSavedLocation: async (locationId: number): Promise<{ saved: boolean; location_id: number }> => {
+    const data = await axiosJson<{ data: { saved: boolean; location_id: number } }>(
+      `/api/v1/profiles/saved/${locationId}/`,
+      {},  // empty body forces POST
+    );
+    return (data as any).data;
+  },
 };

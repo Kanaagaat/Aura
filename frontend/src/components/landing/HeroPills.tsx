@@ -5,7 +5,7 @@ const PILLS = [
   { label: '☕ Coffee', className: 'top-[18%] left-[6%] md:left-[10%]' },
   { label: '🧘 Yoga', className: 'top-[12%] right-[8%] md:right-[14%]' },
   { label: '✨ Spa', className: 'top-[42%] left-[4%] md:left-[8%]' },
-  { label: '🗺 Almaty', className: 'top-[38%] right-[5%] md:right-[10%]' },
+  { label: '🗺 Your city', className: 'top-[38%] right-[5%] md:right-[10%]' },
   { label: '🕯 Beacon', className: 'bottom-[28%] left-[12%] md:left-[18%]' },
   { label: '💬 Connect', className: 'bottom-[22%] right-[10%] md:right-[16%]' },
 ];

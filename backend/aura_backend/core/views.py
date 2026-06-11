@@ -269,10 +269,10 @@ class BeaconViewSet(viewsets.ModelViewSet):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.select_related("user").all()
     serializer_class = UserProfileSerializer
-    http_method_names = ["get", "patch", "head", "options"]
+    http_method_names = ["get", "patch", "post", "delete", "head", "options"]
 
     def get_permissions(self):
-        if self.action in ("me", "partial_update", "update"):
+        if self.action in ("me", "partial_update", "update", "saved", "toggle_saved"):
             return [permissions.IsAuthenticated()]
         return [permissions.AllowAny()]
 
@@ -301,4 +301,38 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
         return Response(UserProfileSerializer(profile).data)
+
+    @action(detail=False, methods=["get"], url_path="saved")
+    def saved(self, request):
+        """GET /api/v1/profiles/saved/ — list the current user's saved locations."""
+        profile = getattr(request.user, "profile", None)
+        if not profile:
+            return Response({"data": [], "error": None})
+        locations = profile.saved_locations.all()
+        serializer = LocationSerializer(locations, many=True, context={"request": request})
+        return Response({"data": serializer.data, "error": None})
+
+    @action(detail=False, methods=["post"], url_path=r"saved/(?P<location_id>\d+)")
+    def toggle_saved(self, request, location_id: str = None):
+        """POST /api/v1/profiles/saved/<location_id>/ — toggle save/unsave."""
+        profile = getattr(request.user, "profile", None)
+        if not profile:
+            profile = UserProfile.objects.create(
+                user=request.user,
+                display_name=request.user.username,
+            )
+        try:
+            location = Location.objects.get(pk=int(location_id))
+        except Location.DoesNotExist:
+            return Response(
+                {"data": None, "error": {"code": "not_found", "message": "Location not found."}},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        if profile.saved_locations.filter(pk=location.pk).exists():
+            profile.saved_locations.remove(location)
+            saved = False
+        else:
+            profile.saved_locations.add(location)
+            saved = True
+        return Response({"data": {"saved": saved, "location_id": location.pk}, "error": None})
 
