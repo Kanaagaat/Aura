@@ -3,6 +3,7 @@ import { supabase } from './supabase';
 
 export interface WaitlistSubmission {
   email: string;
+  city: string;
   telegram: string;
   interests: string[];
   created_at: string;
@@ -26,6 +27,7 @@ export async function submitWaitlist(data: WaitlistSubmission): Promise<void> {
   if (supabase) {
     const { error } = await supabase.from('waitlist').insert({
       email: data.email,
+      city: data.city || null,
       telegram: data.telegram || null,
       interests: data.interests,
       created_at: data.created_at,

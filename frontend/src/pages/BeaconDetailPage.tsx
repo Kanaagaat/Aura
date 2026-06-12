@@ -7,6 +7,7 @@ import { LocationImage } from '../components/LocationImage';
 import { StoryCardModal } from '../components/StoryCardModal';
 import { TwoGisButton } from '../components/TwoGisButton';
 import { MiniMap } from '../components/MiniMap';
+import { Skeleton } from '../components/ui/Skeleton';
 import { useToastStore } from '../store/useToastStore';
 import type { Beacon } from '../types';
 import { api } from '../lib/api';
@@ -32,6 +33,8 @@ export function BeaconDetailPage() {
   const [joining, setJoining] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [compat, setCompat] = useState<{ score: number | null; explanation: string | null } | null>(null);
+  const [compatLoading, setCompatLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -49,6 +52,21 @@ export function BeaconDetailPage() {
       cancelled = true;
     };
   }, [id]);
+
+  const beaconId = beacon?.id;
+  const creatorId = beacon?.creator?.id;
+  const profileId = profile?.id;
+
+  // Load compatibility score once beacon and profile are known
+  useEffect(() => {
+    if (!beaconId || !isAuthenticated) return;
+    if (creatorId != null && profileId != null && creatorId === profileId) return;
+    setCompatLoading(true);
+    api.compatibility(beaconId)
+      .then((data) => setCompat(data))
+      .catch(() => { /* silent fallback */ })
+      .finally(() => setCompatLoading(false));
+  }, [beaconId, creatorId, isAuthenticated, profileId]);
 
   if (loadError) {
     return (
@@ -138,9 +156,17 @@ export function BeaconDetailPage() {
 
       <div className="px-5 md:px-8 -mt-8 relative">
         <div className="rounded-[var(--radius-card)] bg-surface border border-border p-6 shadow-[var(--shadow-soft)]">
-          <span className="text-xs uppercase tracking-wider text-primary font-medium">
-            {beacon.activity_type}
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs uppercase tracking-wider text-primary font-medium">
+              {beacon.activity_type}
+            </span>
+            {beacon.visibility === 'female' && (
+              <span className="text-xs rounded-full bg-pink-50 text-pink-500 px-2 py-0.5">🌸 Women only</span>
+            )}
+            {beacon.visibility === 'male' && (
+              <span className="text-xs rounded-full bg-blue-50 text-blue-500 px-2 py-0.5">💙 Men only</span>
+            )}
+          </div>
           <h1 className="font-serif text-3xl mt-2 mb-1">{beacon.message}</h1>
           <p className="text-text-muted">{beacon.location?.name}</p>
           <p className="text-sm text-text-muted mt-2">{scheduled}</p>
@@ -160,6 +186,36 @@ export function BeaconDetailPage() {
               {joins.length + 1} {joins.length + 1 === 1 ? 'person' : 'people'} interested
             </p>
           </div>
+
+          {/* Compatibility card */}
+          {isAuthenticated && !isCreator && (
+            <div className="mt-4 rounded-xl border border-[#EEECE8] bg-[#FAFAF7] p-3">
+              {compatLoading ? (
+                <Skeleton className="h-10 w-full rounded-lg" />
+              ) : compat ? (
+                <div className="flex items-center gap-3">
+                  {compat.score !== null && (
+                    <div
+                      className="shrink-0 flex items-center justify-center rounded-full text-sm font-semibold"
+                      style={{
+                        width: 44, height: 44,
+                        background: compat.score >= 60 ? '#EFF5F0' : compat.score >= 30 ? '#FDF6EC' : '#FFF5F5',
+                        color: compat.score >= 60 ? '#5a7a5c' : compat.score >= 30 ? '#D4A96A' : '#C4978A',
+                      }}
+                    >
+                      {compat.score}%
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-[#1C1C1A]">Vibe match</p>
+                    {compat.explanation && (
+                      <p className="text-xs text-[#8A8880] truncate">{compat.explanation}</p>
+                    )}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          )}
 
           {joinError && (
             <p className="mt-4 text-sm text-rose-500">{joinError}</p>

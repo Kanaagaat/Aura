@@ -15,10 +15,12 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 // Fix Leaflet's default icon — required or markers show as broken images
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({ iconUrl: markerIcon, shadowUrl: markerShadow });
 
 import type { Location } from '../types';
+
+type BeaconMarker = { locationId: number; visibility: string };
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const TILE_URL =
@@ -70,14 +72,17 @@ function createBeaconPulseIcon(
   emoji: string,
   name: string,
   selected: boolean,
-  showLabel: boolean
+  showLabel: boolean,
+  visibility: string = 'all'
 ) {
+  const badge = visibility === 'female' ? '🌸' : visibility === 'male' ? '💙' : '';
   return L.divIcon({
     html: `
       <div class="aura-map-marker-shell${selected || showLabel ? ' aura-map-marker-shell--labeled' : ''}">
         <div class="aura-beacon-marker">
           <div class="aura-beacon-marker__pulse"></div>
           <div class="aura-beacon-marker__core">${emoji}</div>
+          ${badge ? `<span class="aura-beacon-marker__badge">${badge}</span>` : ''}
         </div>
         <span class="aura-map-marker-label">${escapeHtml(name)}</span>
       </div>
@@ -208,6 +213,8 @@ interface AuraMapProps {
   locations: Location[];
   selectedId: number | null;
   activeBeaconLocationIds?: number[];
+  beaconMarkers?: BeaconMarker[];
+  highlightedIds?: number[];
   onSelect: (id: number) => void;
 }
 
@@ -215,6 +222,8 @@ export function AuraMap({
   locations,
   selectedId,
   activeBeaconLocationIds = [],
+  beaconMarkers,
+  highlightedIds = [],
   onSelect,
 }: AuraMapProps) {
   const [zoom, setZoom] = useState(13);
@@ -262,7 +271,10 @@ export function AuraMap({
           ];
           const emoji = EMOJI[loc.category] ?? '📍';
           const isSelected = loc.id === selectedId;
-          const hasBeacon = activeBeaconLocationIds.includes(loc.id);
+          const bm = beaconMarkers?.find((m) => m.locationId === loc.id);
+          const hasBeacon = bm != null || activeBeaconLocationIds.includes(loc.id);
+          const visibility = bm?.visibility ?? 'all';
+          const isHighlighted = highlightedIds.includes(loc.id);
 
           return (
             <Marker
@@ -270,13 +282,15 @@ export function AuraMap({
               position={pos}
               icon={
                 hasBeacon
-                  ? createBeaconPulseIcon(emoji, loc.name, isSelected, showLabels)
+                  ? createBeaconPulseIcon(emoji, loc.name, isSelected || isHighlighted, showLabels, visibility)
+                  : isHighlighted
+                  ? createVenueIcon(emoji, loc.name, true, showLabels)
                   : createVenueIcon(emoji, loc.name, isSelected, showLabels)
               }
               eventHandlers={{
                 click: () => onSelect(loc.id),
               }}
-              zIndexOffset={isSelected ? 1000 : 0}
+              zIndexOffset={isSelected ? 1000 : isHighlighted ? 500 : 0}
             />
           );
         })}

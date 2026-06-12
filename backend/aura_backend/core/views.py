@@ -3,6 +3,7 @@ import secrets
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import status, viewsets, permissions
@@ -28,6 +29,7 @@ from .serializers import (
     RegisterSerializer,
     GoogleAuthSerializer,
 )
+from beacons.services import can_view_beacon, visible_beacon_q
 
 
 def get_tokens_for_user(user):
@@ -51,6 +53,34 @@ class RegisterView(APIView):
             "user": profile_serializer.data,
             **tokens
         }, status=status.HTTP_201_CREATED)
+
+
+class CustomLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        username = request.data.get("username", "")
+        password = request.data.get("password", "")
+        if not username or not password:
+            return Response(
+                {"detail": "Username and password are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user = authenticate(request, username=username, password=password)
+        if not user:
+            return Response(
+                {"detail": "No active account found with the given credentials."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        tokens = get_tokens_for_user(user)
+        profile, _ = UserProfile.objects.get_or_create(
+            user=user,
+            defaults={"display_name": user.username},
+        )
+        return Response({
+            "user": UserProfileSerializer(profile).data,
+            **tokens,
+        }, status=status.HTTP_200_OK)
 
 
 class GoogleAuthView(APIView):
@@ -98,6 +128,12 @@ class GoogleAuthView(APIView):
             return Response(
                 {"detail": "Failed to verify token with Google."},
                 status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not idinfo.get("email_verified", False):
+            return Response(
+                {"detail": "Google email is not verified."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         email = idinfo.get("email")
@@ -215,6 +251,8 @@ class BeaconViewSet(viewsets.ModelViewSet):
         )
         if self.action == "list":
             qs = qs.filter(is_active=True, expires_at__gt=now)
+        if self.action in ["list", "retrieve"]:
+            qs = qs.filter(visible_beacon_q(self.request.user))
         return qs
 
     def perform_create(self, serializer):
@@ -240,6 +278,10 @@ class BeaconViewSet(viewsets.ModelViewSet):
         if beacon.is_expired or not beacon.is_active:
             return Response(
                 {"detail": "Beacon has expired."}, status=status.HTTP_400_BAD_REQUEST
+            )
+        if not can_view_beacon(request.user, beacon):
+            return Response(
+                {"detail": "Beacon not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
         ser = BeaconJoinCreateSerializer(data=request.data)
@@ -336,3 +378,18 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             saved = True
         return Response({"data": {"saved": saved, "location_id": location.pk}, "error": None})
 
+
+class StatsView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        from django.utils import timezone as tz
+        today = tz.now().date()
+        return Response({
+            "data": {
+                "active_beacons": Beacon.objects.filter(is_active=True, expires_at__gt=tz.now()).count(),
+                "beacons_today": Beacon.objects.filter(created_at__date=today).count(),
+                "total_users": UserProfile.objects.count(),
+            },
+            "error": None,
+        })

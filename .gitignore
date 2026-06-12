@@ -33,3 +33,4 @@ pnpm-debug.log*
 *.tar.gz
 prompt.md
 design-md/
+.gstack/

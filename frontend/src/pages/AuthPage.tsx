@@ -1,5 +1,5 @@
 declare global {
-  interface Window { google: any; }
+  interface Window { google: { accounts: { id: { initialize: (cfg: Record<string, unknown>) => void; renderButton: (el: HTMLElement, cfg: Record<string, unknown>) => void } } } | undefined; }
 }
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -42,6 +42,31 @@ const MASCOT_MSG: Record<number, string> = {
   2: 'Great taste!',
   3: 'Almost done...',
 };
+
+// ─── error message normaliser ────────────────────────────────────────────────
+
+function friendlyAuthError(raw: string): string {
+  const s = raw.toLowerCase();
+  if (s.includes('no active account') || s.includes('invalid credentials') || s.includes('wrong password') || s.includes('incorrect')) {
+    return 'Username or password is incorrect.';
+  }
+  if (s.includes('username is already taken') || s.includes('a user with that username')) {
+    return 'That username is already taken. Try a different one.';
+  }
+  if (s.includes('email is already registered') || s.includes('already exists')) {
+    return 'That email is already registered. Try signing in instead.';
+  }
+  if (s.includes('password') && (s.includes('short') || s.includes('least'))) {
+    return 'Password must be at least 6 characters.';
+  }
+  if (s.includes('enter a valid email')) {
+    return 'Please enter a valid email address.';
+  }
+  if (s.includes('this field') && s.includes('required')) {
+    return 'Please fill in all required fields.';
+  }
+  return raw;
+}
 
 // ─── slide variants ───────────────────────────────────────────────────────────
 
@@ -96,11 +121,22 @@ function StepBasicInfo({
         <input type="password" name="password" value={formData.password} onChange={onChange}
           placeholder="••••••••" className={inputCls} />
       </div>
-      {localError && (
-        <div className="rounded-xl bg-rose-50 border border-rose-100 px-3 py-2 text-sm text-rose-600">
-          {localError}
-        </div>
-      )}
+      <AnimatePresence>
+        {localError && (
+          <motion.div
+            initial={{ opacity: 0, y: -4, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: -4, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-100 px-3 py-2.5">
+              <span className="text-rose-400 text-base shrink-0">⚠</span>
+              <p className="text-sm text-rose-600">{localError}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -311,9 +347,9 @@ function ProgressDots({ step, total }: { step: number; total: number }) {
 export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/home';
+  const redirectPath = searchParams.get('redirect') || '/feed';
 
-  const { login, register, googleLogin, isAuthenticated, error, loading } = useAuraStore();
+  const { login, register, googleLogin, isAuthenticated, profile, error, loading } = useAuraStore();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [registerStep, setRegisterStep] = useState(0);
@@ -335,11 +371,18 @@ export function AuthPage() {
     setLocalError(null);
     try {
       await googleLogin(credential);
-      navigate(redirectPath);
-    } catch (e) { setLocalError((e as Error).message); }
-  }, [googleLogin, navigate, redirectPath]);
+    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
+  }, [googleLogin]);
 
-  useEffect(() => { if (isAuthenticated) navigate(redirectPath); }, [isAuthenticated, navigate, redirectPath]);
+  useEffect(() => {
+    if (!isAuthenticated || !profile) return;
+    const needsProfile = !profile.gender || !profile.vibe_word || (profile.interests?.length ?? 0) < 2;
+    if (needsProfile) {
+      navigate(`/onboarding?redirect=${encodeURIComponent(redirectPath)}`, { replace: true });
+      return;
+    }
+    navigate(redirectPath, { replace: true });
+  }, [isAuthenticated, navigate, profile, redirectPath]);
 
   useEffect(() => {
     if (!hasGoogleAuth || !googleClientId || mode !== 'login') return;
@@ -353,7 +396,7 @@ export function AuthPage() {
     };
     const existing = document.getElementById(scriptId) as HTMLScriptElement | null;
     if (existing) {
-      window.google?.accounts?.id ? mount() : existing.addEventListener('load', mount);
+      if (window.google?.accounts?.id) { mount(); } else { existing.addEventListener('load', mount); }
       return () => { cancelled = true; existing.removeEventListener('load', mount); };
     }
     const script = document.createElement('script');
@@ -366,8 +409,7 @@ export function AuthPage() {
     setLocalError(null);
     try {
       await googleLogin(`mock_${formData.username || 'sofia_p'}`);
-      navigate(redirectPath);
-    } catch (e) { setLocalError((e as Error).message); }
+    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
   };
 
   // ── login submit ──
@@ -377,8 +419,7 @@ export function AuthPage() {
     if (!formData.username || !formData.password) { setLocalError('Fill in username and password.'); return; }
     try {
       await login({ username: formData.username, password: formData.password });
-      navigate(redirectPath);
-    } catch (e) { setLocalError((e as Error).message); }
+    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
   };
 
   // ── register step navigation ──
@@ -406,9 +447,8 @@ export function AuthPage() {
     if (!vibeWord.trim()) { setLocalError('Type one word to describe yourself.'); return; }
     setLocalError(null);
     try {
-      await register({ ...formData, gender, interests, vibe_word: vibeWord.trim() });
-      navigate(redirectPath);
-    } catch (e) { setLocalError((e as Error).message); }
+      await register({ ...formData, gender: gender ?? undefined, interests, vibe_word: vibeWord.trim() });
+    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
   };
 
   const TOTAL_STEPS = 4;
@@ -432,9 +472,22 @@ export function AuthPage() {
               <p className="text-[#8A8880] text-sm">Find your place. Find your people.</p>
             </div>
 
-            {(localError || error) && (
-              <div className="mb-4 bg-rose-50 border border-rose-100 rounded-xl p-3 text-sm text-rose-600">{localError || error}</div>
-            )}
+            <AnimatePresence>
+              {(localError || error) && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -4, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden mb-4"
+                >
+                  <div className="flex items-center gap-2 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2.5">
+                    <span className="text-rose-400 text-base shrink-0">⚠</span>
+                    <p className="text-sm text-rose-600">{localError || error}</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <form onSubmit={handleLoginSubmit} className="space-y-3">
               <input type="text" name="username" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })}
@@ -524,21 +577,23 @@ export function AuthPage() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Step errors (steps 1-3) */}
-            {localError && registerStep > 0 && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-3 text-sm text-rose-500 text-center"
-              >
-                {localError}
-              </motion.p>
-            )}
-
-            {/* API error */}
-            {error && (
-              <div className="mt-3 bg-rose-50 border border-rose-100 rounded-xl px-3 py-2 text-sm text-rose-600">{error}</div>
-            )}
+            {/* Error display for steps 1–3 (step 0 shows inline inside StepBasicInfo) */}
+            <AnimatePresence>
+              {localError && registerStep > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -4, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-3 flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-100 px-3 py-2.5">
+                    <span className="text-rose-400 text-base shrink-0">⚠</span>
+                    <p className="text-sm text-rose-600">{localError}</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Navigation buttons */}
             <div className="flex gap-3 mt-6">

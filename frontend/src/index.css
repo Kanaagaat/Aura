@@ -170,6 +170,15 @@
   font-size: 13px;
 }
 
+.aura-beacon-marker__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 10px;
+  line-height: 1;
+  pointer-events: none;
+}
+
 .aura-map-cluster {
   width: 48px;
   height: 48px;
@@ -328,7 +337,15 @@
   display: grid;
   gap: 48px;
   grid-template-columns: 1fr;
+  justify-items: center;
+  margin: 0 auto;
+  max-width: 960px;
   position: relative;
+}
+
+.how-it-works-steps > div {
+  width: 100%;
+  max-width: 280px;
 }
 
 @media (min-width: 1024px) {

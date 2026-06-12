@@ -27,7 +27,7 @@ export function BeaconCard({ beacon, compact }: BeaconCardProps) {
     <Link
       to={`/beacon/${beacon.id}`}
       className={clsx(
-        'block rounded-[var(--radius-card)] bg-surface border border-border overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]',
+        'block rounded-[var(--radius-card)] bg-surface border border-border overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)] active:scale-[0.97]',
         compact ? 'min-w-[260px] shrink-0' : 'w-full',
         expired && 'opacity-60 grayscale'
       )}
@@ -56,6 +56,12 @@ export function BeaconCard({ beacon, compact }: BeaconCardProps) {
           <span className="text-xs uppercase tracking-wider text-text-muted font-medium">
             {beacon.activity_type}
           </span>
+          {beacon.visibility === 'female' && (
+            <span className="ml-auto text-[10px] rounded-full bg-pink-50 text-pink-500 px-2 py-0.5 shrink-0">🌸 Women only</span>
+          )}
+          {beacon.visibility === 'male' && (
+            <span className="ml-auto text-[10px] rounded-full bg-blue-50 text-blue-500 px-2 py-0.5 shrink-0">💙 Men only</span>
+          )}
         </div>
         <p className="font-serif text-lg leading-snug mb-1">{beacon.message}</p>
         <p className="text-sm text-text-muted">{beacon.location.name}</p>

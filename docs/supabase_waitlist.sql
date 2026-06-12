@@ -1,11 +1,17 @@
 -- docs/supabase_waitlist.sql
+-- Recreate the public waitlist table used by the landing page.
+-- Warning: this drops existing waitlist rows.
+
 create extension if not exists "pgcrypto";
 
-create table if not exists public.waitlist (
+drop table if exists public.waitlist;
+
+create table public.waitlist (
   id uuid primary key default gen_random_uuid(),
-  email text not null,
+  email text not null unique,
+  city text,
   telegram text,
-  interests jsonb,
+  interests jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now()
 );
 

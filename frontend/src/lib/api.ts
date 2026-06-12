@@ -92,7 +92,18 @@ async function fetchJson<T>(path: string, options?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || `Request failed: ${res.status}`);
+    // DRF can return {"detail":"..."} or field-level {"username":["msg"]} or {"non_field_errors":["msg"]}
+    let message: string = err.detail || '';
+    if (!message) {
+      const msgs: string[] = [];
+      for (const [key, val] of Object.entries(err)) {
+        if (Array.isArray(val)) {
+          val.forEach((v) => msgs.push(key === 'non_field_errors' ? String(v) : String(v)));
+        }
+      }
+      message = msgs[0] || `Request failed: ${res.status}`;
+    }
+    throw new Error(message);
   }
   if (res.status === 204) return undefined as T;
   return res.json();
@@ -107,11 +118,11 @@ async function axiosJson<T>(path: string, payload?: unknown): Promise<T> {
     const response =
       payload === undefined ? await client.get(path) : await client.post(path, payload);
     return unwrapApiData<T>(response.data);
-  } catch (err: any) {
-    const data = err?.response?.data;
-    const message =
-      data?.error?.message || data?.detail || err?.message || 'Request failed';
-    throw new Error(message);
+  } catch (err: unknown) {
+    const e = err as { response?: { data?: { error?: { message?: string }; detail?: string } }; message?: string };
+    const data = e?.response?.data;
+    const message = data?.error?.message || data?.detail || e?.message || 'Request failed';
+    throw new Error(message, { cause: err });
   }
 }
 
@@ -121,14 +132,21 @@ interface AuthResponse {
   refresh: string;
 }
 
+interface LoginPayload { username: string; password: string }
+interface RegisterPayload {
+  username: string; email: string; password: string;
+  display_name?: string; telegram_username?: string;
+  gender?: string; interests?: string[]; vibe_word?: string;
+}
+
 export const api = {
-  login: (payload: any) =>
+  login: (payload: LoginPayload) =>
     fetchJson<AuthResponse>('/api/auth/login/', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
 
-  register: (payload: any) =>
+  register: (payload: RegisterPayload) =>
     fetchJson<AuthResponse>('/api/auth/register/', {
       method: 'POST',
       body: JSON.stringify(payload),
@@ -166,7 +184,7 @@ export const api = {
     axiosJson<Beacon>(`/api/v1/beacons/${id}/join/`, { telegram_handle: telegram_handle || '' }),
 
   deleteBeacon: (id: number) =>
-    axiosJson<void>(`/api/v1/beacons/${id}/`, {}),
+    fetchJson<void>(`/api/v1/beacons/${id}/`, { method: 'DELETE' }),
 
   getProfile: () => fetchJson<UserProfile>('/api/v1/profiles/me/'),
 
@@ -179,15 +197,23 @@ export const api = {
     }),
 
   getSavedLocations: async (): Promise<Location[]> => {
-    const data = await axiosJson<{ data: Location[] }>('/api/v1/profiles/saved/');
-    return (data as any).data ?? data ?? [];
+    const data = await axiosJson<Location[]>('/api/v1/profiles/saved/');
+    return Array.isArray(data) ? data : [];
   },
 
-  toggleSavedLocation: async (locationId: number): Promise<{ saved: boolean; location_id: number }> => {
-    const data = await axiosJson<{ data: { saved: boolean; location_id: number } }>(
+  toggleSavedLocation: (locationId: number): Promise<{ saved: boolean; location_id: number }> =>
+    axiosJson<{ saved: boolean; location_id: number }>(
       `/api/v1/profiles/saved/${locationId}/`,
-      {},  // empty body forces POST
-    );
-    return (data as any).data;
-  },
+      {},
+    ),
+
+  vibeSearch: (mood: string) =>
+    axiosJson<{ locations: (Location & { reason?: string })[]; vibe_summary: string | null }>(
+      '/api/v1/ai/vibe-search/', { mood }
+    ),
+
+  compatibility: (beaconId: number) =>
+    axiosJson<{ score: number | null; explanation: string | null }>(
+      `/api/v1/ai/compatibility/?beacon_id=${beaconId}`
+    ),
 };

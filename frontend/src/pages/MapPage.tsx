@@ -1,12 +1,15 @@
 // frontend/src/pages/MapPage.tsx
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocations } from '../hooks/useLocations';
 import { AuraMap } from '../components/AuraMap';
 import { VibeCard } from '../components/VibeCard';
 import { BeaconCreate } from '../components/BeaconCreate';
 import { FilterChips } from '../components/FilterChips';
 import { useAuraStore } from '../store/useAuraStore';
+import { useToastStore } from '../store/useToastStore';
+import { api } from '../lib/api';
 import type { Category } from '../types';
 
 const EMOJI: Record<string, string> = {
@@ -18,13 +21,21 @@ const EMOJI: Record<string, string> = {
 
 export function MapPage() {
   const { locations, loading, error } = useLocations();
-  const { beacons } = useAuraStore();
+  const { beacons, profile } = useAuraStore();
+  const showToast = useToastStore((s) => s.show);
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [beaconLocationId, setBeaconLocationId] = useState<number | null>(null);
   const [freshBeaconLocationIds, setFreshBeaconLocationIds] = useState<number[]>([]);
   const [filter, setFilter] = useState<Category>('all');
   const [search, setSearch] = useState('');
+
+  // Vibe search state
+  const [vibeOpen, setVibeOpen] = useState(false);
+  const [vibe, setVibe] = useState('');
+  const [vibeLoading, setVibeLoading] = useState(false);
+  const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
+  const vibeInputRef = useRef<HTMLInputElement>(null);
 
   // Filtered location list
   const filtered = useMemo(() => {
@@ -41,18 +52,45 @@ export function MapPage() {
 
   const selected = filtered.find((l) => l.id === selectedId) ?? null;
 
-  // Locations with at least one active beacon
+  // Beacon markers with visibility for gender-badge display on map
+  const beaconMarkers = useMemo(() => {
+    const seen = new Map<number, string>();
+    beacons.filter((b) => {
+      if (!b.is_active) return false;
+      if (!b.visibility || b.visibility === 'all') return true;
+      if (profile && b.creator?.id === profile.id) return true;
+      return Boolean(profile?.gender && b.visibility === profile.gender);
+    }).forEach((b) => {
+      seen.set(b.location.id, b.visibility ?? 'all');
+    });
+    freshBeaconLocationIds.forEach((id) => {
+      if (!seen.has(id)) seen.set(id, 'all');
+    });
+    return Array.from(seen.entries()).map(([locationId, visibility]) => ({ locationId, visibility }));
+  }, [beacons, freshBeaconLocationIds, profile]);
+
   const activeBeaconLocationIds = useMemo(
-    () => [
-      ...new Set([
-        ...beacons.filter((b) => b.is_active).map((b) => b.location.id),
-        ...freshBeaconLocationIds,
-      ]),
-    ],
-    [beacons, freshBeaconLocationIds]
+    () => beaconMarkers.map((m) => m.locationId),
+    [beaconMarkers]
   );
 
   const beaconLocation = locations.find((loc) => loc.id === beaconLocationId) ?? null;
+
+  const handleVibeSearch = async () => {
+    if (!vibe.trim() || vibeLoading) return;
+    setVibeLoading(true);
+    try {
+      const result = await api.vibeSearch(vibe.trim());
+      const ids = result.locations.map((l) => l.id);
+      setHighlightedIds(ids);
+      if (result.vibe_summary) showToast(result.vibe_summary);
+      setVibeOpen(false);
+      setVibe('');
+    } catch {
+      showToast('Could not complete vibe search right now.');
+    }
+    setVibeLoading(false);
+  };
 
   return (
     <div className="relative h-[calc(100vh-5rem)] md:h-screen overflow-hidden">
@@ -118,21 +156,15 @@ export function MapPage() {
             locations={filtered}
             selectedId={selectedId}
             activeBeaconLocationIds={activeBeaconLocationIds}
+            beaconMarkers={beaconMarkers}
+            highlightedIds={highlightedIds}
             onSelect={(id) => setSelectedId((prev) => (prev === id ? null : id))}
           />
         )}
       </div>
 
-      {/* ── Location count badge ── */}
-      {!loading && !error && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 md:hidden">
-          <div className="rounded-full bg-white/90 backdrop-blur-md px-4 py-2 text-xs font-medium text-[#5A5750] shadow-[0_2px_12px_rgba(0,0,0,0.1)] border border-[#EEECE8]">
-            Vibey spots near you
-          </div>
-        </div>
-      )}
 
-      {/* ── Desktop sidebar list (no selection) ── */}
+{/* ── Desktop sidebar list (no selection) ── */}
       {!selected && (
         <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-[380px] flex-col bg-white/92 backdrop-blur-xl border-l border-[#EEECE8] z-20 shadow-[-4px_0_24px_rgba(0,0,0,0.04)] overflow-hidden">
           <div className="p-6 border-b border-[#EEECE8]">
@@ -214,6 +246,64 @@ export function MapPage() {
           setSelectedId(locationId);
         }}
       />
+
+      {/* ── Vibe Search floating pill ── */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 md:left-6 md:translate-x-0">
+        <AnimatePresence mode="wait">
+          {!vibeOpen ? (
+            <motion.button
+              key="pill"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              type="button"
+              onClick={() => { setVibeOpen(true); setTimeout(() => vibeInputRef.current?.focus(), 50); }}
+              className="flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium shadow-lg"
+              style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', border: '1px solid #EEECE8', color: '#8A8880' }}
+            >
+              <span>✦</span>
+              <span>I feel like...</span>
+              {highlightedIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setHighlightedIds([]); }}
+                  className="ml-1 text-[#7A9E7E] text-xs"
+                >
+                  ×{highlightedIds.length}
+                </button>
+              )}
+            </motion.button>
+          ) : (
+            <motion.div
+              key="input"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex items-center gap-2 rounded-full px-4 py-2.5 shadow-lg"
+              style={{ background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(12px)', border: '1px solid #7A9E7E', width: 280 }}
+            >
+              <input
+                ref={vibeInputRef}
+                type="text"
+                value={vibe}
+                onChange={(e) => setVibe(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleVibeSearch(); if (e.key === 'Escape') setVibeOpen(false); }}
+                placeholder="describe your mood…"
+                className="flex-1 bg-transparent text-sm outline-none text-[#1C1C1A] placeholder:text-[#B0ACA4]"
+              />
+              <button
+                type="button"
+                onClick={handleVibeSearch}
+                disabled={vibeLoading}
+                className="text-[#7A9E7E] text-sm font-medium"
+              >
+                {vibeLoading ? '...' : '→'}
+              </button>
+              <button type="button" onClick={() => setVibeOpen(false)} className="text-[#8A8880]">×</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

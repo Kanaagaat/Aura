@@ -57,6 +57,7 @@ export interface Beacon {
   is_active: boolean;
   join_count: number;
   joins: BeaconJoin[];
+  visibility?: BeaconVisibility;
   is_expired: boolean;
   created_at: string;
 }

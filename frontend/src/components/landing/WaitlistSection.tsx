@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { submitWaitlist } from '../../lib/waitlist';
 
@@ -30,12 +30,46 @@ function isValidEmail(email: string) {
 
 export function WaitlistSection() {
   const [email, setEmail]       = useState('');
+  const [city, setCity]         = useState('Almaty');
   const [telegram, setTelegram] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
   const [success, setSuccess]   = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [referralCount, setReferralCount] = useState(0);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      const key = `aura_refs_${ref}`;
+      const count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+      localStorage.setItem(key, String(count));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (success) {
+      const handle = email.trim().toLowerCase().split('@')[0];
+      const count = parseInt(localStorage.getItem(`aura_refs_${handle}`) || '0', 10);
+      setReferralCount(count);
+    }
+  }, [success, email]);
+
+  const referralHandle = email.trim().toLowerCase().split('@')[0];
+  const referralLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/join?ref=${encodeURIComponent(referralHandle)}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* silent */
+    }
+  };
 
   const toggleInterest = (label: string) => {
     setInterests(cur => cur.includes(label) ? cur.filter(i => i !== label) : [...cur, label]);
@@ -52,7 +86,13 @@ export function WaitlistSection() {
 
     setLoading(true);
     try {
-      await submitWaitlist({ email: normalizedEmail, telegram: telegram.trim(), interests, created_at: new Date().toISOString() });
+      await submitWaitlist({
+        email: normalizedEmail,
+        city: city.trim(),
+        telegram: telegram.trim(),
+        interests,
+        created_at: new Date().toISOString(),
+      });
       setSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -76,7 +116,6 @@ export function WaitlistSection() {
               className="text-center"
               style={{ paddingBottom: 80 }}
             >
-              {/* ✓ circle */}
               <div style={{
                 width: 80, height: 80, borderRadius: '50%', background: '#7A9E7E',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -90,9 +129,69 @@ export function WaitlistSection() {
               }}>
                 You're on the list.
               </h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.65, fontFamily: '"DM Sans", system-ui, sans-serif' }}>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.65, fontFamily: '"DM Sans", system-ui, sans-serif', marginBottom: 32 }}>
                 We'll reach out on Telegram as soon as we launch in your city.
               </p>
+
+              {/* Referral section */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: 16,
+                  padding: '20px 20px 16px',
+                  textAlign: 'left',
+                }}
+              >
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontFamily: '"DM Sans", system-ui, sans-serif', marginBottom: 4 }}>
+                  Skip the line — invite 2 friends
+                </p>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontFamily: '"DM Sans", system-ui, sans-serif', marginBottom: 14 }}>
+                  Move up the waitlist when friends join with your link.
+                </p>
+
+                {/* Referral link + copy */}
+                <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                  <div style={{
+                    flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: 10, padding: '10px 14px', fontSize: 12,
+                    color: 'rgba(255,255,255,0.5)', fontFamily: 'monospace',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}>
+                    {referralLink}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopy}
+                    style={{
+                      background: copied ? '#7A9E7E' : 'rgba(255,255,255,0.1)',
+                      border: 'none', borderRadius: 10, padding: '0 16px',
+                      fontSize: 13, color: '#fff', cursor: 'pointer',
+                      fontFamily: '"DM Sans", system-ui, sans-serif',
+                      transition: 'background 0.2s', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {copied ? '✓ Copied' : 'Copy'}
+                  </button>
+                </div>
+
+                {/* Progress tracker */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 4, overflow: 'hidden' }}>
+                    <div style={{
+                      height: '100%', borderRadius: 4, background: '#7A9E7E',
+                      width: `${Math.min(referralCount, 2) * 50}%`,
+                      transition: 'width 0.4s ease',
+                    }} />
+                  </div>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontFamily: '"DM Sans", system-ui, sans-serif', whiteSpace: 'nowrap' }}>
+                    {referralCount}/2 referred
+                  </span>
+                </div>
+              </motion.div>
             </motion.div>
           ) : (
             <motion.div
@@ -145,6 +244,17 @@ export function WaitlistSection() {
                     </p>
                   )}
                 </div>
+
+                {/* City */}
+                <input
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={e => setCity(e.target.value)}
+                  style={INPUT_STYLE}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#7A9E7E'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+                />
 
                 {/* Telegram */}
                 <input

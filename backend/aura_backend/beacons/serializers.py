@@ -26,6 +26,7 @@ class BeaconSerializer(serializers.ModelSerializer):
             "creator",
             "activity_type",
             "message",
+            "visibility",
             "scheduled_at",
             "expires_at",
             "is_active",
@@ -45,6 +46,9 @@ class BeaconCreateSerializer(serializers.Serializer):
     activity_type = serializers.ChoiceField(choices=Beacon.ACTIVITY_CHOICES)
     message = serializers.CharField(max_length=100)
     scheduled_at = serializers.DateTimeField()
+    visibility = serializers.ChoiceField(
+        choices=Beacon.VISIBILITY_CHOICES, default=Beacon.VISIBILITY_ALL, required=False
+    )
 
 
 class BeaconJoinCreateSerializer(serializers.ModelSerializer):

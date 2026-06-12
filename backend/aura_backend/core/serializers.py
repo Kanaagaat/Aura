@@ -27,6 +27,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "beacons_lit",
             "saved_location_ids",
         ]
+        read_only_fields = ["is_premium"]
 
     def get_saved_location_ids(self, obj: "UserProfile") -> list[int]:
         return list(obj.saved_locations.values_list("pk", flat=True))
@@ -66,7 +67,17 @@ class LocationSerializer(serializers.ModelSerializer):
         return two_gis_firm_url(obj.two_gis_id)
 
     def get_active_beacon_count(self, obj: Location) -> int:
-        return obj.beacons.filter(is_active=True).count()
+        from django.utils import timezone
+        from beacons.services import visible_beacon_q
+
+        request = self.context.get("request")
+        user = getattr(request, "user", None)
+        return (
+            obj.beacons
+            .filter(is_active=True, expires_at__gt=timezone.now())
+            .filter(visible_beacon_q(user))
+            .count()
+        )
 
 
 class BeaconJoinSerializer(serializers.ModelSerializer):
@@ -172,4 +183,3 @@ class RegisterSerializer(serializers.Serializer):
 
 class GoogleAuthSerializer(serializers.Serializer):
     credential = serializers.CharField()
-

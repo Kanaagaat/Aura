@@ -22,9 +22,9 @@ interface AuraState {
   fetchProfile: () => Promise<void>;
   fetchSavedLocations: () => Promise<void>;
   toggleSave: (locationId: number) => Promise<void>;
-  login: (payload: any) => Promise<void>;
-  register: (payload: any) => Promise<void>;
-  googleLogin: (credential: string) => Promise<void>;
+  login: (payload: Parameters<typeof api.login>[0]) => Promise<void>;
+  register: (payload: Parameters<typeof api.register>[0]) => Promise<void>;
+  googleLogin: (credential: string) => Promise<UserProfile>;
   updateProfile: (payload: Partial<UserProfile>) => Promise<void>;
   logout: () => void;
   createBeacon: (payload: Parameters<typeof api.createBeacon>[0]) => Promise<Beacon>;
@@ -146,6 +146,7 @@ export const useAuraStore = create<AuraState>((set, get) => ({
       const data = await api.googleAuth(credential);
       setTokens(data.access, data.refresh);
       set({ profile: data.user, isAuthenticated: true, loading: false });
+      return data.user;
     } catch (e) {
       set({ error: (e as Error).message, loading: false });
       throw e;
@@ -181,7 +182,7 @@ export const useAuraStore = create<AuraState>((set, get) => ({
 
   init: async () => {
     set({ loading: true });
-    const promises: Promise<any>[] = [
+    const promises: Promise<void>[] = [
       get().fetchLocations(),
       get().fetchBeacons(),
     ];
@@ -193,4 +194,3 @@ export const useAuraStore = create<AuraState>((set, get) => ({
     set({ loading: false });
   },
 }));
-

@@ -1,13 +1,13 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
-const CHROME_HIDDEN_ROUTES = ['/auth', '/'];
+const CHROME_HIDDEN_ROUTES = ['/auth', '/onboarding', '/'];
 
 const NAV = [
-  { to: '/home',       icon: 'home',   label: 'Home'    },
-  { to: '/map',        icon: 'map',    label: 'Map'     },
-  { to: '/beacon/new', icon: 'flare',  label: 'Beacon'  },
-  { to: '/profile',    icon: 'person', label: 'Profile' },
+  { to: '/feed',       icon: 'explore', label: 'Feed'    },
+  { to: '/map',        icon: 'map',     label: 'Map'     },
+  { to: '/beacon/new', icon: 'flare',   label: 'Beacon'  },
+  { to: '/profile',    icon: 'person',  label: 'Profile' },
 ];
 
 export function SidebarNav() {

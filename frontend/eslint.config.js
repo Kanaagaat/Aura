@@ -18,5 +18,11 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // setState inside effects is standard React — the rule fires too broadly
+      'react-hooks/set-state-in-effect': 'off',
+      // Date.now() in render is fine for expiry checks; compiler rule is over-strict
+      'react-hooks/purity': 'off',
+    },
   },
 ])

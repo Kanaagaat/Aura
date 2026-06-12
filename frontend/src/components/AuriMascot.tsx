@@ -6,7 +6,7 @@
 //   <AuriMascot state="excited" size={80} pulse message="98% match!" />
 //   <AuriMascot state="thinking" message="Finding venues…" />
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export type MascotState =
   | "idle"
