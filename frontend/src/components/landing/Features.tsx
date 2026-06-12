@@ -1,88 +1,86 @@
 import { motion } from 'framer-motion';
-import { fadeUp, fadeUpVariant, staggerContainer } from './animations';
 
 const FEATURES = [
   {
-    emoji: '🗺',
-    title: 'Interactive Map',
-    body: 'Handpicked wellness places with warm markers, soft filters, and no ads.',
-    soon: false,
+    icon: '🗺️',
+    headline: 'Curated, not cluttered',
+    body: 'Only the 40 best wellness spots in your city. Updated by editors, not algorithms.',
   },
   {
-    emoji: '🕯',
-    title: 'Beacons',
-    body: 'Light a 2-hour spontaneous meetup at any venue. Expires automatically.',
-    soon: false,
+    icon: '🔆',
+    headline: 'Beacons expire in 2 hours',
+    body: 'No stale posts. Every beacon is happening today.',
   },
   {
-    emoji: '🧘',
-    title: 'Vibe Tags',
-    body: 'Every venue tagged with moods — focused, cozy, energising, social. Find your match.',
-    soon: false,
+    icon: '🧘',
+    headline: 'Find your kind of people',
+    body: 'Connect with someone heading to the same spot. Meet over matcha after.',
   },
   {
-    emoji: '✨',
-    title: 'AI Curator',
-    body: "Describe your mood in natural language. Aura's AI finds the right place.",
-    soon: true,
-  },
-  {
-    emoji: '💬',
-    title: 'Telegram-native',
-    body: 'No new DMs to manage. Connect directly via Telegram deep-link.',
-    soon: false,
-  },
-  {
-    emoji: '📍',
-    title: 'City-first',
-    body: 'Built for your city, not a noisy global feed. Every place feels personally curated.',
-    soon: false,
+    icon: '📲',
+    headline: 'No app download needed',
+    body: 'Works in any browser. Add to home screen in one tap.',
   },
 ];
 
 export function Features() {
   return (
-    <section className="px-5 md:px-8 py-16 md:py-24 bg-white">
-      <div className="mx-auto max-w-5xl">
+    <section style={{ background: '#F5F1EA', padding: '80px 0' }}>
+      <div className="mx-auto px-5 lg:px-8" style={{ maxWidth: 1280 }}>
         <motion.h2
-          {...fadeUp}
-          className="text-center text-[28px] md:text-[36px] font-bold leading-tight tracking-[-0.8px] text-[#1a1a18] mb-14"
-          style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          style={{
+            fontFamily: '"Cormorant Garamond", Georgia, serif',
+            fontSize: 36, fontWeight: 400, color: '#1C1C1A',
+            textAlign: 'center', marginBottom: 48, letterSpacing: '-0.3px',
+          }}
         >
-          Everything you need to find your vibe
+          Everything you need. Nothing you don&apos;t.
         </motion.h2>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 mx-auto"
+          style={{ maxWidth: 880 }}
         >
-          {FEATURES.map((f) => (
-            <motion.article
-              key={f.title}
-              variants={fadeUpVariant}
-              className="relative rounded-[20px] bg-white p-8 shadow-[0_2px_16px_rgba(0,0,0,0.06)]"
+          {FEATURES.map((f, i) => (
+            <motion.div
+              key={f.headline}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                background: '#fff',
+                borderRadius: 20,
+                boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+                padding: '28px 24px',
+              }}
             >
-              {f.soon && (
-                <span className="absolute top-4 right-4 rounded-full bg-[#8faa8b]/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#44664a]">
-                  Soon
-                </span>
-              )}
-              <span className="block text-[40px] mb-4" aria-hidden>
-                {f.emoji}
+              <span style={{ fontSize: 32, display: 'block', marginBottom: 14 }} aria-hidden>
+                {f.icon}
               </span>
               <h3
-                className="text-[20px] font-semibold text-[#1a1a18] mb-2"
-                style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}
+                style={{
+                  fontFamily: '"Playfair Display", Georgia, serif',
+                  fontSize: 18, fontWeight: 400, color: '#1C1C1A', marginBottom: 8,
+                }}
               >
-                {f.title}
+                {f.headline}
               </h3>
-              <p className="text-[#62625b] text-base leading-relaxed">{f.body}</p>
-            </motion.article>
+              <p
+                style={{
+                  fontFamily: '"DM Sans", system-ui, sans-serif',
+                  fontSize: 14, color: '#8A8880', lineHeight: 1.65,
+                }}
+              >
+                {f.body}
+              </p>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

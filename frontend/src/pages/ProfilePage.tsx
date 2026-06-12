@@ -99,9 +99,10 @@ export function ProfilePage() {
               logout();
               navigate('/auth');
             }}
-            className="rounded-full border border-border px-4 py-2 text-sm text-rose-500 hover:border-rose-300 hover:bg-rose-50 transition-colors"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-rose-400 hover:border-rose-300 hover:bg-rose-50 transition-colors"
+            aria-label="Sign out"
           >
-            Sign Out
+            <span className="material-symbols-outlined text-[20px]">logout</span>
           </button>
         </div>
       </div>

@@ -1,20 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #fbfbf9;
-  --color-surface: #ffffff;
-  --color-surface-cream: #f6f6f3;
-  --color-text-main: #1a1a18;
-  --color-text-muted: #62625b;
-  --color-primary: #8faa8b;
+  /* ── Brief canonical tokens ── */
+  --color-canvas: #FAFAF7;
+  --color-surface: #FFFFFF;
+  --color-surface-warm: #F5F1EA;
+  --color-sage: #7A9E7E;
+  --color-sage-light: #EFF5F0;
+  --color-rose: #C4978A;
+  --color-amber: #D4A96A;
+  --color-amber-light: #FDF6EC;
+  --color-ink: #1C1C1A;
+  --color-ink-secondary: #8A8880;
+  --color-border: #EEECE8;
+  /* ── Legacy aliases (keep existing app pages working) ── */
+  --color-background: #FAFAF7;
+  --color-surface-cream: #F5F1EA;
+  --color-text-main: #1C1C1A;
+  --color-text-muted: #8A8880;
+  --color-primary: #7A9E7E;
   --color-primary-dark: #5a7a5c;
-  --color-accent: #c8a882;
-  --color-accent-hover: #b5936a;
-  --color-accent-rose: #c4978a;
-  --color-accent-amber: #d4a96a;
-  --color-border: #dadad3;
+  --color-accent: #D4A96A;
+  --color-accent-hover: #b89155;
+  --color-accent-rose: #C4978A;
+  --color-accent-amber: #D4A96A;
+  /* ── Typography ── */
+  --font-display: "Cormorant Garamond", Georgia, serif;
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "DM Sans", system-ui, sans-serif;
+  /* ── Shapes ── */
   --radius-card: 20px;
   --radius-modal: 28px;
   --radius-pill: 100px;
@@ -301,4 +315,51 @@
     right: 24px;
     bottom: auto;
   }
+}
+
+/* ── Phone Demo pulse (landing page) ── */
+@keyframes phoneDemoPulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* ── How It Works step grid ── */
+.how-it-works-steps {
+  display: grid;
+  gap: 48px;
+  grid-template-columns: 1fr;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .how-it-works-steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+  }
+
+  .how-it-works-steps::after {
+    content: '';
+    position: absolute;
+    top: 82px;
+    left: 20%;
+    right: 20%;
+    height: 0;
+    border-top: 1px dashed #EEECE8;
+    z-index: 0;
+    pointer-events: none;
+  }
+}
+
+/* ── Social proof marquee (mobile) ── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 20s linear infinite;
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  align-items: center;
 }
