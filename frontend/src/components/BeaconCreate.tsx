@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAuraStore } from '../store/useAuraStore';
 import { useToastStore } from '../store/useToastStore';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
-import type { ActivityType, Location } from '../types';
+import type { ActivityType, BeaconVisibility, Location } from '../types';
 
 const ACTIVITIES: { id: ActivityType; label: string; emoji: string }[] = [
   { id: 'coffee', label: 'Coffee', emoji: '☕' },
@@ -58,6 +58,7 @@ export function BeaconCreate({ location, onClose, onSuccess }: BeaconCreateProps
   const [timeSlot, setTimeSlot] = useState(getDefaultSlot);
   const [dateValue, setDateValue] = useState(() => getDefaultDate(getDefaultSlot()));
   const [message, setMessage] = useState('');
+  const [visibility, setVisibility] = useState<BeaconVisibility>('all');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -82,6 +83,7 @@ export function BeaconCreate({ location, onClose, onSuccess }: BeaconCreateProps
         activity_type: activity,
         message: message.trim().slice(0, 100),
         scheduled_at: scheduledAt.toISOString(),
+        visibility,
       });
       showToast('Beacon lit! It stays live for 2 hours.');
       onSuccess(location.id);
@@ -194,6 +196,32 @@ export function BeaconCreate({ location, onClose, onSuccess }: BeaconCreateProps
                     }`}
                   >
                     {slot}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Visibility */}
+            <div className="mb-5">
+              <p className="mb-2 text-sm font-semibold text-[#1C1C1A]">Who's this for?</p>
+              <div className="flex gap-2">
+                {([
+                  { id: 'all',    emoji: '🌍', label: 'Everyone' },
+                  { id: 'male',   emoji: '👦', label: 'Men'      },
+                  { id: 'female', emoji: '👧', label: 'Women'    },
+                ] as { id: BeaconVisibility; emoji: string; label: string }[]).map(({ id, emoji, label }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setVisibility(id)}
+                    className="flex-1 rounded-full border py-2 text-sm font-medium transition"
+                    style={{
+                      borderColor: visibility === id ? '#1C1C1A' : '#EEECE8',
+                      background: visibility === id ? '#1C1C1A' : '#FAFAF7',
+                      color: visibility === id ? '#fff' : '#5A5750',
+                    }}
+                  >
+                    {emoji} {label}
                   </button>
                 ))}
               </div>

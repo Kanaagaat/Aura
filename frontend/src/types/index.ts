@@ -1,5 +1,7 @@
 export type Category = 'all' | 'yoga' | 'coffee' | 'spa' | 'other';
 export type ActivityType = 'coffee' | 'yoga' | 'walk' | 'study';
+export type Gender = 'male' | 'female';
+export type BeaconVisibility = 'all' | 'male' | 'female';
 
 export interface UserProfile {
   id: number;
@@ -12,6 +14,9 @@ export interface UserProfile {
   is_premium: boolean;
   beacons_lit: number;
   saved_location_ids: number[];
+  gender?: Gender;
+  interests?: string[];
+  vibe_word?: string;
 }
 
 export interface Location {
@@ -61,4 +66,5 @@ export interface CreateBeaconPayload {
   activity_type: ActivityType;
   message: string;
   scheduled_at: string;
+  visibility?: BeaconVisibility;
 }

@@ -4,6 +4,7 @@ import { HowItWorks } from '../components/landing/HowItWorks';
 import { Features } from '../components/landing/Features';
 import { WaitlistSection } from '../components/landing/WaitlistSection';
 import { PhoneDemo } from '../components/landing/PhoneDemo';
+import { AuriMascot } from '../components/AuriMascot';
 
 const VIBE_PILLS = ['#SoftLight', '#MorningYoga', '#MatchaRun', '#QuietCorner', '#EarlyBird'];
 
@@ -130,7 +131,7 @@ export function LandingPage() {
               </div>
 
               {/* Floating vibe pills */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" style={{ marginBottom: 28 }}>
                 {VIBE_PILLS.map((pill, i) => (
                   <motion.span
                     key={pill}
@@ -145,6 +146,9 @@ export function LandingPage() {
                   </motion.span>
                 ))}
               </div>
+
+              {/* Auri mascot */}
+              <AuriMascot state="idle" size={64} animate />
             </motion.div>
 
             {/* Right: phone mockup */}
