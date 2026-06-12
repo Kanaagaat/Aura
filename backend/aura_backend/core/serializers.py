@@ -20,6 +20,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "telegram_username",
             "instagram_handle",
             "avatar_url",
+            "gender",
+            "interests",
+            "vibe_word",
             "is_premium",
             "beacons_lit",
             "saved_location_ids",
@@ -93,6 +96,7 @@ class BeaconSerializer(serializers.ModelSerializer):
             "creator",
             "activity_type",
             "message",
+            "visibility",
             "scheduled_at",
             "expires_at",
             "is_active",
@@ -128,6 +132,11 @@ class RegisterSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     display_name = serializers.CharField(max_length=100, required=False, default="")
     telegram_username = serializers.CharField(max_length=32, required=False, default="")
+    gender = serializers.CharField(max_length=10, required=False, default="")
+    interests = serializers.ListField(
+        child=serializers.CharField(max_length=50), required=False, default=list
+    )
+    vibe_word = serializers.CharField(max_length=20, required=False, default="")
 
     def validate_username(self, value):
         if User.objects.filter(username__iexact=value).exists():
@@ -139,6 +148,11 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError("Email is already registered.")
         return value
 
+    def validate_gender(self, value):
+        if value and value not in ("male", "female", ""):
+            raise serializers.ValidationError("Must be 'male' or 'female'.")
+        return value
+
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data["username"],
@@ -148,7 +162,10 @@ class RegisterSerializer(serializers.Serializer):
         UserProfile.objects.create(
             user=user,
             display_name=validated_data.get("display_name") or validated_data["username"],
-            telegram_username=validated_data.get("telegram_username", "")
+            telegram_username=validated_data.get("telegram_username", ""),
+            gender=validated_data.get("gender", ""),
+            interests=validated_data.get("interests", []),
+            vibe_word=validated_data.get("vibe_word", ""),
         )
         return user
 

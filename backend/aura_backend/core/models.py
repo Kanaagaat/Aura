@@ -14,6 +14,9 @@ class UserProfile(models.Model):
     # TextField (not URLField) so uploaded avatars can be stored as data URLs.
     avatar_url = models.TextField(blank=True, default="")
     instagram_handle = models.CharField(max_length=64, blank=True, default="")
+    gender = models.CharField(max_length=10, blank=True, default="")  # 'male' | 'female'
+    interests = models.JSONField(default=list, blank=True)
+    vibe_word = models.CharField(max_length=20, blank=True, default="")
     is_premium = models.BooleanField(default=False)
     saved_locations = models.ManyToManyField(
         "Location", blank=True, related_name="saved_by"
@@ -81,6 +84,15 @@ class Beacon(models.Model):
         (ACTIVITY_STUDY, "Study"),
     ]
 
+    VISIBILITY_ALL = "all"
+    VISIBILITY_MALE = "male"
+    VISIBILITY_FEMALE = "female"
+    VISIBILITY_CHOICES = [
+        (VISIBILITY_ALL, "Everyone"),
+        (VISIBILITY_MALE, "Men"),
+        (VISIBILITY_FEMALE, "Women"),
+    ]
+
     location = models.ForeignKey(
         Location, on_delete=models.CASCADE, related_name="beacons"
     )
@@ -89,6 +101,9 @@ class Beacon(models.Model):
     )
     activity_type = models.CharField(max_length=15, choices=ACTIVITY_CHOICES)
     message = models.CharField(max_length=100)
+    visibility = models.CharField(
+        max_length=10, choices=VISIBILITY_CHOICES, default=VISIBILITY_ALL
+    )
     scheduled_at = models.DateTimeField()
     expires_at = models.DateTimeField()
     is_active = models.BooleanField(default=True)
