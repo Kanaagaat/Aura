@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
-const CHROME_HIDDEN_ROUTES = ['/auth', '/onboarding', '/'];
+const CHROME_HIDDEN_ROUTES = ['/auth', '/onboarding', '/join', '/'];
 
 const NAV = [
   { to: '/feed',       icon: 'explore', label: 'Feed'    },

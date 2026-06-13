@@ -59,7 +59,9 @@ function AppRoutes() {
     }
   }, [appAccessAllowed, init]);
 
-  if (!appAccessAllowed && location.pathname !== '/') {
+  const isReferralRoute = location.pathname === '/join';
+
+  if (!appAccessAllowed && location.pathname !== '/' && !isReferralRoute) {
     return <Navigate to="/" replace />;
   }
 
@@ -72,6 +74,7 @@ function AppRoutes() {
   if (
     appAccessAllowed &&
     needsOnboarding &&
+    !isReferralRoute &&
     location.pathname !== '/onboarding' &&
     location.pathname !== '/auth'
   ) {
@@ -91,6 +94,7 @@ function AppRoutes() {
       <ErrorBoundary>
       <Routes>
         <Route path="/" element={<LandingOrRedirect appAccessAllowed={appAccessAllowed} />} />
+        <Route path="/join" element={<LandingPage />} />
         <Route path="/app" element={<Navigate to="/feed" replace />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/feed" element={<FeedPage />} />

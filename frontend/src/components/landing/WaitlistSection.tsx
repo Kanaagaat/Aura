@@ -44,9 +44,12 @@ export function WaitlistSection() {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     if (ref) {
+      const seenKey = `aura_ref_seen_${ref}`;
+      if (sessionStorage.getItem(seenKey) === '1') return;
       const key = `aura_refs_${ref}`;
       const count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
       localStorage.setItem(key, String(count));
+      sessionStorage.setItem(seenKey, '1');
     }
   }, []);
 
