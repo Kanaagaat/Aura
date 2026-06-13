@@ -1,0 +1,1 @@
+web: gunicorn --chdir aura_backend aura_backend.wsgi:application
