@@ -9,14 +9,8 @@ import { MiniMap } from '../components/MiniMap';
 import { BeaconCard } from '../components/BeaconCard';
 import { AuraButton } from '../components/AuraButton';
 import { Skeleton } from '../components/ui/Skeleton';
+import { useLanguage } from '../i18n';
 import type { Beacon, Location } from '../types';
-
-const CATEGORY_LABEL: Record<string, string> = {
-  coffee: 'Specialty Coffee',
-  yoga: 'Yoga & Studio',
-  spa: 'Spa & Wellness',
-  other: 'Curated Spot',
-};
 
 const EMOJI: Record<string, string> = {
   coffee: '☕',
@@ -29,6 +23,7 @@ export function VenueDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { beacons, fetchBeacons, isAuthenticated, profile, toggleSave } = useAuraStore();
+  const { t } = useLanguage();
   const [venue, setVenue] = useState<Location | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [savingHeart, setSavingHeart] = useState(false);
@@ -42,25 +37,22 @@ export function VenueDetailPage() {
     api
       .getLocation(venueId)
       .then(setVenue)
-      .catch(() => setError('This venue could not be found.'));
+      .catch(() => setError(t('venue.error.subtitle')));
     fetchBeacons();
-  }, [id, venueId, fetchBeacons]);
+  }, [id, venueId, fetchBeacons, t]);
 
   const venueBeacons = useMemo(
-    () =>
-      beacons.filter(
-        (b) => b.location?.id === venueId && b.is_active && !b.is_expired,
-      ),
+    () => beacons.filter((b) => b.location?.id === venueId && b.is_active && !b.is_expired),
     [beacons, venueId],
   );
 
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-        <p className="font-serif text-xl mb-2">Venue unavailable</p>
+        <p className="font-serif text-xl mb-2">{t('venue.error.title')}</p>
         <p className="text-sm text-text-muted mb-6">{error}</p>
         <Link to="/map" className="rounded-full bg-accent text-white px-6 py-3 text-sm font-medium">
-          Back to map
+          {t('venue.error.cta')}
         </Link>
       </div>
     );
@@ -78,6 +70,12 @@ export function VenueDetailPage() {
 
   const emoji = EMOJI[venue.category] ?? '📍';
   const isSaved = (profile?.saved_location_ids ?? []).includes(venueId);
+
+  const categoryLabelKey = `venue.category.${venue.category}` as
+    | 'venue.category.coffee'
+    | 'venue.category.yoga'
+    | 'venue.category.spa'
+    | 'venue.category.other';
 
   const handleToggleSave = async () => {
     if (!isAuthenticated) {
@@ -123,7 +121,6 @@ export function VenueDetailPage() {
           ←
         </button>
 
-        {/* Heart / Save button */}
         <button
           type="button"
           onClick={handleToggleSave}
@@ -142,7 +139,7 @@ export function VenueDetailPage() {
 
         {venue.is_featured && (
           <span className="absolute bottom-4 right-4 rounded-full bg-accent-amber/90 px-3 py-1 text-xs font-semibold text-amber-900">
-            ⭐ Editor&apos;s pick
+            {t('venue.editorPick')}
           </span>
         )}
       </div>
@@ -150,7 +147,7 @@ export function VenueDetailPage() {
       <div className="px-5 md:px-8 -mt-6 relative">
         <div className="rounded-[var(--radius-modal)] bg-surface border border-border p-6 md:p-8 shadow-[var(--shadow-soft)]">
           <p className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-1">
-            {emoji} {CATEGORY_LABEL[venue.category] ?? 'Curated Spot'}
+            {emoji} {t(categoryLabelKey)}
           </p>
           <h1 className="font-serif text-3xl md:text-4xl text-text-main">{venue.name}</h1>
           {venue.address && (
@@ -181,7 +178,7 @@ export function VenueDetailPage() {
 
           <div className="mt-8 flex flex-col gap-3">
             <AuraButton className="w-full" onClick={lightBeacon}>
-              🌿 Light a Beacon here
+              {t('venue.lightBeacon')}
             </AuraButton>
             <TwoGisButton
               twoGisId={venue.two_gis_id}
@@ -201,16 +198,16 @@ export function VenueDetailPage() {
 
         <section className="mt-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-serif text-2xl">Active Beacons</h2>
+            <h2 className="font-serif text-2xl">{t('venue.activeBeacons')}</h2>
             {venueBeacons.length > 0 && (
               <span className="text-xs font-medium text-accent-amber">
-                🔆 {venueBeacons.length} live
+                🔆 {t('venue.beacons.live', { n: venueBeacons.length })}
               </span>
             )}
           </div>
           {venueBeacons.length === 0 ? (
             <p className="text-sm text-text-muted text-center py-8 bg-surface-cream rounded-[var(--radius-card)]">
-              No beacons here yet — you could light the first one.
+              {t('venue.beacons.empty')}
             </p>
           ) : (
             <div className="space-y-4">

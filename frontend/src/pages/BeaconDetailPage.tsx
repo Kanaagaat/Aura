@@ -9,6 +9,7 @@ import { TwoGisButton } from '../components/TwoGisButton';
 import { MiniMap } from '../components/MiniMap';
 import { Skeleton } from '../components/ui/Skeleton';
 import { useToastStore } from '../store/useToastStore';
+import { useLanguage } from '../i18n';
 import type { Beacon } from '../types';
 import { api } from '../lib/api';
 
@@ -20,9 +21,8 @@ function telegramLink(handle: string) {
 export function BeaconDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
 
-  // All hooks are declared unconditionally, before any early return, to keep
-  // a stable hook order across renders (previously this crashed the page).
   const joinBeacon = useAuraStore((s) => s.joinBeacon);
   const showToast = useToastStore((s) => s.show);
   const profile = useAuraStore((s) => s.profile);
@@ -46,18 +46,15 @@ export function BeaconDetailPage() {
         if (!cancelled) setBeacon(data);
       })
       .catch(() => {
-        if (!cancelled) setLoadError('This beacon could not be found or has ended.');
+        if (!cancelled) setLoadError(t('beacon.error.loadFailed'));
       });
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
+    return () => { cancelled = true; };
+  }, [id, t]);
 
   const beaconId = beacon?.id;
   const creatorId = beacon?.creator?.id;
   const profileId = profile?.id;
 
-  // Load compatibility score once beacon and profile are known
   useEffect(() => {
     if (!beaconId || !isAuthenticated) return;
     if (creatorId != null && profileId != null && creatorId === profileId) return;
@@ -72,13 +69,13 @@ export function BeaconDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
         <span className="text-4xl mb-4">🕯️</span>
-        <p className="font-serif text-xl text-text-main mb-2">Beacon unavailable</p>
+        <p className="font-serif text-xl text-text-main mb-2">{t('beacon.error.title')}</p>
         <p className="text-sm text-text-muted mb-6">{loadError}</p>
         <Link
           to="/home"
           className="rounded-full bg-text-main text-white px-6 py-3 text-sm font-medium"
         >
-          Back to Home
+          {t('beacon.error.cta')}
         </Link>
       </div>
     );
@@ -87,15 +84,14 @@ export function BeaconDetailPage() {
   if (!beacon) {
     return (
       <div className="flex items-center justify-center min-h-[50vh] text-text-muted">
-        Loading...
+        {t('beacon.loading')}
       </div>
     );
   }
 
   const joins = beacon.joins ?? [];
   const attendees = [beacon.creator, ...joins.map((j) => j.user)];
-  const alreadyJoined =
-    !!profile && joins.some((j) => j.user?.id === profile.id);
+  const alreadyJoined = !!profile && joins.some((j) => j.user?.id === profile.id);
   const isCreator = !!profile && beacon.creator?.id === profile.id;
 
   const handleJoin = async () => {
@@ -109,15 +105,16 @@ export function BeaconDetailPage() {
       await joinBeacon(beacon.id, profile?.telegram_username);
       const updated = await api.getBeacon(beacon.id);
       setBeacon(updated);
-      showToast("You're in! Coordinate on Telegram when ready.");
+      showToast(t('beacon.toast.joined'));
     } catch (e) {
-      setJoinError((e as Error).message || 'Could not join this beacon.');
+      setJoinError(t('beacon.error.joinFailed'));
     } finally {
       setJoining(false);
     }
   };
 
-  const scheduled = new Date(beacon.scheduled_at).toLocaleString('en-US', {
+  const locale = language === 'ru' ? 'ru-RU' : 'en-US';
+  const scheduled = new Date(beacon.scheduled_at).toLocaleString(locale, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -125,13 +122,18 @@ export function BeaconDetailPage() {
     minute: '2-digit',
   });
 
+  const totalInterested = joins.length + 1;
+  const interestedLabel = totalInterested === 1
+    ? t('beacon.interested.singular', { n: totalInterested })
+    : t('beacon.interested.plural', { n: totalInterested });
+
   const joinLabel = isCreator
-    ? "You lit this beacon"
+    ? t('beacon.join.creator')
     : alreadyJoined
-    ? "✓ You're in"
+    ? t('beacon.join.already')
     : joining
-    ? 'Joining...'
-    : "I'm in";
+    ? t('beacon.join.loading')
+    : t('beacon.join.cta');
 
   return (
     <div className="max-w-2xl mx-auto pb-[calc(8rem+env(safe-area-inset-bottom))] md:pb-12">
@@ -148,7 +150,7 @@ export function BeaconDetailPage() {
           type="button"
           onClick={() => navigate('/home')}
           className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 backdrop-blur"
-          aria-label="Back to home"
+          aria-label="Back"
         >
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
@@ -161,10 +163,10 @@ export function BeaconDetailPage() {
               {beacon.activity_type}
             </span>
             {beacon.visibility === 'female' && (
-              <span className="text-xs rounded-full bg-pink-50 text-pink-500 px-2 py-0.5">🌸 Women only</span>
+              <span className="text-xs rounded-full bg-pink-50 text-pink-500 px-2 py-0.5">{t('beacon.visibility.women')}</span>
             )}
             {beacon.visibility === 'male' && (
-              <span className="text-xs rounded-full bg-blue-50 text-blue-500 px-2 py-0.5">💙 Men only</span>
+              <span className="text-xs rounded-full bg-blue-50 text-blue-500 px-2 py-0.5">{t('beacon.visibility.men')}</span>
             )}
           </div>
           <h1 className="font-serif text-3xl mt-2 mb-1">{beacon.message}</h1>
@@ -172,22 +174,19 @@ export function BeaconDetailPage() {
           <p className="text-sm text-text-muted mt-2">{scheduled}</p>
 
           <div className="mt-6 pt-6 border-t border-border">
-            <p className="text-sm font-medium mb-3">Who&apos;s coming</p>
+            <p className="text-sm font-medium mb-3">{t('beacon.whoComing')}</p>
             {beacon.creator && (
               <Link
                 to={`/users/${beacon.creator.id}`}
                 className="inline-flex items-center gap-2 text-sm text-primary-dark hover:underline mb-3"
               >
-                Hosted by {beacon.creator.display_name}
+                {t('beacon.hostedBy', { name: beacon.creator.display_name })}
               </Link>
             )}
             <AvatarStack users={attendees} linkToProfile />
-            <p className="text-xs text-text-muted mt-2">
-              {joins.length + 1} {joins.length + 1 === 1 ? 'person' : 'people'} interested
-            </p>
+            <p className="text-xs text-text-muted mt-2">{interestedLabel}</p>
           </div>
 
-          {/* Compatibility card */}
           {isAuthenticated && !isCreator && (
             <div className="mt-4 rounded-xl border border-[#EEECE8] bg-[#FAFAF7] p-3">
               {compatLoading ? (
@@ -207,7 +206,7 @@ export function BeaconDetailPage() {
                     </div>
                   )}
                   <div className="min-w-0">
-                    <p className="text-xs font-medium text-[#1C1C1A]">Vibe match</p>
+                    <p className="text-xs font-medium text-[#1C1C1A]">{t('beacon.vibeMatch')}</p>
                     {compat.explanation && (
                       <p className="text-xs text-[#8A8880] truncate">{compat.explanation}</p>
                     )}
@@ -240,7 +239,7 @@ export function BeaconDetailPage() {
               >
                 <AuraButton variant="telegram" className="w-full">
                   <span className="material-symbols-outlined text-lg">send</span>
-                  Link Up on Telegram
+                  {t('beacon.telegram')}
                 </AuraButton>
               </a>
             )}
@@ -250,7 +249,7 @@ export function BeaconDetailPage() {
               className="w-full"
               onClick={() => setShowStory(true)}
             >
-              Share to Stories
+              {t('beacon.share')}
             </AuraButton>
           </div>
         </div>
@@ -262,7 +261,7 @@ export function BeaconDetailPage() {
                 to={`/venues/${beacon.location.id}`}
                 className="flex items-center justify-between rounded-[var(--radius-card)] border border-border bg-surface px-4 py-3 text-sm font-medium text-primary-dark shadow-[var(--shadow-soft)] hover:border-primary/50"
               >
-                <span>View venue details</span>
+                <span>{t('beacon.viewVenue')}</span>
                 <span className="material-symbols-outlined text-lg">arrow_forward</span>
               </Link>
               <MiniMap

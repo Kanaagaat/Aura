@@ -1,35 +1,20 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeUp } from './animations';
+import { useLanguage } from '../../i18n';
+import type { TranslationKey } from '../../i18n/translations';
 
-const ITEMS = [
-  {
-    q: 'Is Aura free?',
-    a: 'Yes, completely free during beta. Always will be for casual users.',
-  },
-  {
-    q: 'Does it work in every city?',
-    a: "We're intentionally city-first. Aura starts with curated local places, then grows city by city.",
-  },
-  {
-    q: 'Do I need a Telegram account?',
-    a: 'Only if you want to connect with someone via Beacon. Browsing the map is anonymous.',
-  },
-  {
-    q: 'How long does a Beacon stay active?',
-    a: 'Exactly 2 hours from the scheduled time. After that it disappears automatically.',
-  },
-  {
-    q: 'Is my profile public?',
-    a: 'Your vibe tags and display name are visible to others on a Beacon. No last name, no location tracking.',
-  },
-  {
-    q: 'What makes a venue get added?',
-    a: 'Every venue is personally visited or vetted. No paid placements, no sponsored spots.',
-  },
+const ITEMS: { qKey: TranslationKey; aKey: TranslationKey }[] = [
+  { qKey: 'faq.1.q', aKey: 'faq.1.a' },
+  { qKey: 'faq.2.q', aKey: 'faq.2.a' },
+  { qKey: 'faq.3.q', aKey: 'faq.3.a' },
+  { qKey: 'faq.4.q', aKey: 'faq.4.a' },
+  { qKey: 'faq.5.q', aKey: 'faq.5.a' },
+  { qKey: 'faq.6.q', aKey: 'faq.6.a' },
 ];
 
-function FAQItem({ q, a }: { q: string; a: string }) {
+function FAQItem({ qKey, aKey }: { qKey: TranslationKey; aKey: TranslationKey }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   return (
@@ -40,7 +25,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         className="flex w-full items-center justify-between gap-4 py-5 text-left"
         aria-expanded={open}
       >
-        <span className="text-base font-semibold text-[#1a1a18]">{q}</span>
+        <span className="text-base font-semibold text-[#1a1a18]">{t(qKey)}</span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.25 }}
@@ -59,7 +44,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-[#62625b] text-base leading-relaxed">{a}</p>
+            <p className="pb-5 text-[#62625b] text-base leading-relaxed">{t(aKey)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -68,6 +53,8 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 export function FAQ() {
+  const { t } = useLanguage();
+
   return (
     <section className="px-5 md:px-8 py-16 md:py-24">
       <div className="mx-auto max-w-2xl">
@@ -76,11 +63,11 @@ export function FAQ() {
           className="text-[28px] md:text-[36px] font-bold leading-tight tracking-[-0.8px] text-[#1a1a18] mb-10"
           style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}
         >
-          Questions
+          {t('faq.title')}
         </motion.h2>
         <motion.div {...fadeUp}>
           {ITEMS.map((item) => (
-            <FAQItem key={item.q} q={item.q} a={item.a} />
+            <FAQItem key={item.qKey} qKey={item.qKey} aKey={item.aKey} />
           ))}
         </motion.div>
       </div>

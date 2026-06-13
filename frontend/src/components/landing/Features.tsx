@@ -1,29 +1,17 @@
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../i18n';
+import type { TranslationKey } from '../../i18n/translations';
 
-const FEATURES = [
-  {
-    icon: '🗺️',
-    headline: 'Curated, not cluttered',
-    body: 'Only the 40 best wellness spots in your city. Updated by editors, not algorithms.',
-  },
-  {
-    icon: '🔆',
-    headline: 'Beacons expire in 2 hours',
-    body: 'No stale posts. Every beacon is happening today.',
-  },
-  {
-    icon: '🧘',
-    headline: 'Find your kind of people',
-    body: 'Connect with someone heading to the same spot. Meet over matcha after.',
-  },
-  {
-    icon: '📲',
-    headline: 'No app download needed',
-    body: 'Works in any browser. Add to home screen in one tap.',
-  },
+const FEATURES: { icon: string; headlineKey: TranslationKey; bodyKey: TranslationKey }[] = [
+  { icon: '🗺️', headlineKey: 'features.1.headline', bodyKey: 'features.1.body' },
+  { icon: '🔆', headlineKey: 'features.2.headline', bodyKey: 'features.2.body' },
+  { icon: '🧘', headlineKey: 'features.3.headline', bodyKey: 'features.3.body' },
+  { icon: '📲', headlineKey: 'features.4.headline', bodyKey: 'features.4.body' },
 ];
 
 export function Features() {
+  const { t } = useLanguage();
+
   return (
     <section style={{ background: '#F5F1EA', padding: '80px 0' }}>
       <div className="mx-auto px-5 lg:px-8" style={{ maxWidth: 1280 }}>
@@ -38,7 +26,7 @@ export function Features() {
             textAlign: 'center', marginBottom: 48, letterSpacing: '-0.3px',
           }}
         >
-          Everything you need. Nothing you don&apos;t.
+          {t('features.title')}
         </motion.h2>
 
         <div
@@ -47,7 +35,7 @@ export function Features() {
         >
           {FEATURES.map((f, i) => (
             <motion.div
-              key={f.headline}
+              key={f.headlineKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -68,7 +56,7 @@ export function Features() {
                   fontSize: 18, fontWeight: 400, color: '#1C1C1A', marginBottom: 8,
                 }}
               >
-                {f.headline}
+                {t(f.headlineKey)}
               </h3>
               <p
                 style={{
@@ -76,7 +64,7 @@ export function Features() {
                   fontSize: 14, color: '#8A8880', lineHeight: 1.65,
                 }}
               >
-                {f.body}
+                {t(f.bodyKey)}
               </p>
             </motion.div>
           ))}

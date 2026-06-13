@@ -1,14 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { submitWaitlist } from '../../lib/waitlist';
-
-const INTERESTS = [
-  { emoji: '☕', label: 'Coffee' },
-  { emoji: '🧘', label: 'Yoga' },
-  { emoji: '✨', label: 'Spa' },
-  { emoji: '🚶', label: 'Walks' },
-  { emoji: '📖', label: 'Study' },
-];
+import { useLanguage } from '../../i18n';
+import { AuraLogo } from '../AuraLogo';
 
 const INPUT_STYLE: React.CSSProperties = {
   width: '100%',
@@ -29,6 +23,7 @@ function isValidEmail(email: string) {
 }
 
 export function WaitlistSection() {
+  const { t } = useLanguage();
   const [email, setEmail]       = useState('');
   const [city, setCity]         = useState('Almaty');
   const [telegram, setTelegram] = useState('');
@@ -39,6 +34,22 @@ export function WaitlistSection() {
   const [emailError, setEmailError] = useState('');
   const [referralCount, setReferralCount] = useState(0);
   const [copied, setCopied] = useState(false);
+
+  // Interest options — labels change with language but the stored value (English) stays stable
+  const INTERESTS = [
+    { emoji: '☕', labelKey: 'interest.coffeeing' as const, value: 'Coffeeing' },
+    { emoji: '🧘', labelKey: 'interest.yoga'      as const, value: 'Yoga'      },
+    { emoji: '✨', labelKey: 'interest.spa'       as const, value: 'Spa'       },
+    { emoji: '🚶', labelKey: 'interest.walking'   as const, value: 'Walking'   },
+    { emoji: '📖', labelKey: 'interest.reading'   as const, value: 'Reading'   },
+    { emoji: '🌿', labelKey: 'interest.wellness'  as const, value: 'Wellness'  },
+    { emoji: '🎵', labelKey: 'interest.music'     as const, value: 'Music'     },
+    { emoji: '🎨', labelKey: 'interest.art'       as const, value: 'Art'       },
+    { emoji: '🍵', labelKey: 'interest.matcha'    as const, value: 'Matcha'    },
+    { emoji: '🌅', labelKey: 'interest.mornings'  as const, value: 'Mornings'  },
+    { emoji: '🏃', labelKey: 'interest.active'    as const, value: 'Active'    },
+    { emoji: '💆', labelKey: 'interest.mindful'   as const, value: 'Mindful'   },
+  ];
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -69,13 +80,11 @@ export function WaitlistSection() {
       await navigator.clipboard.writeText(referralLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* silent */
-    }
+    } catch { /* silent */ }
   };
 
-  const toggleInterest = (label: string) => {
-    setInterests(cur => cur.includes(label) ? cur.filter(i => i !== label) : [...cur, label]);
+  const toggleInterest = (value: string) => {
+    setInterests(cur => cur.includes(value) ? cur.filter(i => i !== value) : [...cur, value]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,8 +93,8 @@ export function WaitlistSection() {
     setEmailError('');
 
     const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail) { setEmailError('Email is required.'); return; }
-    if (!isValidEmail(normalizedEmail)) { setEmailError('Enter a valid email address.'); return; }
+    if (!normalizedEmail) { setEmailError(t('waitlist.email.required')); return; }
+    if (!isValidEmail(normalizedEmail)) { setEmailError(t('waitlist.email.invalid')); return; }
 
     setLoading(true);
     try {
@@ -98,7 +107,7 @@ export function WaitlistSection() {
       });
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setError(err instanceof Error ? err.message : t('waitlist.error.generic'));
     } finally {
       setLoading(false);
     }
@@ -130,10 +139,10 @@ export function WaitlistSection() {
                 fontFamily: '"Cormorant Garamond", Georgia, serif',
                 fontSize: 32, fontWeight: 400, color: '#fff', marginBottom: 12,
               }}>
-                You're on the list.
+                {t('waitlist.success.title')}
               </h2>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.65, fontFamily: '"DM Sans", system-ui, sans-serif', marginBottom: 32 }}>
-                We'll reach out on Telegram as soon as we launch in your city.
+                {t('waitlist.success.subtitle')}
               </p>
 
               {/* Referral section */}
@@ -150,13 +159,12 @@ export function WaitlistSection() {
                 }}
               >
                 <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontFamily: '"DM Sans", system-ui, sans-serif', marginBottom: 4 }}>
-                  Skip the line — invite 2 friends
+                  {t('waitlist.referral.title')}
                 </p>
                 <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontFamily: '"DM Sans", system-ui, sans-serif', marginBottom: 14 }}>
-                  Move up the waitlist when friends join with your link.
+                  {t('waitlist.referral.subtitle')}
                 </p>
 
-                {/* Referral link + copy */}
                 <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                   <div style={{
                     flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
@@ -177,11 +185,10 @@ export function WaitlistSection() {
                       transition: 'background 0.2s', whiteSpace: 'nowrap',
                     }}
                   >
-                    {copied ? '✓ Copied' : 'Copy'}
+                    {copied ? t('waitlist.referral.copied') : t('waitlist.referral.copy')}
                   </button>
                 </div>
 
-                {/* Progress tracker */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 4, overflow: 'hidden' }}>
                     <div style={{
@@ -191,7 +198,7 @@ export function WaitlistSection() {
                     }} />
                   </div>
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontFamily: '"DM Sans", system-ui, sans-serif', whiteSpace: 'nowrap' }}>
-                    {referralCount}/2 referred
+                    {t('waitlist.referral.progress', { n: referralCount })}
                   </span>
                 </div>
               </motion.div>
@@ -204,7 +211,6 @@ export function WaitlistSection() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Headline */}
               <h2
                 className="text-center"
                 style={{
@@ -213,7 +219,7 @@ export function WaitlistSection() {
                   marginBottom: 14, letterSpacing: '-0.5px',
                 }}
               >
-                Be first in your city.
+                {t('waitlist.title')}
               </h2>
               <p
                 className="text-center"
@@ -223,7 +229,7 @@ export function WaitlistSection() {
                   fontFamily: '"DM Sans", system-ui, sans-serif',
                 }}
               >
-                We're launching in Almaty. Join the waitlist and get early access.
+                {t('waitlist.subtitle')}
               </p>
 
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -231,7 +237,7 @@ export function WaitlistSection() {
                 <div>
                   <input
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t('waitlist.email.placeholder')}
                     value={email}
                     onChange={e => { setEmail(e.target.value); setEmailError(''); }}
                     style={{
@@ -251,7 +257,7 @@ export function WaitlistSection() {
                 {/* City */}
                 <input
                   type="text"
-                  placeholder="City"
+                  placeholder={t('waitlist.city.placeholder')}
                   value={city}
                   onChange={e => setCity(e.target.value)}
                   style={INPUT_STYLE}
@@ -262,7 +268,7 @@ export function WaitlistSection() {
                 {/* Telegram */}
                 <input
                   type="text"
-                  placeholder="@yourhandle (optional)"
+                  placeholder={t('waitlist.telegram.placeholder')}
                   value={telegram}
                   onChange={e => setTelegram(e.target.value)}
                   style={INPUT_STYLE}
@@ -273,16 +279,16 @@ export function WaitlistSection() {
                 {/* Interests */}
                 <div>
                   <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 10, fontFamily: '"DM Sans", system-ui, sans-serif', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                    Interests
+                    {t('waitlist.interests.label')}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {INTERESTS.map(({ emoji, label }) => {
-                      const selected = interests.includes(label);
+                    {INTERESTS.map(({ emoji, labelKey, value }) => {
+                      const selected = interests.includes(value);
                       return (
                         <button
-                          key={label}
+                          key={value}
                           type="button"
-                          onClick={() => toggleInterest(label)}
+                          onClick={() => toggleInterest(value)}
                           style={{
                             borderRadius: 100, padding: '7px 16px', fontSize: 13,
                             fontFamily: '"DM Sans", system-ui, sans-serif',
@@ -292,21 +298,19 @@ export function WaitlistSection() {
                             transition: 'background 0.2s, color 0.2s',
                           }}
                         >
-                          {emoji} {label}
+                          {emoji} {t(labelKey)}
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Generic error */}
                 {error && (
                   <p style={{ fontSize: 13, color: '#C4978A', fontFamily: '"DM Sans", system-ui, sans-serif' }}>
                     {error}
                   </p>
                 )}
 
-                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -319,11 +323,11 @@ export function WaitlistSection() {
                     transition: 'opacity 0.2s',
                   }}
                 >
-                  {loading ? 'Joining…' : 'Join the waitlist'}
+                  {loading ? t('waitlist.submit.loading') : t('waitlist.submit')}
                 </button>
 
                 <p className="text-center" style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontFamily: '"DM Sans", system-ui, sans-serif' }}>
-                  No spam. Just your early access link when we launch.
+                  {t('waitlist.fine.print')}
                 </p>
               </form>
             </motion.div>
@@ -335,21 +339,22 @@ export function WaitlistSection() {
       <footer style={{ marginTop: 80, borderTop: '1px solid rgba(255,255,255,0.08)', padding: '32px 20px 40px' }}>
         <div className="mx-auto flex flex-col sm:flex-row items-center justify-between gap-4" style={{ maxWidth: 520 }}>
           <div className="text-center sm:text-left">
-            <span style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 22, fontWeight: 400, color: '#fff' }}>
-              aura
-            </span>
+            <AuraLogo size={24} dark />
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 4, fontFamily: '"DM Sans", system-ui, sans-serif' }}>
-              Starting in Almaty · 2025
+              {t('footer.city')}
             </p>
           </div>
           <div className="flex gap-5">
-            {['Privacy', 'Contact'].map(link => (
+            {([
+              ['footer.privacy', t('footer.privacy')],
+              ['footer.contact', t('footer.contact')],
+            ] as [string, string][]).map(([, label]) => (
               <button
-                key={link}
+                key={label}
                 type="button"
                 style={{ background: 'none', border: 'none', fontSize: 13, color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontFamily: '"DM Sans", system-ui, sans-serif' }}
               >
-                {link}
+                {label}
               </button>
             ))}
           </div>

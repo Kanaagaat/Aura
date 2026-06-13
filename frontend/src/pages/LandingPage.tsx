@@ -5,9 +5,11 @@ import { Features } from '../components/landing/Features';
 import { WaitlistSection } from '../components/landing/WaitlistSection';
 import { PhoneDemo } from '../components/landing/PhoneDemo';
 import { AuriMascot } from '../components/AuriMascot';
+import { AuraLogo } from '../components/AuraLogo';
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
+import { useLanguage } from '../i18n';
 
 const VIBE_PILLS = ['#SoftLight', '#MorningYoga', '#MatchaRun', '#QuietCorner', '#EarlyBird'];
-
 const PROOF_AVATARS = ['K', 'A', 'D', 'M'];
 
 function scrollTo(id: string) {
@@ -15,6 +17,7 @@ function scrollTo(id: string) {
 }
 
 export function LandingPage() {
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -22,6 +25,8 @@ export function LandingPage() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const heroTitle = t('landing.hero.title').split('\n');
 
   return (
     <div
@@ -38,18 +43,17 @@ export function LandingPage() {
         }}
       >
         <div className="mx-auto flex items-center justify-between px-5 lg:px-8" style={{ maxWidth: 1280, height: 64 }}>
-          <span style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 26, fontWeight: 400, color: '#1C1C1A', letterSpacing: '-0.3px' }}>
-            aura
-          </span>
-          <div className="flex items-center gap-4 md:gap-5">
+          <AuraLogo size={30} />
+          <div className="flex items-center gap-3 md:gap-4">
             <button
               type="button"
               onClick={() => scrollTo('how-it-works')}
               className="hidden sm:block text-sm transition-colors"
               style={{ background: 'none', border: 'none', color: '#8A8880', cursor: 'pointer', padding: '8px 4px' }}
             >
-              How it works
+              {t('nav.howItWorks')}
             </button>
+            <LanguageSwitcher />
             <button
               type="button"
               onClick={() => scrollTo('waitlist')}
@@ -59,7 +63,7 @@ export function LandingPage() {
                 borderRadius: 100, height: 40, padding: '0 20px', cursor: 'pointer',
               }}
             >
-              Get early access
+              {t('nav.getEarlyAccess')}
             </button>
           </div>
         </div>
@@ -84,7 +88,7 @@ export function LandingPage() {
                 fontSize: 11, letterSpacing: '0.12em', color: '#7A9E7E',
                 textTransform: 'uppercase', fontWeight: 500, marginBottom: 24,
               }}>
-                WELLNESS · COMMUNITY · YOUR CITY
+                {t('landing.eyebrow')}
               </p>
 
               {/* Headline */}
@@ -93,13 +97,13 @@ export function LandingPage() {
                 fontSize: 'clamp(40px, 5vw, 64px)',
                 fontWeight: 300, lineHeight: 1.1, color: '#1C1C1A', marginBottom: 24,
               }}>
-                Find your people.<br />
-                Find your place.
+                {heroTitle[0]}<br />
+                {heroTitle[1]}
               </h1>
 
               {/* Subline */}
               <p style={{ fontSize: 16, color: '#8A8880', lineHeight: 1.65, marginBottom: 40, maxWidth: 420 }}>
-                A curated map of the best wellness spots in your city — and the people heading there right now.
+                {t('landing.hero.subtitle')}
               </p>
 
               {/* CTAs */}
@@ -114,7 +118,7 @@ export function LandingPage() {
                     fontFamily: '"DM Sans", system-ui, sans-serif',
                   }}
                 >
-                  Get early access
+                  {t('landing.hero.cta.primary')}
                 </button>
                 <button
                   type="button"
@@ -126,7 +130,7 @@ export function LandingPage() {
                     fontFamily: '"DM Sans", system-ui, sans-serif',
                   }}
                 >
-                  See how it works ↓
+                  {t('landing.hero.cta.secondary')}
                 </button>
               </div>
 
@@ -186,7 +190,7 @@ export function LandingPage() {
           className="mx-auto flex items-center justify-between gap-4 flex-wrap px-5 lg:px-8"
           style={{ maxWidth: 1280 }}
         >
-          <span style={{ fontSize: 13, color: '#8A8880' }}>Already in Almaty</span>
+          <span style={{ fontSize: 13, color: '#8A8880' }}>{t('landing.proof.city')}</span>
 
           <div className="flex items-center gap-3">
             <div className="flex">
@@ -208,12 +212,12 @@ export function LandingPage() {
                 </div>
               ))}
             </div>
-            <span style={{ fontSize: 13, color: '#8A8880' }}>34 curated spots · 12 early members</span>
+            <span style={{ fontSize: 13, color: '#8A8880' }}>{t('landing.proof.stats')}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <span style={{ color: '#D4A96A', fontSize: 14 }}>★★★★★</span>
-            <span style={{ fontSize: 13, color: '#8A8880', fontStyle: 'italic' }}>"Finally a map that gets it."</span>
+            <span style={{ fontSize: 13, color: '#8A8880', fontStyle: 'italic' }}>{t('landing.proof.quote')}</span>
           </div>
         </div>
       </section>
@@ -225,9 +229,9 @@ export function LandingPage() {
       >
         <div className="marquee-track">
           {[...Array(2)].flatMap((_, ri) => [
-            <span key={`almaty-${ri}`} style={{ fontSize: 13, color: '#8A8880', flexShrink: 0 }}>Already in Almaty</span>,
-            <span key={`dots-${ri}`} style={{ fontSize: 13, color: '#8A8880', flexShrink: 0 }}>34 curated spots · 12 early members</span>,
-            <span key={`stars-${ri}`} style={{ fontSize: 13, color: '#8A8880', fontStyle: 'italic', flexShrink: 0 }}>★★★★★ "Finally a map that gets it."</span>,
+            <span key={`almaty-${ri}`} style={{ fontSize: 13, color: '#8A8880', flexShrink: 0 }}>{t('landing.proof.city')}</span>,
+            <span key={`dots-${ri}`} style={{ fontSize: 13, color: '#8A8880', flexShrink: 0 }}>{t('landing.proof.stats')}</span>,
+            <span key={`stars-${ri}`} style={{ fontSize: 13, color: '#8A8880', fontStyle: 'italic', flexShrink: 0 }}>★★★★★ {t('landing.proof.quote')}</span>,
           ])}
         </div>
       </section>

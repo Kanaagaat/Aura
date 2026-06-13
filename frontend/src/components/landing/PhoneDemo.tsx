@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../../i18n';
 
 const PILL: React.CSSProperties = {
   background: '#fff',
@@ -15,6 +16,7 @@ const PILL: React.CSSProperties = {
 };
 
 function ScreenMap({ onNext }: { onNext: () => void }) {
+  const { t } = useLanguage();
   return (
     <div style={{ flex: 1, background: '#EDE8DE', position: 'relative', overflow: 'hidden' }}>
       {/* Street grid */}
@@ -93,7 +95,7 @@ function ScreenMap({ onNext }: { onNext: () => void }) {
             </div>
           </div>
           <div style={{ fontSize: 11, color: '#7A9E7E', fontWeight: 500, fontFamily: '"DM Sans", system-ui, sans-serif' }}>
-            Tap a spot →
+            {t('demo.tapSpot')}
           </div>
         </div>
       </button>
@@ -102,6 +104,7 @@ function ScreenMap({ onNext }: { onNext: () => void }) {
 }
 
 function ScreenVibeCard({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const { t } = useLanguage();
   return (
     <div style={{ flex: 1, background: '#fff', overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
       {/* Venue photo area */}
@@ -127,7 +130,7 @@ function ScreenVibeCard({ onNext, onBack }: { onNext: () => void; onBack: () => 
 
       <div style={{ padding: '12px 14px', flex: 1 }}>
         <div style={{ fontSize: 10, color: '#8A8880', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4, fontFamily: '"DM Sans", system-ui, sans-serif' }}>
-          🧘 Yoga studio
+          🧘 {t('demo.yogaStudio')}
         </div>
         <div style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 18, fontWeight: 400, color: '#1C1C1A', marginBottom: 2 }}>
           Flow Studio
@@ -151,7 +154,7 @@ function ScreenVibeCard({ onNext, onBack }: { onNext: () => void; onBack: () => 
           background: '#FDF6EC', borderRadius: 10, padding: '8px 10px', marginBottom: 12,
           fontSize: 11, color: '#1C1C1A', fontFamily: '"DM Sans", system-ui, sans-serif',
         }}>
-          🔆 2 people going today
+          🔆 {t('demo.peopleGoing', { n: '2' })}
         </div>
 
         <button
@@ -164,10 +167,10 @@ function ScreenVibeCard({ onNext, onBack }: { onNext: () => void; onBack: () => 
             fontFamily: '"DM Sans", system-ui, sans-serif',
           }}
         >
-          Light a Beacon Here
+          {t('map.venue.lightBeacon')}
         </button>
         <div style={{ textAlign: 'center', fontSize: 10, color: '#8A8880', fontFamily: '"DM Sans", system-ui, sans-serif' }}>
-          Light a beacon →
+          {t('demo.lightBeaconLink')}
         </div>
       </div>
     </div>
@@ -175,6 +178,7 @@ function ScreenVibeCard({ onNext, onBack }: { onNext: () => void; onBack: () => 
 }
 
 function ScreenBeaconCreated({ onReset }: { onReset: () => void }) {
+  const { t } = useLanguage();
   return (
     <div style={{ flex: 1, background: '#FAFAF7', padding: '14px', overflow: 'auto' }}>
       <div style={{
@@ -182,7 +186,7 @@ function ScreenBeaconCreated({ onReset }: { onReset: () => void }) {
         padding: '8px 16px', textAlign: 'center', fontSize: 12, fontWeight: 600,
         marginBottom: 16, fontFamily: '"DM Sans", system-ui, sans-serif',
       }}>
-        ✓ Beacon lit! 🌿
+        {t('demo.beaconLit')}
       </div>
 
       <div style={{
@@ -196,7 +200,7 @@ function ScreenBeaconCreated({ onReset }: { onReset: () => void }) {
           "Morning flow, matcha after"
         </div>
         <div style={{ fontSize: 11, color: '#8A8880', marginBottom: 6, fontFamily: '"DM Sans", system-ui, sans-serif' }}>
-          Today · 10:00
+          {t('demo.today')} · 10:00
         </div>
         <div style={{ fontSize: 11, color: '#7A9E7E', fontWeight: 500, fontFamily: '"DM Sans", system-ui, sans-serif' }}>
           👤 You + 2 joined
@@ -209,14 +213,14 @@ function ScreenBeaconCreated({ onReset }: { onReset: () => void }) {
           borderRadius: 100, padding: '8px 0', fontSize: 10, color: '#1C1C1A',
           cursor: 'pointer', fontFamily: '"DM Sans", system-ui, sans-serif',
         }}>
-          Share to Stories
+          {t('demo.shareStories')}
         </button>
         <button type="button" style={{
           flex: 1, background: '#7A9E7E', color: '#fff', border: 'none',
           borderRadius: 100, padding: '8px 0', fontSize: 10, fontWeight: 600,
           cursor: 'pointer', fontFamily: '"DM Sans", system-ui, sans-serif',
         }}>
-          Open in Telegram
+          {t('demo.openTelegram')}
         </button>
       </div>
 
@@ -229,7 +233,7 @@ function ScreenBeaconCreated({ onReset }: { onReset: () => void }) {
           fontFamily: '"DM Sans", system-ui, sans-serif',
         }}
       >
-        Start over ↺
+        {t('demo.startOver')}
       </button>
     </div>
   );

@@ -1,16 +1,21 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import { useLanguage } from '../i18n';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { AuraLogo } from './AuraLogo';
 
 const CHROME_HIDDEN_ROUTES = ['/auth', '/onboarding', '/join', '/'];
 
-const NAV = [
-  { to: '/feed',       icon: 'explore', label: 'Feed'    },
-  { to: '/map',        icon: 'map',     label: 'Map'     },
-  { to: '/beacon/new', icon: 'flare',   label: 'Beacon'  },
-  { to: '/profile',    icon: 'person',  label: 'Profile' },
-];
+const NAV_ITEMS = [
+  { to: '/feed',       icon: 'explore', labelKey: 'nav.feed'    },
+  { to: '/map',        icon: 'map',     labelKey: 'nav.map'     },
+  { to: '/beacon/new', icon: 'flare',   labelKey: 'nav.beacon'  },
+  { to: '/profile',    icon: 'person',  labelKey: 'nav.profile' },
+] as const;
 
 export function SidebarNav() {
+  const { t } = useLanguage();
+
   return (
     <nav
       className="hidden lg:flex flex-col fixed left-0 top-0 h-screen py-8 z-50"
@@ -23,19 +28,12 @@ export function SidebarNav() {
     >
       {/* Wordmark */}
       <div className="px-7 mb-10">
-        <h1
-          style={{
-            fontFamily: '"Cormorant Garamond", Georgia, serif',
-            fontSize: 28, fontWeight: 400, color: '#1C1C1A', letterSpacing: '-0.3px',
-          }}
-        >
-          aura
-        </h1>
+        <AuraLogo size={30} />
       </div>
 
       {/* Nav links */}
       <div className="flex flex-col gap-0.5 flex-1 px-3">
-        {NAV.map(({ to, icon, label }) => (
+        {NAV_ITEMS.map(({ to, icon, labelKey }) => (
           <NavLink
             key={to}
             to={to}
@@ -53,27 +51,34 @@ export function SidebarNav() {
                 <span className={clsx('material-symbols-outlined text-xl', isActive && 'filled')}>
                   {icon}
                 </span>
-                <span>{label}</span>
+                <span>{t(labelKey)}</span>
               </>
             )}
           </NavLink>
         ))}
       </div>
 
+      {/* Language switcher */}
+      <div className="px-4 mb-3 flex justify-start">
+        <LanguageSwitcher />
+      </div>
+
       {/* Light a Beacon CTA */}
       <NavLink
         to="/beacon/new"
-        className="mx-4 mt-auto mb-2 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-colors"
+        className="mx-4 mt-1 mb-2 flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-colors"
         style={{ background: '#1C1C1A', color: '#fff' }}
       >
         <span className="material-symbols-outlined text-lg">add</span>
-        Light a Beacon
+        {t('nav.lightBeacon')}
       </NavLink>
     </nav>
   );
 }
 
 export function MobileNav() {
+  const { t } = useLanguage();
+
   return (
     <nav
       className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-2 py-2"
@@ -85,7 +90,7 @@ export function MobileNav() {
       }}
     >
       <div className="flex justify-around">
-        {NAV.map(({ to, icon, label }) => (
+        {NAV_ITEMS.map(({ to, icon, labelKey }) => (
           <NavLink
             key={to}
             to={to}
@@ -93,7 +98,6 @@ export function MobileNav() {
           >
             {({ isActive }) => (
               <>
-                {/* Sage underline pill for active */}
                 {isActive && (
                   <span
                     className="absolute top-0 left-1/2 -translate-x-1/2"
@@ -110,7 +114,7 @@ export function MobileNav() {
                   {icon}
                 </span>
                 <span className={clsx('transition-colors', isActive ? 'text-[#5a7a5c] font-medium' : 'text-[#8A8880]')}>
-                  {label}
+                  {t(labelKey)}
                 </span>
               </>
             )}

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LocationImage } from './LocationImage';
 import { TwoGisButton } from './TwoGisButton';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useLanguage } from '../i18n';
 import type { Location } from '../types';
 
 interface VibeCardProps {
@@ -17,13 +18,6 @@ const EMOJI: Record<string, string> = {
   yoga: '🧘',
   spa: '✨',
   other: '📍',
-};
-
-const CATEGORY_LABEL: Record<string, string> = {
-  coffee: 'Specialty Coffee',
-  yoga: 'Yoga & Studio',
-  spa: 'Spa & Wellness',
-  other: 'Curated Spot',
 };
 
 // ─── Desktop right-panel (≥768 px) ───────────────────────────────────────────
@@ -110,8 +104,14 @@ function PanelContent({
   onClose: () => void;
   onLightBeacon: () => void;
 }) {
+  const { t } = useLanguage();
   const emoji = EMOJI[location.category] ?? '📍';
-  const categoryLabel = CATEGORY_LABEL[location.category] ?? 'Curated Spot';
+  const categoryLabelKey = `venue.category.${location.category}` as
+    | 'venue.category.coffee'
+    | 'venue.category.yoga'
+    | 'venue.category.spa'
+    | 'venue.category.other';
+  const categoryLabel = t(categoryLabelKey);
 
   return (
     <div className="flex flex-col h-full">
@@ -130,7 +130,7 @@ function PanelContent({
         {/* Featured badge */}
         {location.is_featured && (
           <span className="absolute top-4 left-4 rounded-full bg-amber-400/90 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-amber-900">
-            ⭐ Featured
+            {t('venue.featured')}
           </span>
         )}
 
@@ -200,7 +200,12 @@ function PanelContent({
           <div className="flex items-center gap-2 rounded-2xl bg-amber-50 border border-amber-100 px-4 py-3">
             <span className="text-amber-500 text-lg">🔆</span>
             <p className="text-sm font-medium text-amber-800">
-              {location.active_beacon_count} active beacon{location.active_beacon_count > 1 ? 's' : ''} here right now
+              {t(
+                location.active_beacon_count === 1
+                  ? 'map.venue.activeBeacons.singular'
+                  : 'map.venue.activeBeacons.plural',
+                { n: String(location.active_beacon_count) }
+              )}
             </p>
           </div>
         )}
@@ -215,7 +220,7 @@ function PanelContent({
           onClick={onLightBeacon}
           className="w-full rounded-full py-4 bg-[#1C1C1A] text-white text-sm font-semibold tracking-wide hover:bg-[#2C2C2A] active:scale-[0.98] transition-all duration-150 shadow-[0_4px_16px_rgba(0,0,0,0.18)]"
         >
-          🌿 Light a Beacon Here
+          {t('map.venue.lightBeacon')}
         </button>
 
         <TwoGisButton
@@ -228,7 +233,7 @@ function PanelContent({
           to={`/venues/${location.id}`}
           className="w-full rounded-full border border-[#EEECE8] bg-white py-3 text-center text-sm font-medium text-primary-dark hover:border-[#7A9E7E]/50 transition-colors"
         >
-          View full venue →
+          {t('map.venue.viewFull')}
         </Link>
 
         {/* Bottom padding for mobile safe area */}

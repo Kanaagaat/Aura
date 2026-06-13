@@ -1,27 +1,16 @@
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../i18n';
+import type { TranslationKey } from '../../i18n/translations';
 
-const STEPS = [
-  {
-    num: '01',
-    emoji: '🗺️',
-    headline: 'Discover curated spots',
-    body: 'Hand-picked yoga studios, specialty coffee, and spas — no noise, no auto-repair shops.',
-  },
-  {
-    num: '02',
-    emoji: '🔆',
-    headline: 'Light a Beacon',
-    body: "Tell the map where you're headed. Two taps and your intention is live for 2 hours.",
-  },
-  {
-    num: '03',
-    emoji: '🤝',
-    headline: 'Show up together',
-    body: 'Someone nearby joins. You meet at the venue. Simple.',
-  },
+const STEPS: { num: string; emoji: string; headlineKey: TranslationKey; bodyKey: TranslationKey }[] = [
+  { num: '01', emoji: '🗺️', headlineKey: 'howItWorks.step1.headline', bodyKey: 'howItWorks.step1.body' },
+  { num: '02', emoji: '🔆', headlineKey: 'howItWorks.step2.headline', bodyKey: 'howItWorks.step2.body' },
+  { num: '03', emoji: '🤝', headlineKey: 'howItWorks.step3.headline', bodyKey: 'howItWorks.step3.body' },
 ];
 
 export function HowItWorks() {
+  const { t } = useLanguage();
+
   return (
     <section id="how-it-works" style={{ padding: '100px 0', background: '#FAFAF7' }}>
       <div className="mx-auto px-5 lg:px-8" style={{ maxWidth: 1280 }}>
@@ -36,7 +25,7 @@ export function HowItWorks() {
             textAlign: 'center', marginBottom: 60, letterSpacing: '-0.3px',
           }}
         >
-          Simple by design.
+          {t('howItWorks.title')}
         </motion.h2>
 
         <div className="how-it-works-steps">
@@ -49,7 +38,6 @@ export function HowItWorks() {
               transition={{ duration: 0.6, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
               style={{ position: 'relative' }}
             >
-              {/* Large background step number */}
               <span
                 aria-hidden
                 style={{
@@ -63,7 +51,6 @@ export function HowItWorks() {
                 {step.num}
               </span>
 
-              {/* Content */}
               <div style={{ position: 'relative', zIndex: 1, paddingTop: 44 }}>
                 <span style={{ fontSize: 48, display: 'block', marginBottom: 16 }} aria-hidden>
                   {step.emoji}
@@ -74,7 +61,7 @@ export function HowItWorks() {
                     fontSize: 20, fontWeight: 400, color: '#1C1C1A', marginBottom: 8,
                   }}
                 >
-                  {step.headline}
+                  {t(step.headlineKey)}
                 </h3>
                 <p
                   style={{
@@ -82,7 +69,7 @@ export function HowItWorks() {
                     fontSize: 14, color: '#8A8880', lineHeight: 1.65, maxWidth: 260,
                   }}
                 >
-                  {step.body}
+                  {t(step.bodyKey)}
                 </p>
               </div>
             </motion.div>

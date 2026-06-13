@@ -3,26 +3,33 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuriMascot } from '../components/AuriMascot';
 import { useAuraStore } from '../store/useAuraStore';
+import { useLanguage } from '../i18n';
 import type { Gender } from '../types';
 
-const INTERESTS = [
-  { emoji: '☕', label: 'Coffeeing' },
-  { emoji: '🚶', label: 'Walking' },
-  { emoji: '🧘', label: 'Yoga' },
-  { emoji: '📖', label: 'Reading' },
-  { emoji: '🌿', label: 'Wellness' },
-  { emoji: '🎵', label: 'Music' },
-  { emoji: '🎨', label: 'Art' },
-  { emoji: '🍵', label: 'Matcha' },
-  { emoji: '✨', label: 'Spa' },
-  { emoji: '🌅', label: 'Mornings' },
-  { emoji: '🏃', label: 'Active' },
-  { emoji: '💆', label: 'Mindful' },
+type InterestLabelKey =
+  | 'interest.coffeeing' | 'interest.walking' | 'interest.yoga'
+  | 'interest.reading'   | 'interest.wellness' | 'interest.music'
+  | 'interest.art'       | 'interest.matcha'   | 'interest.spa'
+  | 'interest.mornings'  | 'interest.active'   | 'interest.mindful';
+
+const INTERESTS: { emoji: string; label: string; labelKey: InterestLabelKey }[] = [
+  { emoji: '☕', label: 'Coffeeing', labelKey: 'interest.coffeeing' },
+  { emoji: '🚶', label: 'Walking',   labelKey: 'interest.walking'   },
+  { emoji: '🧘', label: 'Yoga',      labelKey: 'interest.yoga'      },
+  { emoji: '📖', label: 'Reading',   labelKey: 'interest.reading'   },
+  { emoji: '🌿', label: 'Wellness',  labelKey: 'interest.wellness'  },
+  { emoji: '🎵', label: 'Music',     labelKey: 'interest.music'     },
+  { emoji: '🎨', label: 'Art',       labelKey: 'interest.art'       },
+  { emoji: '🍵', label: 'Matcha',    labelKey: 'interest.matcha'    },
+  { emoji: '✨', label: 'Spa',       labelKey: 'interest.spa'       },
+  { emoji: '🌅', label: 'Mornings',  labelKey: 'interest.mornings'  },
+  { emoji: '🏃', label: 'Active',    labelKey: 'interest.active'    },
+  { emoji: '💆', label: 'Mindful',   labelKey: 'interest.mindful'   },
 ];
 
-const GENDER_OPTIONS: { value: Gender; label: string; symbol: string }[] = [
-  { value: 'male', label: 'Male', symbol: '♂' },
-  { value: 'female', label: 'Female', symbol: '♀' },
+const GENDER_OPTIONS: { value: Gender; labelKey: 'auth.gender.male' | 'auth.gender.female'; symbol: string }[] = [
+  { value: 'male', labelKey: 'auth.gender.male', symbol: '♂' },
+  { value: 'female', labelKey: 'auth.gender.female', symbol: '♀' },
 ];
 
 function isProfileComplete(profile: ReturnType<typeof useAuraStore.getState>['profile']): boolean {
@@ -38,6 +45,7 @@ export function OnboardingPage() {
   const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/feed';
   const { profile, fetchProfile, updateProfile, loading } = useAuraStore();
+  const { t } = useLanguage();
 
   const [gender, setGender] = useState<Gender | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
@@ -68,41 +76,24 @@ export function OnboardingPage() {
 
   const toggleInterest = (label: string) => {
     setInterests((current) => {
-      if (current.includes(label)) {
-        return current.filter((item) => item !== label);
-      }
-      if (current.length >= 5) {
-        return current;
-      }
+      if (current.includes(label)) return current.filter((item) => item !== label);
+      if (current.length >= 5) return current;
       return [...current, label];
     });
   };
 
   const handleSave = async () => {
-    if (!gender) {
-      setError('Choose a gender to continue.');
-      return;
-    }
-    if (interests.length < 2) {
-      setError('Pick at least 2 interests.');
-      return;
-    }
-    if (!vibeWord.trim()) {
-      setError('Add one word to describe yourself.');
-      return;
-    }
+    if (!gender) { setError(t('onboarding.error.gender')); return; }
+    if (interests.length < 2) { setError(t('onboarding.error.interests')); return; }
+    if (!vibeWord.trim()) { setError(t('onboarding.error.vibeWord')); return; }
 
     setSaving(true);
     setError(null);
     try {
-      await updateProfile({
-        gender,
-        interests,
-        vibe_word: vibeWord.trim(),
-      });
+      await updateProfile({ gender, interests, vibe_word: vibeWord.trim() });
       navigate(redirectPath, { replace: true });
     } catch (err) {
-      setError((err as Error).message || 'Could not save your profile.');
+      setError(t('onboarding.error.save'));
     } finally {
       setSaving(false);
     }
@@ -111,7 +102,7 @@ export function OnboardingPage() {
   if (!profile && loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#FAFAF7] px-5 text-sm text-[#8A8880]">
-        Loading profile...
+        {t('onboarding.loading')}
       </div>
     );
   }
@@ -126,18 +117,18 @@ export function OnboardingPage() {
       >
         <div className="rounded-[28px] border border-[#EEECE8] bg-white/75 p-7 shadow-[0_4px_24px_rgba(0,0,0,0.04)] backdrop-blur-md">
           <div className="mb-6 flex flex-col items-center text-center">
-            <AuriMascot state="happy" size={56} animate message="A little about you..." />
+            <AuriMascot state="happy" size={56} animate message={t('onboarding.mascot.message')} />
             <h1 className="mt-4 font-serif text-3xl font-light text-[#1C1C1A]">
-              Complete your Aura
+              {t('onboarding.profile.title')}
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-[#8A8880]">
-              Add the details we use for beacon visibility and compatibility.
+              {t('onboarding.profile.subtitle')}
             </p>
           </div>
 
           <section className="mb-6">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#8A8880]">
-              I am
+              {t('onboarding.iam')}
             </p>
             <div className="grid grid-cols-2 gap-3">
               {GENDER_OPTIONS.map((option) => {
@@ -146,10 +137,7 @@ export function OnboardingPage() {
                   <motion.button
                     key={option.value}
                     type="button"
-                    onClick={() => {
-                      setGender(option.value);
-                      setError(null);
-                    }}
+                    onClick={() => { setGender(option.value); setError(null); }}
                     whileTap={{ scale: 0.96 }}
                     className={`flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-colors ${
                       selected
@@ -158,7 +146,7 @@ export function OnboardingPage() {
                     }`}
                   >
                     <span className="text-4xl leading-none">{option.symbol}</span>
-                    <span className="font-serif text-base">{option.label}</span>
+                    <span className="font-serif text-base">{t(option.labelKey)}</span>
                   </motion.button>
                 );
               })}
@@ -168,22 +156,19 @@ export function OnboardingPage() {
           <section className="mb-6">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880]">
-                Interests
+                {t('onboarding.interests.sectionLabel')}
               </p>
               <span className="text-xs font-medium text-[#8A8880]">{selectedCount}/5</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {INTERESTS.map(({ emoji, label }) => {
+              {INTERESTS.map(({ emoji, label, labelKey }) => {
                 const selected = interests.includes(label);
                 const disabled = !selected && interests.length >= 5;
                 return (
                   <motion.button
                     key={label}
                     type="button"
-                    onClick={() => {
-                      toggleInterest(label);
-                      setError(null);
-                    }}
+                    onClick={() => { toggleInterest(label); setError(null); }}
                     whileTap={{ scale: 0.94 }}
                     disabled={disabled}
                     className={`rounded-full border px-3 py-2 text-sm transition-colors ${
@@ -192,7 +177,7 @@ export function OnboardingPage() {
                         : 'border-[#EEECE8] bg-[#FAFAF7] text-[#1C1C1A] disabled:text-[#C0BCB6]'
                     }`}
                   >
-                    {emoji} {label}
+                    {emoji} {t(labelKey)}
                   </motion.button>
                 );
               })}
@@ -204,7 +189,7 @@ export function OnboardingPage() {
               htmlFor="vibe-word"
               className="mb-2 block text-xs font-semibold uppercase tracking-wider text-[#8A8880]"
             >
-              One word
+              {t('onboarding.oneWord')}
             </label>
             <input
               id="vibe-word"
@@ -214,7 +199,7 @@ export function OnboardingPage() {
                 setVibeWord(event.target.value.replace(/\s/g, '').slice(0, 20));
                 setError(null);
               }}
-              placeholder="curious"
+              placeholder={t('onboarding.vibeWord.placeholder')}
               className="w-full rounded-2xl border border-[#EEECE8] bg-[#FAFAF7] px-4 py-3 text-center text-lg text-[#1C1C1A] outline-none transition-colors placeholder:text-[#B0ACA4] focus:border-[#7A9E7E]"
             />
             <AnimatePresence>
@@ -248,7 +233,7 @@ export function OnboardingPage() {
             disabled={!canContinue || saving}
             className="mt-6 w-full rounded-full bg-[#1C1C1A] py-3 text-sm font-semibold text-white transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {saving ? 'Saving...' : 'Enter Aura'}
+            {saving ? t('onboarding.saving') : t('onboarding.enter')}
           </button>
         </div>
       </motion.main>

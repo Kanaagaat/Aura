@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { client } from '../api/client';
+import { useLanguage } from '../i18n';
 
 interface Stats {
   active_beacons: number;
@@ -9,6 +10,7 @@ interface Stats {
 
 export function CommunityStatsBar() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const cached = sessionStorage.getItem('aura_stats');
@@ -34,11 +36,11 @@ export function CommunityStatsBar() {
       className="flex items-center justify-center gap-2 px-4 py-2.5 text-xs text-[#8A8880]"
       style={{ borderBottom: '1px solid #EEECE8', background: '#FAFAF7' }}
     >
-      <span>34 curated spots</span>
+      <span>{t('stats.spots')}</span>
       <span className="text-[#D4D0C8]">·</span>
-      <span>{stats.total_users} people active</span>
+      <span>{t('stats.active', { n: String(stats.total_users) })}</span>
       <span className="text-[#D4D0C8]">·</span>
-      <span>{stats.beacons_today} beacons today</span>
+      <span>{t('stats.today', { n: String(stats.beacons_today) })}</span>
     </div>
   );
 }

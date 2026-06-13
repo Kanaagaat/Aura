@@ -7,24 +7,32 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuraStore } from '../store/useAuraStore';
 import { AuriMascot } from '../components/AuriMascot';
+import { AuraLogo } from '../components/AuraLogo';
+import { useLanguage } from '../i18n';
 import type { MascotState as _MS } from '../components/AuriMascot';
 import type { Gender } from '../types';
 
 // ─── constants ────────────────────────────────────────────────────────────────
 
-const INTERESTS = [
-  { emoji: '☕', label: 'Coffeeing' },
-  { emoji: '🚶', label: 'Walking' },
-  { emoji: '🧘', label: 'Yoga' },
-  { emoji: '📖', label: 'Reading' },
-  { emoji: '🌿', label: 'Wellness' },
-  { emoji: '🎵', label: 'Music' },
-  { emoji: '🎨', label: 'Art' },
-  { emoji: '🍵', label: 'Matcha' },
-  { emoji: '✨', label: 'Spa' },
-  { emoji: '🌅', label: 'Mornings' },
-  { emoji: '🏃', label: 'Active' },
-  { emoji: '💆', label: 'Mindful' },
+type InterestLabelKey =
+  | 'interest.coffeeing' | 'interest.walking' | 'interest.yoga'
+  | 'interest.reading'   | 'interest.wellness' | 'interest.music'
+  | 'interest.art'       | 'interest.matcha'   | 'interest.spa'
+  | 'interest.mornings'  | 'interest.active'   | 'interest.mindful';
+
+const INTERESTS: { emoji: string; label: string; labelKey: InterestLabelKey }[] = [
+  { emoji: '☕', label: 'Coffeeing', labelKey: 'interest.coffeeing' },
+  { emoji: '🚶', label: 'Walking',   labelKey: 'interest.walking'   },
+  { emoji: '🧘', label: 'Yoga',      labelKey: 'interest.yoga'      },
+  { emoji: '📖', label: 'Reading',   labelKey: 'interest.reading'   },
+  { emoji: '🌿', label: 'Wellness',  labelKey: 'interest.wellness'  },
+  { emoji: '🎵', label: 'Music',     labelKey: 'interest.music'     },
+  { emoji: '🎨', label: 'Art',       labelKey: 'interest.art'       },
+  { emoji: '🍵', label: 'Matcha',    labelKey: 'interest.matcha'    },
+  { emoji: '✨', label: 'Spa',       labelKey: 'interest.spa'       },
+  { emoji: '🌅', label: 'Mornings',  labelKey: 'interest.mornings'  },
+  { emoji: '🏃', label: 'Active',    labelKey: 'interest.active'    },
+  { emoji: '💆', label: 'Mindful',   labelKey: 'interest.mindful'   },
 ];
 
 const PLACEHOLDER_WORDS = ['calm', 'curious', 'present', 'vibrant', 'serene', 'bold', 'gentle'];
@@ -36,37 +44,7 @@ const MASCOT_STATE: Record<number, _MS> = {
   3: 'excited',
 };
 
-const MASCOT_MSG: Record<number, string> = {
-  0: 'Welcome to Aura ✨',
-  1: 'Nice to meet you...',
-  2: 'Great taste!',
-  3: 'Almost done...',
-};
-
-// ─── error message normaliser ────────────────────────────────────────────────
-
-function friendlyAuthError(raw: string): string {
-  const s = raw.toLowerCase();
-  if (s.includes('no active account') || s.includes('invalid credentials') || s.includes('wrong password') || s.includes('incorrect')) {
-    return 'Username or password is incorrect.';
-  }
-  if (s.includes('username is already taken') || s.includes('a user with that username')) {
-    return 'That username is already taken. Try a different one.';
-  }
-  if (s.includes('email is already registered') || s.includes('already exists')) {
-    return 'That email is already registered. Try signing in instead.';
-  }
-  if (s.includes('password') && (s.includes('short') || s.includes('least'))) {
-    return 'Password must be at least 6 characters.';
-  }
-  if (s.includes('enter a valid email')) {
-    return 'Please enter a valid email address.';
-  }
-  if (s.includes('this field') && s.includes('required')) {
-    return 'Please fill in all required fields.';
-  }
-  return raw;
-}
+const MASCOT_MSG_KEY = ['auth.mascot.0', 'auth.mascot.1', 'auth.mascot.2', 'auth.mascot.3'] as const;
 
 // ─── slide variants ───────────────────────────────────────────────────────────
 
@@ -77,8 +55,6 @@ const slideVariants = {
 };
 
 const transition = { duration: 0.25, ease: [0.22, 1, 0.36, 1] as const };
-
-// ─── input style helper ───────────────────────────────────────────────────────
 
 const inputCls =
   'w-full bg-[#FAFAF7] border border-[#EEECE8] rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#7A9E7E] transition-colors placeholder:text-[#B0ACA4]';
@@ -94,30 +70,31 @@ function StepBasicInfo({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   localError: string | null;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">Username</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">{t('auth.step.username')}</p>
         <input type="text" name="username" value={formData.username} onChange={onChange}
           placeholder="e.g., sofia_p" className={inputCls} />
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">Display name</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">{t('auth.step.displayName')}</p>
         <input type="text" name="display_name" value={formData.display_name} onChange={onChange}
           placeholder="e.g., Sofia P." className={inputCls} />
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">Email</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">{t('auth.step.email')}</p>
         <input type="email" name="email" value={formData.email} onChange={onChange}
           placeholder="e.g., sofia@example.com" className={inputCls} />
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">Telegram handle</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">{t('auth.step.telegram')}</p>
         <input type="text" name="telegram_username" value={formData.telegram_username} onChange={onChange}
           placeholder="@yourhandle" className={inputCls} />
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">Password</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-1">{t('auth.step.password')}</p>
         <input type="password" name="password" value={formData.password} onChange={onChange}
           placeholder="••••••••" className={inputCls} />
       </div>
@@ -144,19 +121,20 @@ function StepBasicInfo({
 // ─── Step 1: gender ───────────────────────────────────────────────────────────
 
 function StepGender({ value, onChange }: { value: Gender | null; onChange: (g: Gender) => void }) {
-  const options: { g: Gender; symbol: string; label: string }[] = [
-    { g: 'male',   symbol: '♂', label: 'Male'   },
-    { g: 'female', symbol: '♀', label: 'Female' },
+  const { t } = useLanguage();
+  const options: { g: Gender; symbol: string; labelKey: 'auth.gender.male' | 'auth.gender.female' }[] = [
+    { g: 'male',   symbol: '♂', labelKey: 'auth.gender.male'   },
+    { g: 'female', symbol: '♀', labelKey: 'auth.gender.female' },
   ];
 
   return (
     <div>
       <h2 style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 28, fontWeight: 300, color: '#1C1C1A', marginBottom: 8 }}>
-        Who are you?
+        {t('auth.gender.title')}
       </h2>
-      <p className="text-sm text-[#8A8880] mb-6">We use this to personalise your experience.</p>
+      <p className="text-sm text-[#8A8880] mb-6">{t('auth.gender.subtitle')}</p>
       <div className="grid grid-cols-2 gap-3">
-        {options.map(({ g, symbol, label }) => {
+        {options.map(({ g, symbol, labelKey }) => {
           const selected = value === g;
           return (
             <motion.button
@@ -174,7 +152,7 @@ function StepGender({ value, onChange }: { value: Gender | null; onChange: (g: G
               }}
             >
               <span style={{ fontSize: 40, lineHeight: 1 }}>{symbol}</span>
-              <span style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 16 }}>{label}</span>
+              <span style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 16 }}>{t(labelKey)}</span>
               {selected && (
                 <motion.span
                   initial={{ scale: 0 }}
@@ -201,6 +179,7 @@ function StepGender({ value, onChange }: { value: Gender | null; onChange: (g: G
 // ─── Step 2: interests ────────────────────────────────────────────────────────
 
 function StepInterests({ selected, onChange }: { selected: string[]; onChange: (v: string[]) => void }) {
+  const { t } = useLanguage();
   const toggle = (label: string) => {
     if (selected.includes(label)) {
       onChange(selected.filter(l => l !== label));
@@ -212,14 +191,14 @@ function StepInterests({ selected, onChange }: { selected: string[]; onChange: (
   return (
     <div>
       <h2 style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 28, fontWeight: 300, color: '#1C1C1A', marginBottom: 8 }}>
-        What&apos;s your vibe?
+        {t('auth.interests.title')}
       </h2>
       <div className="flex items-center justify-between mb-5">
-        <p className="text-sm text-[#8A8880]">Pick 2–5 things you love.</p>
+        <p className="text-sm text-[#8A8880]">{t('auth.interests.subtitle')}</p>
         <span className="text-xs font-medium text-[#8A8880]">{selected.length}/5</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {INTERESTS.map(({ emoji, label }) => {
+        {INTERESTS.map(({ emoji, label, labelKey }) => {
           const active = selected.includes(label);
           const maxed = !active && selected.length >= 5;
           return (
@@ -237,13 +216,13 @@ function StepInterests({ selected, onChange }: { selected: string[]; onChange: (
                 cursor: maxed ? 'not-allowed' : 'pointer',
               }}
             >
-              {emoji} {label}
+              {emoji} {t(labelKey)}
             </motion.button>
           );
         })}
       </div>
       {selected.length < 2 && (
-        <p className="mt-4 text-xs text-[#8A8880]">Select at least 2 to continue.</p>
+        <p className="mt-4 text-xs text-[#8A8880]">{t('auth.interests.min')}</p>
       )}
     </div>
   );
@@ -252,6 +231,7 @@ function StepInterests({ selected, onChange }: { selected: string[]; onChange: (
 // ─── Step 3: vibe word ────────────────────────────────────────────────────────
 
 function StepVibeWord({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { t } = useLanguage();
   const [phIdx, setPhIdx] = useState(0);
   const [shake, setShake] = useState(false);
 
@@ -271,9 +251,9 @@ function StepVibeWord({ value, onChange }: { value: string; onChange: (v: string
   return (
     <div>
       <h2 style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 28, fontWeight: 300, color: '#1C1C1A', marginBottom: 8 }}>
-        In one word...
+        {t('auth.vibeWord.title')}
       </h2>
-      <p className="text-sm text-[#8A8880] mb-6">How would you describe yourself?</p>
+      <p className="text-sm text-[#8A8880] mb-6">{t('auth.vibeWord.subtitle')}</p>
 
       <motion.div
         animate={shake ? { x: [-5, 5, -5, 5, -3, 3, 0] } : { x: 0 }}
@@ -294,7 +274,6 @@ function StepVibeWord({ value, onChange }: { value: string; onChange: (v: string
         />
       </motion.div>
 
-      {/* Large preview */}
       <AnimatePresence mode="wait">
         {value.length > 0 && (
           <motion.p
@@ -316,7 +295,7 @@ function StepVibeWord({ value, onChange }: { value: string; onChange: (v: string
       </AnimatePresence>
 
       {value.length === 0 && (
-        <p className="text-center mt-4 text-xs text-[#B0ACA4]">No spaces — one word only.</p>
+        <p className="text-center mt-4 text-xs text-[#B0ACA4]">{t('auth.vibeWord.hint')}</p>
       )}
     </div>
   );
@@ -348,6 +327,7 @@ export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/feed';
+  const { t } = useLanguage();
 
   const { login, register, googleLogin, isAuthenticated, profile, error, loading } = useAuraStore();
 
@@ -371,7 +351,7 @@ export function AuthPage() {
     setLocalError(null);
     try {
       await googleLogin(credential);
-    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
+    } catch (e) { setLocalError((e as Error).message); }
   }, [googleLogin]);
 
   useEffect(() => {
@@ -409,28 +389,26 @@ export function AuthPage() {
     setLocalError(null);
     try {
       await googleLogin(`mock_${formData.username || 'sofia_p'}`);
-    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
+    } catch (e) { setLocalError((e as Error).message); }
   };
 
-  // ── login submit ──
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
-    if (!formData.username || !formData.password) { setLocalError('Fill in username and password.'); return; }
+    if (!formData.username || !formData.password) { setLocalError(t('auth.error.fillUsername')); return; }
     try {
       await login({ username: formData.username, password: formData.password });
-    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
+    } catch (e) { setLocalError((e as Error).message); }
   };
 
-  // ── register step navigation ──
   const goNext = () => {
     if (registerStep === 0) {
-      if (!formData.username || !formData.email || !formData.password) { setLocalError('Fill in username, email and password.'); return; }
-      if (formData.password.length < 6) { setLocalError('Password must be at least 6 characters.'); return; }
+      if (!formData.username || !formData.email || !formData.password) { setLocalError(t('auth.error.fillAll')); return; }
+      if (formData.password.length < 6) { setLocalError(t('auth.error.passwordShort')); return; }
       setLocalError(null);
     }
-    if (registerStep === 1 && !gender) { setLocalError('Please choose a gender.'); return; }
-    if (registerStep === 2 && interests.length < 2) { setLocalError('Pick at least 2 interests.'); return; }
+    if (registerStep === 1 && !gender) { setLocalError(t('auth.error.gender')); return; }
+    if (registerStep === 2 && interests.length < 2) { setLocalError(t('auth.error.interests')); return; }
     setLocalError(null);
     setDirection(1);
     setRegisterStep(s => s + 1);
@@ -442,13 +420,12 @@ export function AuthPage() {
     setRegisterStep(s => s - 1);
   };
 
-  // ── register final submit ──
   const handleRegisterSubmit = async () => {
-    if (!vibeWord.trim()) { setLocalError('Type one word to describe yourself.'); return; }
+    if (!vibeWord.trim()) { setLocalError(t('auth.error.vibeWord')); return; }
     setLocalError(null);
     try {
       await register({ ...formData, gender: gender ?? undefined, interests, vibe_word: vibeWord.trim() });
-    } catch (e) { setLocalError(friendlyAuthError((e as Error).message)); }
+    } catch (e) { setLocalError((e as Error).message); }
   };
 
   const TOTAL_STEPS = 4;
@@ -456,7 +433,6 @@ export function AuthPage() {
   return (
     <div className="flex items-center justify-center min-h-[90vh] px-4 py-8">
       <div className="w-full max-w-md">
-        {/* ── Login mode ── */}
         {mode === 'login' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -466,10 +442,10 @@ export function AuthPage() {
           >
             <div className="flex flex-col items-center mb-8">
               <AuriMascot state="idle" size={56} animate />
-              <h1 style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 36, fontWeight: 300, color: '#7A9E7E', marginTop: 12, marginBottom: 4 }}>
-                aura
-              </h1>
-              <p className="text-[#8A8880] text-sm">Find your place. Find your people.</p>
+              <div style={{ marginTop: 12, marginBottom: 4 }}>
+                <AuraLogo size={32} />
+              </div>
+              <p className="text-[#8A8880] text-sm">{t('auth.login.tagline')}</p>
             </div>
 
             <AnimatePresence>
@@ -491,18 +467,18 @@ export function AuthPage() {
 
             <form onSubmit={handleLoginSubmit} className="space-y-3">
               <input type="text" name="username" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })}
-                placeholder="Username" className={inputCls} />
+                placeholder={t('auth.username.placeholder')} className={inputCls} />
               <input type="password" name="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })}
-                placeholder="Password" className={inputCls} />
+                placeholder={t('auth.password.placeholder')} className={inputCls} />
               <button type="submit" disabled={loading}
                 className="w-full rounded-full bg-[#1C1C1A] py-3 text-sm font-semibold text-white transition active:scale-[0.98] disabled:opacity-60">
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? t('auth.login.loading') : t('auth.login.submit')}
               </button>
             </form>
 
             <div className="flex items-center my-5">
               <div className="flex-1 border-t border-[#EEECE8]" />
-              <span className="text-[#8A8880] text-xs px-3 uppercase tracking-wider">or</span>
+              <span className="text-[#8A8880] text-xs px-3 uppercase tracking-wider">{t('auth.divider')}</span>
               <div className="flex-1 border-t border-[#EEECE8]" />
             </div>
 
@@ -512,7 +488,7 @@ export function AuthPage() {
               <button type="button" onClick={handleMockBypass} disabled={loading}
                 className="w-full flex items-center justify-center gap-3 rounded-full border border-[#EEECE8] bg-white py-3 text-sm font-medium text-[#1C1C1A] hover:bg-[#FAFAF7] transition-colors disabled:opacity-60">
                 <GoogleIcon />
-                Continue with Google
+                {t('auth.google.label')}
               </button>
             )}
 
@@ -522,16 +498,15 @@ export function AuthPage() {
             </button>
 
             <p className="text-center mt-5 text-sm text-[#8A8880]">
-              New to Aura?{' '}
+              {t('auth.switch.toRegister')}{' '}
               <button onClick={() => { setMode('register'); setRegisterStep(0); setLocalError(null); }}
                 className="text-[#7A9E7E] font-medium hover:underline">
-                Create an account
+                →
               </button>
             </p>
           </motion.div>
         )}
 
-        {/* ── Register multi-step ── */}
         {mode === 'register' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -539,19 +514,17 @@ export function AuthPage() {
             transition={transition}
             className="bg-white/70 backdrop-blur-md rounded-[28px] border border-[#EEECE8] p-8 shadow-[0_4px_24px_rgba(0,0,0,0.04)]"
           >
-            {/* Mascot + progress */}
             <div className="flex flex-col items-center mb-4">
               <AuriMascot
                 state={MASCOT_STATE[registerStep]}
                 size={52}
                 animate
-                message={MASCOT_MSG[registerStep]}
+                message={t(MASCOT_MSG_KEY[registerStep])}
                 pulse={registerStep === 3}
               />
             </div>
             <ProgressDots step={registerStep} total={TOTAL_STEPS} />
 
-            {/* Step content */}
             <AnimatePresence custom={direction} mode="wait">
               <motion.div
                 key={registerStep}
@@ -577,7 +550,6 @@ export function AuthPage() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Error display for steps 1–3 (step 0 shows inline inside StepBasicInfo) */}
             <AnimatePresence>
               {localError && registerStep > 0 && (
                 <motion.div
@@ -595,7 +567,6 @@ export function AuthPage() {
               )}
             </AnimatePresence>
 
-            {/* Navigation buttons */}
             <div className="flex gap-3 mt-6">
               {registerStep > 0 && (
                 <button type="button" onClick={goBack}
@@ -606,21 +577,21 @@ export function AuthPage() {
               {registerStep < TOTAL_STEPS - 1 ? (
                 <button type="button" onClick={goNext}
                   className="flex-1 rounded-full bg-[#1C1C1A] py-3 text-sm font-semibold text-white transition active:scale-[0.98]">
-                  Continue
+                  {t('auth.continue')}
                 </button>
               ) : (
                 <button type="button" onClick={handleRegisterSubmit} disabled={loading}
                   className="flex-1 rounded-full bg-[#7A9E7E] py-3 text-sm font-semibold text-white transition active:scale-[0.98] disabled:opacity-60">
-                  {loading ? 'Creating account...' : 'Join Aura 🌿'}
+                  {loading ? t('auth.register.creating') : t('auth.register.joinCta')}
                 </button>
               )}
             </div>
 
             <p className="text-center mt-4 text-sm text-[#8A8880]">
-              Already have an account?{' '}
+              {t('auth.switch.toLogin')}{' '}
               <button onClick={() => { setMode('login'); setLocalError(null); }}
                 className="text-[#7A9E7E] font-medium hover:underline">
-                Sign in
+                →
               </button>
             </p>
           </motion.div>

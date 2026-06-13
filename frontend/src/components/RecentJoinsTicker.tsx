@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { client } from '../api/client';
+import { useLanguage } from '../i18n';
 
 interface JoinItem {
   user_name: string;
@@ -13,6 +14,7 @@ const ACTIVITY_EMOJI: Record<string, string> = {
 
 export function RecentJoinsTicker() {
   const [items, setItems] = useState<JoinItem[]>([]);
+  const { t } = useLanguage();
 
   useEffect(() => {
     client.get('/api/v1/beacons/recent-joins/')
@@ -26,7 +28,7 @@ export function RecentJoinsTicker() {
   if (items.length === 0) return null;
 
   const text = items
-    .map((i) => `${i.user_name} joined ${ACTIVITY_EMOJI[i.activity] ?? '✨'} ${i.activity} at ${i.location_name}`)
+    .map((i) => `${i.user_name} ${t('ticker.joined')} ${ACTIVITY_EMOJI[i.activity] ?? '✨'} ${i.activity} ${t('ticker.at')} ${i.location_name}`)
     .join('   ·   ');
 
   return (

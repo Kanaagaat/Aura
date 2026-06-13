@@ -4,6 +4,7 @@ import { useAuraStore } from '../store/useAuraStore';
 import { BeaconCard } from '../components/BeaconCard';
 import { InstagramIcon } from '../components/InstagramIcon';
 import { TelegramIcon } from '../components/TelegramIcon';
+import { useLanguage } from '../i18n';
 import { api } from '../lib/api';
 import type { Beacon, UserProfile } from '../types';
 
@@ -14,6 +15,7 @@ export function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { profile: myProfile, beacons, fetchBeacons } = useAuraStore();
+  const { t } = useLanguage();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,8 +32,8 @@ export function UserProfilePage() {
     api
       .getProfileById(profileId)
       .then(setUser)
-      .catch(() => setError('This profile could not be found.'));
-  }, [id, profileId, isOwnProfile, navigate]);
+      .catch(() => setError(t('userProfile.error.title')));
+  }, [id, profileId, isOwnProfile, navigate, t]);
 
   useEffect(() => {
     fetchBeacons();
@@ -40,10 +42,10 @@ export function UserProfilePage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-        <p className="font-serif text-xl mb-2">Profile unavailable</p>
+        <p className="font-serif text-xl mb-2">{t('userProfile.error.title')}</p>
         <p className="text-sm text-text-muted mb-6">{error}</p>
         <Link to="/home" className="rounded-full bg-text-main text-white px-6 py-3 text-sm">
-          Back to Home
+          {t('userProfile.error.cta')}
         </Link>
       </div>
     );
@@ -52,7 +54,7 @@ export function UserProfilePage() {
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-[50vh] text-text-muted">
-        Loading profile...
+        {t('userProfile.loading')}
       </div>
     );
   }
@@ -70,16 +72,14 @@ export function UserProfilePage() {
         className="flex items-center gap-2 text-text-muted text-sm mb-6 hover:text-text-main"
       >
         <span className="material-symbols-outlined text-lg">arrow_back</span>
-        Back
+        {t('userProfile.backCta')}
       </button>
 
       <div className="text-center mb-10">
         <img
           src={user.avatar_url || FALLBACK_AVATAR}
           alt={user.display_name}
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = FALLBACK_AVATAR;
-          }}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_AVATAR; }}
           className="h-24 w-24 rounded-full object-cover mx-auto border-4 border-surface shadow-[var(--shadow-soft)]"
         />
         <h1 className="font-serif text-3xl mt-4">{user.display_name}</h1>
@@ -94,7 +94,7 @@ export function UserProfilePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white hover:border-[#229ED9] transition-colors"
-              aria-label={`Open Telegram profile @${user.telegram_username.replace('@', '')}`}
+              aria-label={`Telegram @${user.telegram_username.replace('@', '')}`}
             >
               <TelegramIcon className="h-5 w-5" />
             </a>
@@ -105,7 +105,7 @@ export function UserProfilePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white hover:border-[#D6249F] transition-colors"
-              aria-label={`Open Instagram profile @${user.instagram_handle.replace('@', '')}`}
+              aria-label={`Instagram @${user.instagram_handle.replace('@', '')}`}
             >
               <InstagramIcon className="h-5 w-5" />
             </a>
@@ -116,18 +116,18 @@ export function UserProfilePage() {
       <div className="grid grid-cols-2 gap-4 mb-10">
         <div className="rounded-[var(--radius-card)] bg-surface border border-border p-4 text-center">
           <p className="font-serif text-2xl text-primary-dark">{user.beacons_lit}</p>
-          <p className="text-xs text-text-muted mt-1">Beacons Lit</p>
+          <p className="text-xs text-text-muted mt-1">{t('userProfile.beaconsLit')}</p>
         </div>
         <div className="rounded-[var(--radius-card)] bg-surface border border-border p-4 text-center">
           <p className="font-serif text-2xl text-primary-dark">{active.length}</p>
-          <p className="text-xs text-text-muted mt-1">Active Now</p>
+          <p className="text-xs text-text-muted mt-1">{t('userProfile.activeNow')}</p>
         </div>
       </div>
 
-      <h2 className="font-serif text-2xl mb-4">Beacons</h2>
+      <h2 className="font-serif text-2xl mb-4">{t('userProfile.beacons.title')}</h2>
       <div className="space-y-4">
         {shown.length === 0 ? (
-          <p className="text-text-muted text-sm text-center py-8">No beacons yet.</p>
+          <p className="text-text-muted text-sm text-center py-8">{t('userProfile.noBeacons')}</p>
         ) : (
           shown.map((b) => <BeaconCard key={b.id} beacon={b} />)
         )}

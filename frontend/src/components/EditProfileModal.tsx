@@ -1,8 +1,8 @@
-// frontend/src/components/EditProfileModal.tsx
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuraStore } from '../store/useAuraStore';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { useLanguage } from '../i18n';
 import type { UserProfile } from '../types';
 
 interface EditProfileModalProps {
@@ -11,10 +11,11 @@ interface EditProfileModalProps {
   onClose: () => void;
 }
 
-const MAX_AVATAR_BYTES = 1.5 * 1024 * 1024; // 1.5 MB
+const MAX_AVATAR_BYTES = 1.5 * 1024 * 1024;
 
 export function EditProfileModal({ open, profile, onClose }: EditProfileModalProps) {
   const updateProfile = useAuraStore((s) => s.updateProfile);
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   useBodyScrollLock(open);
 
@@ -30,17 +31,17 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      setError('Please choose an image file.');
+      setError(t('editProfile.error.imageType'));
       return;
     }
     if (file.size > MAX_AVATAR_BYTES) {
-      setError('Image is too large (max 1.5 MB). Try a smaller photo.');
+      setError(t('editProfile.error.imageSize'));
       return;
     }
     setError(null);
     const reader = new FileReader();
     reader.onload = () => setAvatarUrl(reader.result as string);
-    reader.onerror = () => setError('Could not read that image.');
+    reader.onerror = () => setError(t('editProfile.error.imageRead'));
     reader.readAsDataURL(file);
   };
 
@@ -57,7 +58,7 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
       });
       onClose();
     } catch (e) {
-      setError((e as Error).message || 'Could not save your profile.');
+      setError(t('editProfile.error.save'));
     } finally {
       setSaving(false);
     }
@@ -90,9 +91,8 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pt-5 pb-4">
-              <h2 className="font-serif text-2xl text-[#1C1C1A] mb-6">Edit Profile</h2>
+              <h2 className="font-serif text-2xl text-[#1C1C1A] mb-6">{t('editProfile.title')}</h2>
 
-              {/* Avatar editor */}
               <div className="flex flex-col items-center mb-6">
                 <div className="relative">
                   {avatarUrl ? (
@@ -110,29 +110,22 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     className="absolute -bottom-1 -right-1 h-9 w-9 rounded-full bg-[#1C1C1A] text-white flex items-center justify-center shadow-md hover:bg-[#2C2C2A] transition-colors"
-                    aria-label="Change photo"
+                    aria-label={t('editProfile.changePhoto')}
                   >
                     <span className="material-symbols-outlined text-lg">photo_camera</span>
                   </button>
                 </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFile}
-                />
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="mt-3 text-xs text-[#7A9E7E] font-medium hover:underline"
                 >
-                  Upload new photo
+                  {t('editProfile.changePhoto')}
                 </button>
               </div>
 
-              {/* Avatar URL */}
-              <Field label="Photo URL (optional)">
+              <Field label={t('editProfile.photo.label')}>
                 <input
                   type="text"
                   value={avatarUrl.startsWith('data:') ? '' : avatarUrl}
@@ -142,42 +135,43 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
                 />
               </Field>
 
-              <Field label="Display Name">
+              <Field label={t('editProfile.displayName.label')}>
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder={t('editProfile.displayName.placeholder')}
                   className={inputClass}
                 />
               </Field>
 
-              <Field label="Bio">
+              <Field label={t('editProfile.bio.label')}>
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value.slice(0, 160))}
                   rows={2}
+                  placeholder={t('editProfile.bio.placeholder')}
                   className={`${inputClass} resize-none`}
-                  placeholder="A line about your vibe…"
                 />
                 <p className="text-[10px] text-[#B0ACA4] mt-1 text-right">{bio.length}/160</p>
               </Field>
 
-              <Field label="Telegram Handle">
+              <Field label={t('editProfile.telegram.label')}>
                 <input
                   type="text"
                   value={telegram}
                   onChange={(e) => setTelegram(e.target.value)}
-                  placeholder="username"
+                  placeholder={t('editProfile.telegram.placeholder')}
                   className={inputClass}
                 />
               </Field>
 
-              <Field label="Instagram Handle">
+              <Field label={t('editProfile.instagram.label')}>
                 <input
                   type="text"
                   value={instagram}
                   onChange={(e) => setInstagram(e.target.value)}
-                  placeholder="username"
+                  placeholder={t('editProfile.instagram.placeholder')}
                   className={inputClass}
                 />
               </Field>
@@ -191,7 +185,7 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
                 onClick={onClose}
                 className="flex-1 rounded-full border border-[#EEECE8] py-3 text-sm font-medium text-[#5A5750] hover:bg-[#FAFAF7] transition-colors"
               >
-                Cancel
+                {t('editProfile.cancel')}
               </button>
               <button
                 type="button"
@@ -199,7 +193,7 @@ export function EditProfileModal({ open, profile, onClose }: EditProfileModalPro
                 disabled={saving}
                 className="flex-1 rounded-full bg-[#1C1C1A] text-white py-3 text-sm font-medium hover:bg-[#2C2C2A] transition-colors disabled:opacity-60"
               >
-                {saving ? 'Saving…' : 'Save Changes'}
+                {saving ? t('editProfile.saving') : t('editProfile.save')}
               </button>
             </div>
           </motion.div>
